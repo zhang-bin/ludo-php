@@ -9,4 +9,3 @@ require 'header.php';
 //you can pass ctrl name to LdApplication to make that ctrl name as the index ctrl
 $application = new LdApplication();
 $application->run();
-?>

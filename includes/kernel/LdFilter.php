@@ -92,13 +92,8 @@ class LdFilter {
 		$config->set('Core.Encoding', PROGRAM_CHARSET);
 		$config->set('Cache.SerializerPath', LD_UPLOAD_TMP_PATH);
 		if ($allowedTags) $config->set('HTML.Allowed', $allowedTags);
-//		$config->set('HTML.Doctype', 'HTML 4.01 Transitional'); // replace with your doctype
-//		$config->set('URI.Base', 'http://www.example.com');
-//		$config->set('URI.MakeAbsolute', true);
-//		$config->set('AutoFormat.AutoParagraph', true);
 
 		$purifier = new HTMLPurifier($config);
 		return $purifier->purify(trim($dirtyHtml));
 	}
 }
-?>

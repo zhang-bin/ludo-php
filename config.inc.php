@@ -45,4 +45,3 @@ define('API_SALT',			'Iclouds.is.very_G00d'); //api salt for nagios record. $Wo.
 define('FINAL_STAGE',			'2');
 define('INTERNAL_STAGE',			'1');
 define('PROV_STAGE',				'0');
-?>

@@ -28,10 +28,6 @@ class LdKernel {
     static private $_instance = null;
 
 	private function __construct() {
-//		$this->inStream = new LdInputStream();
-//		$this->inputData = &$this->inStream->getInputData();
-//		
-//		$this->outStream = new LdOutputStream();
 		$this->_lang = new LdLanguage();
 	}
     
@@ -129,4 +125,3 @@ class LdKernel {
         return $this->_lang;
     }
 }
-?>

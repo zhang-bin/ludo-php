@@ -64,28 +64,6 @@ abstract class LdBaseCtrl {
 		$this->mem 	  = $this->kernel->getMemcacheHandler();
 		$this->httpHeader = 'Content-Type:text/html;charset='.PROGRAM_CHARSET;
 	}
-	function mget($key) {
-		return MEMCACHE_ENABLE? $this->mem->get($key) : false;
-	}
-	function mset($key, $val, $expired=null, $gzipd=0) {
-		MEMCACHE_ENABLE ? $this->mem->set($key, $val, $gzipd, $expired) : false;
-	}
-	function madd($key, $val, $expired=null, $gzipd=0) {
-		MEMCACHE_ENABLE ? $this->mem->add($key, $val, $gzipd, $expired) : false;
-	}
-	function mrep($key, $val, $expired=null, $gzipd=0) { //mem_replace
-		MEMCACHE_ENABLE ? $this->mem->replace($key, $val, $gzipd, $expired) : false;
-	}
-	function mcre($key, $step) {
-		MEMCACHE_ENABLE ? $this->mem->increment($key, $step) : false;
-	}
-	function mdel($key, $delay=null) {
-		if (!MEMCACHE_ENABLE) return false;
-		if (!$delay)
-			$this->mem->delete($key);
-		else
-			$this->mem->delete($key, $delay);
-	}
 	function getCurrentCtrlName() {
 		return $this->name;
 	}

@@ -58,7 +58,6 @@ if (!DEBUG) {
 } else {
 	ini_set('display_errors', '1');
 	error_reporting(E_ALL ^E_NOTICE);
-//	error_reporting(E_ALL);
 }
 
 
@@ -74,8 +73,6 @@ if (get_magic_quotes_gpc()) {
 
 /* ---[define absolute path and url]----- */
 require LD_KERNEL_PATH.'/LdKernel'.php;
-//require LD_KERNEL_PATH.'/LdInputStream'.php;
-//require LD_KERNEL_PATH.'/LdOutputStream'.php;
 require LD_KERNEL_PATH.'/LdLanguage'.php;
 require LD_KERNEL_PATH.'/LdException'.php;
 require LD_KERNEL_PATH.'/Ld'.php;
@@ -87,7 +84,6 @@ require LD_KERNEL_PATH.'/LdValidator'.php;
 require LD_KERNEL_PATH.'/LdFilter'.php;
 require LD_KERNEL_PATH.'/LdFactory'.php;
 
-require LD_UTIL_PATH.'/LdError'.php;
 require LD_UTIL_PATH.'/utils'.php;
 require LD_HELPER_PATH.'/userUtils'.php;
 require LD_HELPER_PATH.'/Validator'.php;
@@ -101,17 +97,19 @@ define('CURR_URL', 			currUrl());
 
 define('PAGE_SIZE', '10');
 define('PAGE_SPAN', '6');
+
 /* ---[auto include necessarily library]----- */
-function __autoload($className) {
+function autoLoad($className) {
+    if (class_exists($className)) return false;
 	if (substr($className, -3, 3) == 'Dao') {
 		$filename = LD_DAO_PATH.'/'.$className.php; 
 	} else {
 		$filename = LD_CTRL_PATH.'/'.$className.php; 
 	}
-	if (file_exists($filename)) {
-		include $filename;
+	if (file_exists($filename) && is_readable($filename)) {
+		require $filename;
 	} else {
 		return false;
 	}
 }
-?>
+spl_autoload_register('autoLoad');

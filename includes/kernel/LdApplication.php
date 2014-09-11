@@ -33,12 +33,7 @@ class LdApplication {
 		$GLOBALS['ldCtrl'] = $this->_ctrl;
 		
 		$this->_kernel = LdKernel::getInstance();
-//		$this->in = & $this->kernel->getInputData();
-//        $this->out = $this->kernel->getOutputStream();
-
         $GLOBALS['ldKernel'] = $this->_kernel;
-//        $GLOBALS['ldInputData'] = $this->in;
-//        $GLOBALS['ldOutput'] = $this->out;
 	}
 
 	function parsePathInfo() {
@@ -53,10 +48,6 @@ class LdApplication {
 					$this->_ctrl = ucfirst(substr($pathInfo[0], $pos+1));
 					$this->_ctrlPath = str_replace('_', '/', substr($pathInfo[0], 0, $pos+1));
 				}
-//				if (strpos($this->ctrl, '_') !== false) {
-//					//replace _ to Camel style. e.g. replace user_info to UserInfo 
-//					$this->ctrl = str_replace(' ', '', ucwords(str_replace('_', ' ', $this->ctrl))); 
-//				}
 			}
 			
 			//==Act
@@ -238,14 +229,8 @@ class LdApplication {
 		
 		$debugInfo = implode($delimiter, $arr);
 
-		//for security reason, we will show the debug information only when it's under DEBUG mode.
 		$debugOutput = $prefix.$debugInfo.$postfix;
 		file_put_contents($debugFile, $debugOutput);
 
-		//if no output, which means this action use Template to render the result, not an ajax call
-//		if (!isset($lastOutput)) {
-//			echo '<script type="text/javascript">window.open("',$debugUrl,'", "debug_console")</script>';
-//		}
 	}
 }
-?>

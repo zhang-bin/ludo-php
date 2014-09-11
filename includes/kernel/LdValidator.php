@@ -14,7 +14,6 @@
 class LdValidator {
 	public static function email($data) {
 		if (empty($data)) return false;
-//		return preg_match('/^\w+(?:(?:-\w+)|(?:\.\w+))*@[A-Za-z0-9]+(?:(?:\.|-)[A-Za-z0-9]+)*\.[A-Za-z0-9]+$/', $data);
 		return filter_var($data, FILTER_VALIDATE_EMAIL) !== false;
 	}
 	/**
@@ -29,9 +28,9 @@ class LdValidator {
 		$len = strlen($data);
 		return $len >= $min && $len <= $max;
 	}
-	public static function len($data, $lenth) {
+	public static function len($data, $length) {
 		$len = strlen($data);
-		return $len == $lenth;
+		return $len == $length;
 	}
 	public static function minlength($data, $min) {
 		return strlen($data) >= $min;
@@ -60,7 +59,6 @@ class LdValidator {
 	 * @return bool true for well formated ip, vise versa.
 	 */
 	public static function ip($data) {
-//		return !empty($data) && preg_match('/^(25[0-5]|2[0-4][0-9]|[0-1]{1}[0-9]{2}|[1-9]{1}[0-9]{1}|[1-9])\.(25[0-5]|2[0-4][0-9]|[0-1]{1}[0-9]{2}|[1-9]{1}[0-9]{1}|[1-9]|0)\.(25[0-5]|2[0-4][0-9]|[0-1]{1}[0-9]{2}|[1-9]{1}[0-9]{1}|[1-9]|0)\.(25[0-5]|2[0-4][0-9]|[0-1]{1}[0-9]{2}|[1-9]{1}[0-9]{1}|[0-9])$/', $data);
 		if (empty($data)) return false;
 		return filter_var($data, FILTER_VALIDATE_IP) !== false;
 	}
