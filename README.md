@@ -1,7 +1,6 @@
 # Ludo-PHP
 #### Ludo-PHP是一个快速，面向对象的轻量级PHP开发框架。
 
-
 ## 简介
 1. Ludo-PHP采用PDO Mysql Prepare方式操作数据库，避免SQL injection的风险。
 2. 自动路由模式，程序会自动解析url中的controller和action，通过reflection调用对应的方法。
@@ -12,17 +11,17 @@
 3. 自动记录request日志，日志内容包括$_GET, $_POST, $_COOKIE, $_SESSION, $_SERVER, SQL, ERROR信息。
 
 ## 目录结构
-<pre>
-app
-|-conf                      功能配置文件
-|-controllers	            控制器文件
-|-daos		                表dao(Data Access Object)文件
-|-helpers                   辅助类文件
-|-languages                 语言文件
-|-templates		            视图文件
-img                         前端js，css文件
-includes                    框架核心文件
-config.php                  系统配置文件
-config.production.inc.php   生产系统配置文件
-index.php	入口文件
-</pre>
+    <pre>
+    app
+    |-conf                      功能配置文件
+    |-controllers	            控制器文件
+    |-daos		                表dao(Data Access Object)文件
+    |-helpers                   辅助类文件
+    |-languages                 语言文件
+    |-templates		            视图文件
+    img                         前端js，css文件
+    includes                    框架核心文件
+    config.php                  系统配置文件
+    config.production.inc.php   生产系统配置文件
+    index.php	入口文件
+    </pre>
