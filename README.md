@@ -11,7 +11,6 @@
 3. 自动记录request日志，日志内容包括$_GET, $_POST, $_COOKIE, $_SESSION, $_SERVER, SQL, ERROR信息。
 
 ## 目录结构
-    <pre>
     app
     |-conf                      功能配置文件
     |-controllers	            控制器文件
@@ -24,4 +23,3 @@
     config.php                  系统配置文件
     config.production.inc.php   生产系统配置文件
     index.php	入口文件
-    </pre>
