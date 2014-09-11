@@ -99,39 +99,8 @@ function thumbnail($img) {
 function utf2gbk($str) {
 	return mb_check_encoding($str, 'UTF-8') ? mb_convert_encoding($str, 'gbk', 'utf-8') : $str;
 }
-function submenuCss($innerUrl, $css='submenu') {
-	$ctrl = strtolower(CURRENT_CONTROLLER);
-	$act = strtolower(CURRENT_ACTION);
-	if ($_REQUEST['msgId']) {
-		$url = $ctrl.'/'.$_REQUEST['msgId'];
-	} else {
-		if (ctype_digit(substr($act, -1, 1))) {
-			$url = $ctrl.'/'.substr($act, 0, strlen($act) - 1);
-		} else {
-			$url = $ctrl.'/'.$act;
-		}
-	}
-	$currCss = 'curr'.ucfirst($css);
-	return $innerUrl == $url ? " class='$currCss'" : " class='$css'";
-}
 function alert2go($msg, $url) {
 	return '<script type="text/javascript">alert("'.$msg.'"); window.location.href="'.$url.'";</script>';
-}
-
-/**
- * generate random password
- *
- * @param int $len length of password
- */
-function randPassword($len) {
-	//generate random password
-	$chars = array('a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z','1', '2', '3', '4', '5', '6', '7', '8', '9', '0');
-	$max = count($chars) - 1;
-	$password = '';
-	for ($i = 0; $i < $len; $i ++) {
-		$password .= $chars[rand(0, $max)];
-	}
-	return $password;
 }
 
 function logLink($linkTxt, $url) {

@@ -15,17 +15,9 @@ class LdApplication {
     /** @var kernel instance */
 	private $_kernel = null;
 
-    /**
-	 * @var input stream array which include all input information like: $_GET, $_POST, $_COOKIE, $_SESSION, $_FILES */
-	private $_in = array();
-
-    /** @var output stream */
-    private $_out = null;
-
     private $_ctrl = 'Index';
     private $_ctrlPath = '';
     private $_act = 'index';
-    private $_lasturl = '';
 
 	function __construct($ctrl = '') {
 		if (!empty($ctrl))	$this->_ctrl = ucfirst($ctrl);
@@ -119,7 +111,7 @@ class LdApplication {
 							}
 						}
 					}
-					echo $output;
+					echo is_array($output) ? json_encode($output) : $output;
 				}
 				if (DEBUG) self::debug($output);
 				
@@ -231,6 +223,5 @@ class LdApplication {
 
 		$debugOutput = $prefix.$debugInfo.$postfix;
 		file_put_contents($debugFile, $debugOutput);
-
 	}
 }
