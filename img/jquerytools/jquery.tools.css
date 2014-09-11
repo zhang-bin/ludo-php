@@ -1,0 +1,208 @@
+/*---[Jquery Tools TABS]-----------------------*/
+input,label,select{ vertical-align:middle!important;}
+/* root element for tabs  */
+ul.tabs { 
+	list-style:none; 
+	margin:0 !important; 
+	padding:0;
+	height:30px;
+	border-bottom:1px solid #666;	
+}
+/* single tab */
+ul.tabs li { 
+	float:left;	 
+	text-indent:0;
+	padding:0;
+	margin:0 !important;
+	list-style-image:none !important; 
+}
+/* link inside the tab. uses a background image */
+ul.tabs a { 
+	background: url(img/tabs/blue.png) no-repeat -652px 0;
+	_background: url(img/tabs/blue.gif) no-repeat -652px 0;
+	font-size:11px;
+	display:block;
+	height: 30px;  
+	line-height:30px;
+	width: 111px;
+	text-align:center;	
+	text-decoration:none;
+	color:#000;
+	padding:0px;
+	margin:0px;	
+	position:relative;
+	top:1px;
+	outline: none;
+	border-bottom: 0;
+}
+ul.tabs a:active {
+	outline:none;
+	text-decoration:none;	
+}
+/* when mouse enters the tab move the background image */
+ul.tabs a:hover {
+	background-position: -652px -31px;	
+	color:#fff;
+	text-decoration:none;
+	border-bottom:0!important;
+	_border_bottom:0;
+}
+/* active tab uses a class name "current". it's highlight is also done by moving the background image. */
+ul.tabs a.current, ul.tabs a.current:hover, ul.tabs li.current a {
+	background-position: -652px -62px;		
+	cursor:default !important; 
+	color:#000 !important;
+	text-decoration:none;
+}
+/* Different widths for tabs: use a class name: w1, w2, w3 or w2 */
+/* width 1 */
+ul.tabs a.w1 			{ background-position: -519px 0; width:134px; }
+ul.tabs a.w1:hover 	{ background-position: -519px -31px; }
+ul.tabs a.w1.current { background-position: -519px -62px; }
+/* width 2 */
+ul.tabs a.w2 			{ background-position: -366px -0px; width:154px; }
+ul.tabs a.w2:hover 	{ background-position: -366px -31px; }
+ul.tabs a.w2.current { background-position: -366px -62px; }
+/* width 3 */
+ul.tabs a.w3 			{ background-position: -193px -0px; width:174px; }
+ul.tabs a.w3:hover 	{ background-position: -193px -31px; }
+ul.tabs a.w3.current { background-position: -193px -62px; }
+/* width 4 */
+ul.tabs a.w4 			{ background-position: -0px -0px; width:194px; }
+ul.tabs a.w4:hover 	{ background-position: -0px -31px; }
+ul.tabs a.w4.current { background-position: -0px -62px; }
+/* initially all panes are hidden */ 
+div.panes > div {
+	display:none;		
+	padding:15px 10px;
+	border:1px solid #999;
+	border-top:0;
+	height:auto;
+	margin:0 0 5px;
+	width: auto;
+}
+div.panes > div > div{
+	 display:block;		
+	border:0;
+		}
+/*---[Jquery Tools TOOLTIP]-----------------------*/
+/* tooltip styling */ 
+.tooltip { 
+    display:none; 
+    background:url(img/tooltip/black_arrow.png); 
+	_background:url(img/tooltip/black_arrow.gif);
+    height:80px; 
+    padding:15px; 
+    width:159px; 
+    font-size:10px; 
+    color:#fff; 
+} 
+/* a .label element inside tooltip */ 
+.tooltip .label { 
+    color:yellow; 
+    width:35px; 
+} 
+.tooltip a { 
+    color:#ad4; 
+    font-size:11px; 
+    font-weight:bold; 
+}
+/*---[Jquery Tools OVERYLAY]-----------------------*/
+
+
+/*==============Facebox==========================*/
+.facebox { /* overlay is hidden before loading */
+	display: none;
+	/* standard decorations */
+	border: 10px solid #666;
+	/* for modern browsers use semi-transparent color on the border. nice! */
+	border: 10px solid rgba(82, 82, 82, 0.698);
+	/* hot CSS3 features for mozilla and webkit-based browsers (rounded borders) */
+	-moz-border-radius: 8px;
+	-webkit-border-radius: 8px;
+	width:880px;
+	/* CSS3 styling for latest browsers */
+	-moz-box-shadow:	0 0 90px 5px #808080;
+	-webkit-box-shadow: 0 0 90px #808080;
+	background:#fff;
+}
+
+.facebox div {
+	padding: 10px;
+	border: 1px solid #3B5998;
+	background-color: #fff;
+	font-family: "lucida grande", tahoma, verdana, arial, sans-serif;
+}
+
+.facebox h2 {
+	margin: -11px;
+	margin-bottom: 0px;
+	color: #fff;
+	background-color: #6D84B4;
+	padding: 5px 10px;
+	border: 1px solid #3B5998;
+	font-size: 20px;
+}
+.facebox a.close {
+	background:transparent url(img/overlay/close.png) no-repeat scroll 0 0;
+	_background:transparent url(img/overlay/close.gif) no-repeat scroll 0 0;
+	cursor:pointer;
+	position:absolute;
+	right:-20px;
+	top:-20px;
+	cursor:pointer;
+	height:35px;
+	width:35px;
+	z-index:99999;
+}
+.facebox a.close:hover {border:none}
+
+/*==============apple effect overlay==========================*/
+.apple_overlay {
+    display:none;
+    background-image:url(img/overlay/white.png);
+    width:640px;
+    padding:35px;
+    font-size:11px;
+}
+ 
+/* default close button positioned on upper right corner */
+.apple_overlay .close {
+    background-image:url(img/overlay/close.png);
+    position:absolute; right:5px; top:5px;
+    cursor:pointer;
+    height:35px;
+    width:35px;
+}
+
+#overlay {
+    background-image:url(img/overlay/white.png);
+    height:450px;
+}
+#overlay .contentWrap{
+ 	height:441px;
+    overflow-y:auto;
+}
+
+.modal {
+    background-color:#fff;
+    display:none;
+    width:470px;
+    padding:15px;
+    text-align:left;
+    border:2px solid #333;
+ 
+    opacity:0.8;
+    -moz-border-radius:6px;
+    -webkit-border-radius:6px;
+    -moz-box-shadow: 0 0 50px #ccc;
+    -webkit-box-shadow: 0 0 50px #ccc;
+}
+ 
+.modal h2 {
+    background:url(img/overlay/info.png) 0 50% no-repeat;
+    margin:0px;
+    padding:10px 0 10px 45px;
+    border-bottom:1px solid #333;
+    font-size:15px;
+}
