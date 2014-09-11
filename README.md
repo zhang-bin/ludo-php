@@ -7,4 +7,5 @@
 2. 自动路由模式，程序会自动解析url中的controller和action，通过reflection调用对应的方法。
     
     > $method = new ReflectionMethod($this->_ctrl, $action);
+    >
     > $output = $method->invoke($controller);
