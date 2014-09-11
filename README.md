@@ -20,8 +20,12 @@
     |-helpers                   辅助类文件
     |-languages                 语言文件
     |-templates		            视图文件
+    bin                         命令行脚本执行文件
     img                         前端js，css文件
     includes                    框架核心文件
+    sql                         数据库sql文件
+    uploads                     上传目录，临时文件
     config.php                  系统配置文件
     config.production.inc.php   生产系统配置文件
-    index.php	入口文件
+    header.php                  初始化文件
+    index.php	                入口文件
