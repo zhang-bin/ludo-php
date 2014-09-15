@@ -12,4 +12,3 @@ class Error extends LdBaseCtrl {
 		if (!User::logined()) return User::gotoLogin();
 	}
 }
-?>

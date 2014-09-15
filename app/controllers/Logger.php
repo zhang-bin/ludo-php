@@ -8,66 +8,13 @@ class Logger extends LdBaseCtrl {
     	$this->logList();
 	}
 
-	function logList(){
-    	$dao = new LogDao();
-        $pager = pager(array(
-			'base' => 'logger/index',
-			'cur' => empty($_GET['id']) ? 1 : intval($_GET['id']),
-//			'cur'  => intval($_GET['id']),
-			'cnt' => $dao->count(),
-        ));
-        $this->tpl->setFile('log/index')
-                  ->assign('list',$dao->fetchAll($pager['rows'],$pager['start'],'createTime desc'))
-//				  ->assign('list', $dao->fetchAll($pager['rows'], $pager['start']," id desc"))
-                  ->assign('pager',$pager['html'])
-                  ->display();               
-    }
-    
-    function view(){
-    	$id = isset($_GET['id']) ? intval($_GET['id']) : '';
-    	if(empty($id)) redirect('log');
-    	$dao = LdFactory::dao('log');
-    	$loginfo = $dao -> find('id=?',$id);
-    	$this->tpl->setFile('log/view');
-    	$this->tpl->assign('loginfo', $loginfo);
-    	$this->tpl->display();
-    }
-		
-//	const SYSTEM = 'iclouds';
-
 	/**
 	 * log params, it's an array
 	 *
 	 * @var array
 	 */
 	static $log = array();
-	
-/*	  do log with following params:
-	  @param array $arr
-	  	array(
-	  		 'userId' => $_SESSION[USER]['id'] ? $_SESSION[USER]['id'] : 0,
-	  		 'uname' => $_SESSION[USER]['uname'],
-		     'sessionId' => session_id(),
-			 'time' => date('Y-m-d H:i:s'),
-			 'ip' => realIp(),
-			 'ctrl' => CURRENT_CONTROLLER,
-			 'act' => CURRENT_ACTION,
-		//	 'through' => self::PASSPORT,
-			 'success' => 1,
-			 'count' => 1,
-			 'success' => 1,
-			 'url' => currUrl(),
-			 'httpReferer' => $_SERVER['HTTP_REFERER'],
-			 'userAgent' => $_SERVER['HTTP_USER_AGENT'],
-			 'proxyIp' => $_SERVER['REMOTE_ADDR'],
-			 'postData' => null,
-			 
-			 'old' => null,
-			 'new' => null,
-			 'desc' => null,
-	 	);
-	}   */
-	
+
 	static function log($arr, $autoWrite=true) {
 		if (empty(self::$log)) {
 			self::$log = array(
@@ -77,7 +24,6 @@ class Logger extends LdBaseCtrl {
 				'ip' => realIp(),
 				'ctrl' => CURRENT_CONTROLLER,
 				'act' => CURRENT_ACTION,
-//				'through' => self::SYSTEM,
 				'success' => 1,
 				'count' => 1,
 				'url' => currUrl(),
@@ -86,7 +32,6 @@ class Logger extends LdBaseCtrl {
 				'request'  	=> json_encode($_REQUEST),
 				'session'	=> json_encode($_SESSION),
 				'cookie'	=> json_encode($_COOKIE)
-//				'companyId' => $_SESSION[USER]['companyId'] ? $_SESSION[USER]['companyId']  : User::companyIdByDomain(),
 			);
 			if (realIp() != $_SERVER['REMOTE_ADDR']) {
 				$cip = getenv('HTTP_CLIENT_IP') ? 'HTTP_CLIENT_IP:'.getenv('HTTP_CLIENT_IP') : '';
@@ -105,7 +50,7 @@ class Logger extends LdBaseCtrl {
 
 	static function write() {
 		if (!empty(self::$log)) {
-			$dao = LdFactory::dao('Log')->add(self::$log);
+			LdFactory::dao('Log')->add(self::$log);
 			self::$log = array();
 		}
 	}
@@ -161,4 +106,3 @@ class Logger extends LdBaseCtrl {
 		if (!User::can()) redirect('error/accessDenied');
 	}
 }
-?>
