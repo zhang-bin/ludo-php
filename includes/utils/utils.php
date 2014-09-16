@@ -78,7 +78,6 @@ function redirect($innerUrl='') {
 		if (DEBUG) LdApplication::debug();die;
 	} else {
 		return array(STATUS => GO, URL => url($innerUrl));
-        die;
 	}
 }
 function redirectOut($outUrl) {
@@ -87,7 +86,6 @@ function redirectOut($outUrl) {
 		if (DEBUG) LdApplication::debug();die;
 	} else {
         return array(STATUS => GO, URL => $outUrl);
-        die;
 	}
 }
 function isAjax() {
