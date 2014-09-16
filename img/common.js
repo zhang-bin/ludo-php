@@ -9,22 +9,6 @@ jQuery.fn.loading = function(url, params, callback) {
 		if (typeof callback == "function") callback();
 	});
 };
-jQuery.extend({
-	getting: function(url, params, callback, type) {
-		loading(true);
-		$.get(url, params, function(data) {
-			loading(false);
-			if (typeof callback == "function") callback(data);
-		}, type);
-	},
-	posting: function (url, params, callback, type) {
-		loading(true);
-		$.post(url, params, function(data) {
-			loading(false);
-			if (typeof callback == "function") callback(data);
-		}, type);
-	}
-});
 
 function refreshCaptcha(imgUrl) {
 	$('#captchaImg').attr("src", imgUrl + "?sid="+Math.random());
@@ -54,50 +38,62 @@ function ajaxHandler(result) {
             alert(result['msg']);
             if (result['url']) window.location.href = result['url'];
             return false;
+        case 'go':
+            if (result['url']) window.location.href = result['url'];
+            return false;
         default:
             alert(result['msg']);
             return false;
     }
 }
-/**
- * submit data to target url with ajax 
- * @param url
- * @param String|Object data could be a form ID, or object of all data to be submited
- * @param callback
- * @return
- */
-function doPost(url, data, callback) {
-	preSubmit();
-	if (typeof data == "string") data = $('#'+data).serialize();
-	$.posting(url, data, function(result) {
-		 if (typeof callback == "function") {
-			 callback(result);
-			 postSubmit();
-		 } else {
-			 ajaxHandler(result);
-			 postSubmit();
-		 }
-	});
-	return false;
-}
- /**
-  * do form submit with ajax
-  * @param formId
-  * @return
-  */
- function formSubmit(formId, callback) {
-	 var form1 = typeof formId == 'object' ? $(formId) : $('#' + formId);
-	 var url = form1.attr('action');
-	 var data = form1.serialize();
-	 preSubmit();
-	 $.post(url, data, function(result) {
-		 if (typeof callback == "function") {
-			 callback(result);
-			 postSubmit();
-		 } else {
-			 ajaxHandler(result);
-			 postSubmit();
-		 }
-	 });
-	 return false;
+
+jQuery.extend({
+    getting: function(url, params, callback, type) {
+        loading(true);
+        $.get(url, params, function(data) {
+            loading(false);
+            if (typeof callback == "function") callback(data);
+        }, type);
+    },
+    posting: function (url, params, callback, type) {
+        loading(true);
+        $.post(url, params, function(data) {
+            loading(false);
+            if (typeof callback == "function") callback(data);
+        }, type);
+    },
+    doPost: function (url, data, callback) {
+        preSubmit();
+        if (typeof data == "string") data = $('#'+data).serialize();
+        $.posting(url, data, function(result) {
+            if (typeof callback == "function") {
+                callback(result);
+            } else {
+                ajaxHandler(result);
+            }
+            postSubmit();
+        }, "json");
+        return false;
+    },
+    formSubmit: function(formId, callback) {
+        var form1 = typeof formId == 'object' ? $(formId) : $('#' + formId);
+        var url = form1.attr('action');
+        var data = form1.serialize();
+        preSubmit();
+        $.post(url, data, function(result) {
+            if (typeof callback == "function") {
+                callback(result);
+            } else {
+                ajaxHandler(result);
+            }
+            postSubmit();
+        }, "json");
+        return false;
+    }
+});
+
+function del(url, data, callback) {
+    if (confirm('您确定要删除吗?')) {
+        $.doPost(url, data, callback);
+    }
 }

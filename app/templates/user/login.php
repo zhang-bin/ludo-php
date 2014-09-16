@@ -57,41 +57,24 @@ body{
 </head>
 <body style="padding-top:40px;">
 <form class="form-horizontal" id="form1" method="post" action="<?=url('user/login')?>">
-	<h1><a href="<?=url()?>"><img src="<?=turl('/img/logo.gif')?>" /></a></h1>
+	<h1><a href="<?=url()?>"></a></h1>
 	<div class="control-group">
-      	<input type="text" class="input-block-level" id="uname" name="uname" placeholder="<?=LG_USER_UNAME?>" />
-      	<input type="password" class="input-block-level" id="password" name="password" placeholder="<?=LG_USER_PASSWORD?>" />
+      	<input type="text" class="input-block-level" id="uname" name="uname" placeholder="用户名" />
+      	<input type="password" class="input-block-level" id="password" name="password" placeholder="密码" />
 		<input type="hidden" id="timezoneOffset" name="timezoneOffset" />
-		<input id="submitBtn" type="submit" class="btn btn-large btn-primary" value="<?=LG_USER_LOGIN?>" />
+		<input id="submitBtn" type="submit" class="btn btn-large btn-primary" value="登录" />
   	</div>
 </form>
 <div id="loading">Loading</div>
 <script type="text/javascript">
-<!--
 $(document).ready(function() {
-	$("#timezoneOffset").val(new Date().getTimezoneOffset()/60);
   	$('#uname').focus();
- 	var submitting = false; //prevent multiple submit flag
-  	$('#form1').submit(function() {
-	  	if ($("#uname").val() == "") {
-			alert("<?=LG_USER_UNAME_EMPTY?>");
-		  	return false;
-	  	}
-	  	if ($("#password").val() == "") {
-		  	alert("<?=LG_USER_PASSWORD_EMPTY?>");
-		  	return false;
-	  	}
-		if (submitting) return false;
 
-	submitting = true;
-	$.posting(this.action, $(this).serialize(), function(result) {
-		submitting = false;
-	   if(ajaxHandler(result)) return;
-	});
-    return false;
-  });
+  	$('#form1').submit(function() {
+        $.formSubmit(this);
+        return false;
+    });
 });
-//-->
 </script>
 </body>
 </html>

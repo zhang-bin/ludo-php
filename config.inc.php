@@ -1,7 +1,7 @@
 <?php
 define('DB_HOST_M',			'localhost');
 define('DB_HOST_S',			'localhost');
-define('DB_NAME',			'lenovo');
+define('DB_NAME',			'ludo-php');
 define('DB_USER',			'root');
 define('DB_PASSWORD',		'64297881');
 
@@ -11,7 +11,7 @@ define('DB_CONNECT',		0); //0: connect; 1: pconnect
 define('TABLE_PREFIX',		'');
 
 define('SITE_ROOT',			dirname(__FILE__)); //no trailing slash
-define('SITE_URL',			'http://'.$_SERVER['SERVER_NAME'].'/MIDH'); //no trailing slash. You can leave blank if your application will stay in the Document Root of your Web Server
+define('SITE_URL',			'http://'.$_SERVER['SERVER_NAME'].'/ludo-php'); //no trailing slash. You can leave blank if your application will stay in the Document Root of your Web Server
 
 define('SITE_COPYRIGHT',	'');
 define('THEME',				'');
@@ -24,8 +24,6 @@ define('USING_MOD_REWRITE', false);
 define('php', 				'.php'); //@TODO this feature is still alpha. change this to your own php extension
 define('tpl', 				'.php'); //change this to your own php template extension
 define('PROGRAM_CHARSET', 	'UTF-8'); //the charset of current application, this could influence the database query(set names)
-define('MEMCACHE_ENABLE',   false);
-define('MEMCACHE_SERVER', 	'localhost:11211'); //server list, comma seperated. eg. 127.0.0.1:11211,127.0.0.1:11212,pt.com
 
 
 define('POWERED_BY',		'LudoPHP-1.0');
@@ -38,6 +36,10 @@ define('USER', 				'user'); //key for User login info in $_SESSION. $_SESSION[US
 define('PROCESS', 			'process'); //key for Passport process info in $_SESSION. $_SESSION[PROCESS] = array(e.g. 'change_mail2'=>true);
 define('SUCCESS',			'success'); //the result type of an action.
 define('ALERT',				'alert');
+define('STATUS',            'status');
+define('GO',                'go');
+define('MSG',               'msg');
+define('URL',               'url');
 
 define('API_SALT',			'Iclouds.is.very_G00d'); //api salt for nagios record. $Wo.yo@71#Agio$
 

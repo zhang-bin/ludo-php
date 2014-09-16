@@ -13,51 +13,21 @@ class User extends LdBaseCtrl {
     }
 
     function login(){
-    	$dao = new UsersDao();
+    	$dao = new UserDao();
     	if (empty($_POST)){
 			$this->tpl->setFile('user/login')->display();
     	} else {
     		$uname = Filter::str($_POST['uname']);
-    		if (empty($uname)) return ALERT.'|'.LG_USER_UNAME_EMPTY;
-
     		$password = Filter::str($_POST['password']);
-    		if (empty($password)) return ALERT.'|'.LG_USER_PASSWORD_EMPTY;
-    		
-    		list($exist, list($userId, $nickname,$vendorId,$stationId,$usergroup,$timezone, $online)) = $dao->existsRow('uname=? and password=?', 
-    				array($uname, md5($password)),'id, nickname,vendorId,stationId,usergroupId,timezone, online');
-    	//	if ($online == 1) return ALERT.'|'.LG_USER_LOGIN_REPEAT;
-
-    		$dao->update($userId, array('online' => 1, 'sessionId' => session_id()));
-    		
-    		if (!$exist) return ALERT.'|'.LG_USER_LOGIN_FAILED;	
-    		$_SESSION[USER]['id'] = $userId;
-    		$_SESSION[USER]['uname'] = $uname;
-    		$_SESSION[USER]['nickname'] = $nickname;
-    		$_SESSION[USER]['vendorId'] = $vendorId;
-    		$_SESSION[USER]['stationId'] = $stationId;
-			$_SESSION[USER]['usergroup'] = $usergroup;
-			$timezoneOffset = intval($_POST['timezoneOffset']);
-			if ($timezoneOffset >= 0) $timezoneOffset = '+'.$timezoneOffset;
-			$_SESSION[USER]['timezone'] = 'Etc/GMT'.strval($timezoneOffset);
-			$_SESSION[USER]['timezoneOffset'] = trim($timezoneOffset*-1);
-			if ($usergroup == 1) $_SESSION[USER]['isAdmin'] = 1;
+            list ($exist, $user) = $dao->existsRow('uname = ? and password = ?', array($uname, md5($password)));
+    		if (!$exist) return array(STATUS => ALERT, MSG => '用户名或密码错误');
+    		$_SESSION[USER]['id'] = $user['id'];
+    		$_SESSION[USER]['uname'] = $user['uname'];
+    		$_SESSION[USER]['nickname'] = $user['nickname'];
+            $_SESSION[USER]['isAdmin'] = $user['isAdmin'] ? true : false;
 			Logger::log(array(
 				'name' => 'User Login',
 			));
-			$_SESSION[USER]['station'] = LdFactory::dao('Station')->fetchColumn($stationId, 'name');
-			$_SESSION[USER]['timezoneOffsetVendor'] = LdFactory::dao('vendor')->fetchColumn($vendorId, 'timezoneOffset');
-
-    		if (isset($_COOKIE['lang'])) {
-    			$language = $_COOKIE['lang'];
-    		} else {
-    			$language = $_SERVER['HTTP_ACCEPT_LANGUAGE'];
-    		}
-    		
-    		if (false !== strstr($language, 'zh')) {
-    			$_SESSION[USER]['isChinese'] = true;
-    		} else {
-    			$_SESSION[USER]['isChinese'] = false;
-    		}
     		return redirect();
     	}
     }
@@ -66,13 +36,14 @@ class User extends LdBaseCtrl {
     	return !empty($_SESSION[USER]);
     }
     
-	/**
-	 * redirect to login page with jurl
-	 *
-	 * @param String $jurl innerUrl eg.:user/change_password
-	 * @param bool $isOuterJurl whether the jurl is an outter url
-	 */
-	static function gotoLogin($jurl = '', $isOuterJurl=false) {
+    /**
+     * redirect to login page with jurl
+     *
+     * @param string $jurl
+     * @param bool $isOuterJurl
+     * @return string
+     */
+    static function gotoLogin($jurl = '', $isOuterJurl=false) {
 		if (empty($jurl)) {
 			$jurl = currUrl();
 			$isOuterJurl = true;
@@ -82,8 +53,6 @@ class User extends LdBaseCtrl {
 	}
 	
 	function logout() {
-		$dao = new UsersDao();
-		$dao->update($_SESSION[USER]['id'], array('online' => 0));
 		unset($_SESSION);
 		session_destroy();
 		redirect();
@@ -100,9 +69,6 @@ class User extends LdBaseCtrl {
 	}
 	
 	function beforeAction($action) {
-		$needValidate = array('add', 'modifyUser', 'delUser', 'userList');
-		if (!in_array($action, $needValidate)) return;
-		if (!User::logined()) return User::gotoLogin();
-		if (!User::can()) redirect('error/accessDenied');
+        return true;
 	}
 }

@@ -111,7 +111,8 @@ class LdApplication {
 							}
 						}
 					}
-					echo is_array($output) ? json_encode($output) : $output;
+					is_array($output) && $output = json_encode($output);
+                    echo $output;
 				}
 				if (DEBUG) self::debug($output);
 				

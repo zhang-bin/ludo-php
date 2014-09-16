@@ -61,7 +61,6 @@ abstract class LdBaseCtrl {
 		$this->in	  = &$GLOBALS['ldInputData'];
 		$this->out 	  = &$GLOBALS['ldOutput'];
 		$this->tpl 	  = $this->kernel->getTplHandler();
-		$this->mem 	  = $this->kernel->getMemcacheHandler();
 		$this->httpHeader = 'Content-Type:text/html;charset='.PROGRAM_CHARSET;
 	}
 	function getCurrentCtrlName() {
@@ -87,4 +86,3 @@ abstract class LdBaseCtrl {
     }
 	function afterAction($action, $result) {}
 }
-?>

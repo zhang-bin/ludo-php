@@ -104,19 +104,6 @@ class LdKernel {
     	return $this->_sdb;
     }
     
-    function getMemcacheHandler() {
-    	if (!MEMCACHE_ENABLE) return false;
-    	if ($this->_mem == null) {
-				$this->_mem = new Memcache;
-				$servers = explode(',', MEMCACHE_SERVER);
-				foreach ($servers as $server) {
-					list($host, $port) = explode(':', $server);
-					$this->_mem->addServer($host, $port);
-				}
-    	}
-    	return $this->_mem;
-    }
-    
     /**
      * get language handler
      * @return LdLanguage

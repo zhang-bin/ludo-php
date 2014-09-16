@@ -1,44 +1,51 @@
 <?php
 class Menu {
 	static $menu = null;
-	static $submenuUrlCache = null;
+	static $subMenuUrlCache = null;
 	static $currMenuId = null;
 	
 	static function init() {
-		if (self::$menu == null) {
-			$menuConfFile = 'AdminMenu';
-			self::$menu = Load::conf($menuConfFile);
-			self::$submenuUrlCache = self::submenuUrlCache(self::$menu);
-			$curr = lcfirst(CURRENT_CONTROLLER).'/'.CURRENT_ACTION;
+        if (empty(self::$menu)) {
+            self::$menu = Load::conf('Menu');
+            self::$subMenuUrlCache = self::subMenuUrlCache(self::$menu);
+            $curr = lcfirst(CURRENT_CONTROLLER).'/'.CURRENT_ACTION;
+            $curr = str_replace('/index', '', $curr);
 
-			$curr = str_replace('/index', '', $curr);
-			
-			self::$currMenuId = self::$submenuUrlCache[$curr];
-		}
-	}	
+            $tmp = $curr;
+            $curLevel = self::$subMenuUrlCache[$curr]['level'];
+            if ($curLevel == 1) self::$currMenuId['level1'] = $tmp;
+
+            for ($i = $curLevel; $i > 1; $i--) {
+                $tmp = self::$subMenuUrlCache[$tmp]['parent'];
+                self::$currMenuId['level'.($i-1)] = $tmp;
+            }
+        }
+	}
 	
 	static function menuRender() {
 		self::init();
-		
 		$html = '<ul class="nav">';
-		foreach(self::$menu as $k=>$v) {//1级菜单
-			$active = self::$currMenuId['level0'] == $k ? 'active' : '';
-			$li = '<li class="dropdown '.$active.'"><a href="javascript:;" class="dropdown-toggle" data-toggle="dropdown">'.$v['name'].'</a>';
-			if(!empty($v['submenu'])) {
-				$li .= '<ul class="dropdown-menu">';
-				foreach ($v['submenu'] as $kk=>$vv) {//2级菜单
-					if (!empty($vv['submenu'])) {
-						$li .= '<li class="offset-right dropdown"><a href="javascript:;">'.$vv['name'].'</a><ul class="dropdown-menu">';
-						foreach ($vv['submenu'] as $kkk => $vvv) {//3级菜单
-							$li .= '<li><a href="'.url($kkk).'">'.$vvv['name'].'</a></li>';
+		foreach (self::$menu as $top=>$topMenus) {//1级菜单
+			$active = self::$currMenuId['level1'] == $top ? 'active' : '';
+			$li = '<li class="dropdown '.$active.'">';
+            if (empty($topMenus['children'])) {
+                $li .= '<a href="'.url($top).'">'.$topMenus['name'].'</a>';
+            } else {
+                $li .= '<a href="javascript:;" class="dropdown-toggle" data-toggle="dropdown">'.$topMenus['name'].'</a><ul class="dropdown-menu">';
+				foreach ($topMenus['children'] as $second=>$secondMenus) {//2级菜单
+					if (!empty($secondMenus['children'])) {
+						$li .= '<li class="offset-right dropdown"><a href="javascript:;">'.$secondMenus['name'].'</a><ul class="dropdown-menu">';
+						foreach ($secondMenus['children'] as $third => $thirdMenus) {//3级菜单
+							$li .= '<li><a href="'.url($third).'">'.$thirdMenus['name'].'</a></li>';
 						}
-						$li .= '</ul></li>';
+						$li .= '</li>';
 					} else {
-						$li .= '<li><a href="'.url($kk).'">'.$vv['name'].'</a></li>';
+						$li .= '<li><a href="'.url($second).'">'.$secondMenus['name'].'</a></li>';
 					}
 				}
+                $li .= '</ul>';
 			}
-			$li .= '</ul></li>';
+			$li .= '</li>';
 			$html .= $li;
 		}
 		$html .= '</ul>';
@@ -46,50 +53,55 @@ class Menu {
 		return $html;
 	}
 	
-	static function naviRender($title, $toolBox) {
+	static function navRender($title, $toolBox) {
 		self::init();
 		$html = '<ul class="breadcrumb">';
-		if (isset(self::$currMenuId['level0'])) {
-			$menu = self::$currMenuId['level0'];
-			$html .= '<li><a href="'.url($menu).'">'.self::$menu[$menu]['name'].'</a><span class="divider">/</span></li>';
-		}
 		if (isset(self::$currMenuId['level1'])) {
-			$subMenu = self::$currMenuId['level1'];
-			$html .= '<li><a href="'.url($subMenu).'">'.self::$menu[$menu]['submenu'][$subMenu]['name'].'</a><span class="divider">/</span></li>';
+			$menu = self::$currMenuId['level1'];
+            $curMenu = self::$menu[$menu];
+			$html .= '<li><a href="'.url($menu).'">'.$curMenu['name'].'</a></li>';
 		}
 		if (isset(self::$currMenuId['level2'])) {
-			$subSubMenu = self::$currMenuId['level2'];
-			$html .= '<li><a href="'.url($subSubMenu).'">'.self::$menu[$menu]['submenu'][$subMenu]['submenu'][$subSubMenu]['name'].'</a><span class="divider">/</span></li>';
+			$subMenu = self::$currMenuId['level2'];
+            $curMenu = $curMenu['children'][$subMenu];
+			$html .= '<li><span class="divider">/</span><a href="'.url($subMenu).'">'.$curMenu['name'].'</a></li>';
 		}
-		$html .= '<li class="active">'.$title.'</li>';
+		if (isset(self::$currMenuId['level3'])) {
+			$subSubMenu = self::$currMenuId['level3'];
+            $curMenu = $curMenu['children'][$subSubMenu];
+			$html .= '<li><span class="divider">/</span><a href="'.url($subSubMenu).'">'.$curMenu['name'].'</a></li>';
+		}
+        if (!empty($title)) $html .= '<li class="active"><span class="divider">/</span>'.$title.'</li>';
 		$html .= '<span style="float:right;">'.$toolBox.'</span>';
 		$html .= '</ul>';
 		return $html;
 	}
 	
-	static function submenuUrlCache($menuConf) {
+	static function subMenuUrlCache($menuConf) {
 		$cache = array();
-		foreach ($menuConf as $menuId => $menu) {
-			$cache[$menuId] = $menu['name'];
-			foreach ($menu['submenu'] as $subMenuId => $subMenus) {
-				$cache[$subMenuId] = array('level0' => $menuId);
-				if (!empty($subMenus['include'])) {
-					foreach ($subMenus['include'] as $url) {
-						$cache[$url] = array('level1' => $subMenuId, 'level0' => $menuId);
-					}
-				}
-				if (!empty($subMenus['submenu'])) {
-					foreach ($subMenus['submenu'] as $subSubMenuId => $subSubMenus) {
-						$cache[$subSubMenuId] = array('level1' => $subMenuId, 'level0' => $menuId);
-						if (!empty($subSubMenus['include'])) {
-							foreach ($subSubMenus['include'] as $url) {
-								$cache[$url] = array('level2' => $subSubMenuId, 'level1' => $subMenuId, 'level0' => $menuId);
-							}
-						}
-					}
-				}
-			}
-		}
-		return $cache;
-	}
+        foreach ($menuConf as $menuId => $menu) {
+            $cache[$menuId]['level'] = 1;
+            if (strstr($menuId, '/index') === false) {
+                $cache[$menuId.'/index']['level'] = 1;
+            }
+            if (!empty($menu['children'])) {
+                self::_cache($menuId, $menu['children'], $cache, 2);
+            }
+        }
+        return $cache;
+    }
+
+    private static function _cache($parent, $menus, &$cache, $level) {
+        foreach ($menus as $menuId => $menu) {
+            $cache[$menuId]['parent'] = $parent;
+            $cache[$menuId]['level'] = $level;
+            if (!empty($menu['include'])) {
+                foreach ($menu['include'] as $url) {
+                    $cache[$url]['parent'] = $menuId;
+                    $cache[$url]['level'] = $level+1;
+                }
+            }
+            if (!empty($menu['children'])) self::_cache($menuId, $menu['children'], $cache, $level+1);
+        }
+    }
 }

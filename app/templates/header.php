@@ -7,7 +7,6 @@
 	<meta name="Copyright" content="Maitrox" />
 	<meta name="description" content="" />
 	<meta http-equiv="X-UA-Compatible" content="IE=7">
-<!--	<link rel="shortcut icon" href="<?=rurl('img/favicon.ico')?>" type="image/x-icon" />-->
 	<?php
 		Load::js('jquery');
 		Load::js('bootstrap');
@@ -28,13 +27,13 @@
             	<span class="icon-bar"></span>
             	<span class="icon-bar"></span>
           	</button>
-          	<a href="<?=url()?>" class="brand">MIDH</a>
+          	<a href="<?=url()?>" class="brand">Ludo-PHP</a>
           	<div class="nav-collapse collapse">
           		<?=Menu::menuRender()?>
           		<div class="pull-right" style="color:#93C0E6;margin-top:10px;">
 					<?php if(User::logined()) { ?>
-						Welcome, <?=$_SESSION[USER]['nickname']?> <span>|</span>
-						<a href="<?=url('user/logout')?>">Logout</a> 
+                        欢迎, <?=$_SESSION[USER]['nickname']?> <span>|</span>
+						<a href="<?=url('user/logout')?>">退出</a>
 					<?php } ?>
 				</div>
           	</div>
@@ -52,5 +51,5 @@
 </div>
 <div class="container" style="min-height: 458px;">
 	<div class="row-fluid page-header crumbs" style="padding:0px:">
-		<?=Menu::naviRender($gTitle, $gToolbox)?>
+		<?=Menu::navRender($gTitle, $gToolbox)?>
 	</div>

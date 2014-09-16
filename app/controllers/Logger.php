@@ -20,16 +20,15 @@ class Logger extends LdBaseCtrl {
 			self::$log = array(
 				'userId' => $_SESSION[USER]['id'] ? $_SESSION[USER]['id'] : 0,
 				'uname' => $_SESSION[USER]['uname'],
-				'createTime' => gmdate(TIME_FORMAT),
+				'createTime' => date(TIME_FORMAT),
 				'ip' => realIp(),
 				'ctrl' => CURRENT_CONTROLLER,
 				'act' => CURRENT_ACTION,
-				'success' => 1,
-				'count' => 1,
 				'url' => currUrl(),
 				'httpReferer' => $_SERVER['HTTP_REFERER'],
 				'userAgent' => $_SERVER['HTTP_USER_AGENT'],
-				'request'  	=> json_encode($_REQUEST),
+				'post'  	=> json_encode($_POST),
+                'get'       => json_encode($_GET),
 				'session'	=> json_encode($_SESSION),
 				'cookie'	=> json_encode($_COOKIE)
 			);

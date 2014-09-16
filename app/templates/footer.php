@@ -58,7 +58,7 @@ $(document).ready(function(){
 		$.post($(this).attr("action"), $(this).serialize(), function(result) {
 			ajaxHandler(result);
 			postSubmit();
-		});
+		}, "json");
 		return false;
 	});
 	$('.selectpicker').selectpicker();

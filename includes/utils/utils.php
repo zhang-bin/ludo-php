@@ -77,7 +77,8 @@ function redirect($innerUrl='') {
 		header('location:'.url($innerUrl));
 		if (DEBUG) LdApplication::debug();die;
 	} else {
-		return 'go|'.url($innerUrl);die;
+		return array(STATUS => GO, URL => url($innerUrl));
+        die;
 	}
 }
 function redirectOut($outUrl) {
@@ -85,8 +86,9 @@ function redirectOut($outUrl) {
 		header('location:'.$outUrl);
 		if (DEBUG) LdApplication::debug();die;
 	} else {
-		return 'go|'.$outUrl;die;
-	}	
+        return array(STATUS => GO, URL => $outUrl);
+        die;
+	}
 }
 function isAjax() {
 	return 	isset($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest';
