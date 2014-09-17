@@ -277,6 +277,13 @@ function realIp() {
 	return $realIp;
 }
 
+/**
+ * refine a size data
+ *
+ * @param string $size
+ * @param int $fix
+ * @return string
+ */
 function refineSize($size, $fix = 2) {
     if ($size < 1024)	return round($size, $fix).' B'; //<1K
     elseif ($size < 1048576) return round($size / 1024, $fix).' KB'; //<1M
@@ -298,3 +305,201 @@ function debug($var, $print_r=true) {
 	$print_r ? print_r($var) : var_dump($var);
 	echo '</pre>';
 }
+
+/**
+ * Divide an array into two arrays. One with keys and the other with values.
+ *
+ * @param array $array
+ * @return array
+ */
+function array_divide($array) {
+    return array(array_keys($array), array_values($array));
+}
+
+/**
+ * Flatten a multi-dimensional associative array with dots.
+ *
+ * @param array $array
+ * @param string $prepend
+ * @return array
+ */
+function array_dot($array, $prepend = '') {
+    $results = array();
+    foreach ($array as $key => $value) {
+        if (is_array($value)) {
+            $results = array_merge($results, array_dot($value, $prepend.$key.'.'));
+        } else {
+            $results[$prepend.$key] = $value;
+        }
+    }
+    return $results;
+}
+
+/**
+ * Get all of the given array except for a specified array of items.
+ *
+ * @param array $array
+ * @param array $keys
+ * @return array
+ */
+function array_except($array, $keys) {
+    return array_diff_key($array, array_flip((array)$keys));
+}
+
+/**
+ * Return the first element in an array passing a given truth test.
+ *
+ * @param  array    $array
+ * @param  Closure  $callback
+ * @param  mixed    $default
+ * @return mixed
+ */
+function array_first($array, $callback, $default = null) {
+    foreach ($array as $key => $value) {
+        if (call_user_func($callback, $key, $value)) return $value;
+    }
+
+    return $default;
+}
+
+/**
+ * Return the last element in an array passing a given truth test.
+ *
+ * @param  array    $array
+ * @param  Closure  $callback
+ * @param  mixed    $default
+ * @return mixed
+ */
+function array_last($array, $callback, $default = null) {
+    return array_first(array_reverse($array), $callback, $default);
+}
+
+/**
+ * Remove an array item from a given array using "dot" notation.
+ *
+ * @param  array   $array
+ * @param  string  $key
+ * @return void
+ */
+function array_forget(&$array, $key) {
+    $keys = explode('.', $key);
+
+    while (count($keys) > 1) {
+        $key = array_shift($keys);
+        if ( ! isset($array[$key]) || ! is_array($array[$key])) {
+            return;
+        }
+        $array =& $array[$key];
+    }
+    unset($array[array_shift($keys)]);
+}
+
+/**
+ * Get an item from an array using "dot" notation.
+ *
+ * @param  array   $array
+ * @param  string  $key
+ * @param  mixed   $default
+ * @return mixed
+ */
+function array_get($array, $key, $default = null) {
+    if (is_null($key)) return $array;
+    if (isset($array[$key])) return $array[$key];
+    foreach (explode('.', $key) as $segment) {
+        if (!is_array($array) || !array_key_exists($segment, $array)) {
+            return $default;
+        }
+        $array = $array[$segment];
+    }
+    return $array;
+}
+
+/**
+ * Get a value from the array, and remove it.
+ *
+ * @param  array   $array
+ * @param  string  $key
+ * @param  mixed   $default
+ * @return mixed
+ */
+function array_pull(&$array, $key, $default = null) {
+    $value = array_get($array, $key, $default);
+    array_forget($array, $key);
+    return $value;
+}
+
+/**
+ * Determine if a given string ends with a given substring.
+ *
+ * @param string $haystack
+ * @param string|array $needles
+ * @return bool
+ */
+function end_with($haystack, $needles) {
+    foreach ((array) $needles as $needle) {
+        if ($needle == substr($haystack, -strlen($needle))) {
+            return true;
+        }
+    }
+    return false;
+}
+
+/**
+ * Determine if a given string starts with a given substring.
+ *
+ * @param  string  $haystack
+ * @param  string|array  $needles
+ * @return bool
+ */
+function start_with($haystack, $needles) {
+    foreach ((array) $needles as $needle) {
+        if ($needle != '' && strpos($haystack, $needle) === 0) {
+            return true;
+        }
+    }
+    return false;
+}
+
+/**
+ * Determine if a given string contains a given substring.
+ *
+ * @param  string        $haystack
+ * @param  string|array  $needles
+ * @return bool
+ */
+function str_contains($haystack, $needles) {
+    foreach ((array) $needles as $needle) {
+        if ($needle != '' && strpos($haystack, $needle) !== false) {
+            return true;
+        }
+    }
+    return false;
+}
+
+/**
+ * Generate a "random" alpha-numeric string.
+ *
+ * Should not be considered sufficient for cryptography, etc.
+ *
+ * @param int $length
+ * @return string
+ * @throws Exception
+ */
+function str_random($length = 16) {
+    if (function_exists('openssl_random_pseudo_bytes')) {
+        $bytes = openssl_random_pseudo_bytes($length * 2);
+        if ($bytes === false) {
+            throw new LdException('Unable to generate random string.');
+        }
+        return substr(str_replace(array('/', '+', '='), '', base64_encode($bytes)), 0, $length);
+    }
+    $pool = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+    return substr(str_shuffle(str_repeat($pool, 5)), 0, $length);
+}
+
+
+
+
+
+
+

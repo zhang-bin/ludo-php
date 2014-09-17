@@ -84,5 +84,8 @@ abstract class LdBaseCtrl {
             redirect('error/accessDenied');
         }
     }
-	function afterAction($action, $result) {}
+	function afterAction($action, $result) {
+        Load::helper('Session');
+        Session::ageFlashData();
+    }
 }
