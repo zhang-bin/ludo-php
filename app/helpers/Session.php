@@ -42,10 +42,14 @@ class Session {
      * @return void
      */
     public static function ageFlashData() {
-        foreach (array_get($_SESSION, 'flash.old', array()) as $old) {
-            array_forget($_SESSION, $old);
+        $old = array_get($_SESSION, 'flash.old', array());
+        if (!is_array($old)) {
+            $old = array($old);
         }
-        $new = array_get($_SESSION, 'flash.new', '');
+        foreach ($old as $v) {
+            array_forget($_SESSION, $v);
+        }
+        $new = array_get($_SESSION, 'flash.new', array());
         $_SESSION['flash.old'] = $new;
         $_SESSION['flash.new'] = array();
     }
