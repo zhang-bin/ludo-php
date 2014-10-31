@@ -48,6 +48,19 @@ switch ($argv[1]) {
         break;
     case '-D':
     case '--uninstall-module':
+        $moduleName = $argv[2];
+        if (empty($moduleName)) {
+            echo 'fatal: need follow argument module name.';
+            break;
+        }
+        require 'console/module.php';
+        $module = new Module();
+        $result = $module->uninstall($moduleName);
+        if (true !== $result) {
+            debug($result);
+        } else {
+            echo 'Success Done!';
+        }
         break;
     default:
         echo $help;

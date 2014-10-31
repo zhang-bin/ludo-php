@@ -45,9 +45,26 @@ class Module {
         return true;
     }
 
+    public function uninstall($module) {
+        $this->_upper = ucfirst($module);
+        $this->_lower = lcfirst($module);
+        $this->_daoName = $this->_upper . 'Dao';
+
+        $controllerFile = LD_CTRL_PATH . DIRECTORY_SEPARATOR . $this->_upper . '.php';
+        file_exists($controllerFile) && unlink($controllerFile);
+
+        $daoFile = LD_DAO_PATH . DIRECTORY_SEPARATOR . $this->_upper . 'Dao.php';
+        file_exists($daoFile) && unlink($daoFile);
+
+        $tplDir = TPL_ROOT . DIRECTORY_SEPARATOR . $this->_lower;
+        exec("rm -fr ".$tplDir);
+        return true;
+    }
+
+
     private function _controller() {
         $controllerFile = LD_CTRL_PATH . DIRECTORY_SEPARATOR . $this->_upper . '.php';
-//        if (file_exists($controllerFile)) return true;
+        if (file_exists($controllerFile)) return true;
         $condition = $this->_hasDeleted ? '$condition = \'' . $this->_upper . '.deleted = 0\';' : '$condition = \'\';';
 
         $ignore = array('id', 'deleted');
@@ -236,7 +253,7 @@ EOF;
 
     private function _dao() {
         $daoFile = LD_DAO_PATH . DIRECTORY_SEPARATOR . $this->_upper . 'Dao.php';
-        !file_exists($daoFile) && touch($daoFile);
+        if (file_exists($daoFile)) return true;
         $dao = <<<'EOF'
 <?php
 Class ludo_upperDao extends LdBaseDao {
@@ -260,7 +277,7 @@ EOF;
 
     private function _index($dir) {
         $tplIndexFile = $dir . DIRECTORY_SEPARATOR . 'index.php';
-        !file_exists($tplIndexFile) && touch($tplIndexFile);
+        if (file_exists($tplIndexFile)) return true;
 
         $index = <<<'EOF'
 <?php
@@ -335,7 +352,7 @@ EOF;
 
     private function _change($dir) {
         $tplChangeFile = $dir . DIRECTORY_SEPARATOR . 'change.php';
-        !file_exists($tplChangeFile) && touch($tplChangeFile);
+        if (file_exists($tplChangeFile)) return true;
 
         $change = <<<'EOF'
 <?php
@@ -404,7 +421,7 @@ EOF;
 
     private function _view($dir) {
         $tplViewFile = $dir . DIRECTORY_SEPARATOR . 'view.php';
-        !file_exists($tplViewFile) && touch($tplViewFile);
+        if (file_exists($tplViewFile)) return true;
 
         $view = <<<'EOF'
 <?php
