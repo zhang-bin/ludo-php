@@ -1,4 +1,6 @@
 <?php
+if (!empty($_SERVER['HTTP_HOST'])) die;//禁止从url访问
+
 define('SYS_START_TIME', microtime(true));
 define('LD_ENTRY', 'index');
 
@@ -6,7 +8,6 @@ $_SERVER['SERVER_NAME'] = null;
 session_start();
 require 'config.inc.php';
 require 'header.php';
-
 
 $argv = $_SERVER['argv'];
 
@@ -16,7 +17,6 @@ Options:
     -h, --help          print help message
     -C, --install-module    fast create module, include controller file, dao file and templates file
     -D, --uninstall-module  remove module, include  controller file, dao file and templates file
-
 
 EOF;
 define('NEW_LINE', "\r\n");

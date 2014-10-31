@@ -7,6 +7,13 @@ class Module {
     private $_daoName;
     private $_moduleDescr;
 
+    /**
+     * 生成模块
+     *
+     * @param $module string
+     * @param $descr string
+     * @return bool
+     */
     public function install($module, $descr) {
         $this->_upper = ucfirst($module);
         $this->_lower = lcfirst($module);
@@ -45,6 +52,12 @@ class Module {
         return true;
     }
 
+    /**
+     * 删除模块
+     *
+     * @param $module string
+     * @return bool
+     */
     public function uninstall($module) {
         $this->_upper = ucfirst($module);
         $this->_lower = lcfirst($module);
@@ -61,7 +74,11 @@ class Module {
         return true;
     }
 
-
+    /**
+     * 控制器
+     *
+     * @return bool
+     */
     private function _controller() {
         $controllerFile = LD_CTRL_PATH . DIRECTORY_SEPARATOR . $this->_upper . '.php';
         if (file_exists($controllerFile)) return true;
@@ -251,6 +268,11 @@ EOF;
         return true;
     }
 
+    /**
+     * dao文件
+     *
+     * @return bool
+     */
     private function _dao() {
         $daoFile = LD_DAO_PATH . DIRECTORY_SEPARATOR . $this->_upper . 'Dao.php';
         if (file_exists($daoFile)) return true;
@@ -267,6 +289,9 @@ EOF;
         return true;
     }
 
+    /**
+     * tpl文件
+     */
     private function _tpl() {
         $tplDir = TPL_ROOT . DIRECTORY_SEPARATOR . $this->_lower;
         !is_dir($tplDir) && mkdir($tplDir);
@@ -275,6 +300,12 @@ EOF;
         $this->_view($tplDir);
     }
 
+    /**
+     * tpl列表页面
+     *
+     * @param $dir string
+     * @return bool
+     */
     private function _index($dir) {
         $tplIndexFile = $dir . DIRECTORY_SEPARATOR . 'index.php';
         if (file_exists($tplIndexFile)) return true;
@@ -350,6 +381,12 @@ EOF;
         return true;
     }
 
+    /**
+     * tpl添加/修改页面
+     *
+     * @param $dir string
+     * @return bool
+     */
     private function _change($dir) {
         $tplChangeFile = $dir . DIRECTORY_SEPARATOR . 'change.php';
         if (file_exists($tplChangeFile)) return true;
@@ -419,6 +456,12 @@ EOF;
         return true;
     }
 
+    /**
+     * tpl查看页面
+     *
+     * @param $dir string
+     * @return bool
+     */
     private function _view($dir) {
         $tplViewFile = $dir . DIRECTORY_SEPARATOR . 'view.php';
         if (file_exists($tplViewFile)) return true;
