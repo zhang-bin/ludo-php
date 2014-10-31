@@ -16,11 +16,11 @@
    		<h4 class="modal-title">Delete</h4>
    	</div>
 	<div class="modal-body">
-		<p style="text-align: center;"><?=LG_DELETE_CONFIRM?></p>
+		<p style="text-align: center;">确认删除</p>
 	</div>
 	<div class="modal-footer">
-        <button type="button" class="btn btn-default" data-dismiss="modal"><?=LG_BTN_CANCEL?></button>
-        <button type="button" class="btn btn-primary" id="confirmDel"><?=LG_BTN_CONFIRM?></button>
+        <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+        <button type="button" class="btn btn-primary" id="confirmDel">确认</button>
 	</div>
 </div>
 <script type="text/javascript">
@@ -50,7 +50,7 @@ $(document).ready(function(){
 		$.post($(this).attr("href"), {}, function(result) {
           	if(ajaxHandler(result)) return;
           	return false;
-		});
+		}, "json");
 		return false;
 	});
 	$("form.form").submit(function(){
