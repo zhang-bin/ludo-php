@@ -30,7 +30,8 @@ class Logger extends LdBaseCtrl {
 				'post'  	=> json_encode($_POST),
                 'get'       => json_encode($_GET),
 				'session'	=> json_encode($_SESSION),
-				'cookie'	=> json_encode($_COOKIE)
+				'cookie'	=> json_encode($_COOKIE),
+                'success'   => 1
 			);
 			if (realIp() != $_SERVER['REMOTE_ADDR']) {
 				$cip = getenv('HTTP_CLIENT_IP') ? 'HTTP_CLIENT_IP:'.getenv('HTTP_CLIENT_IP') : '';
