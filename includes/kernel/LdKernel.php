@@ -78,7 +78,7 @@ class LdKernel {
      */
     function getDBHandler($initialize = true) {
         if (empty($this->_db) && $initialize) {
-			$this->_db = LdDatabase::getInstance(DB_HOST, DB_USER, DB_PASSWORD, DB_NAME, DB_PORT, DB_TYPE, DB_CONNECT);
+			$this->_db = LdDatabase::getInstance(DB_HOST_M, DB_USER, DB_PASSWORD, DB_NAME, DB_PORT, DB_TYPE, DB_CONNECT);
         }
         
         return $this->_db;
