@@ -17,12 +17,12 @@ class User extends LdBaseCtrl {
     	if (empty($_POST)){
 			$this->tpl->setFile('user/login')->display();
     	} else {
-    		$uname = Filter::str($_POST['uname']);
+            $username = Filter::str($_POST['username']);
     		$password = Filter::str($_POST['password']);
-            list ($exist, $user) = $dao->existsRow('uname = ? and password = ?', array($uname, md5($password)));
+            list ($exist, $user) = $dao->existsRow('username = ? and password = ?', array($username, md5($password)));
     		if (!$exist) return array(STATUS => ALERT, MSG => '用户名或密码错误');
     		$_SESSION[USER]['id'] = $user['id'];
-    		$_SESSION[USER]['uname'] = $user['uname'];
+    		$_SESSION[USER]['username'] = $user['username'];
     		$_SESSION[USER]['nickname'] = $user['nickname'];
             $_SESSION[USER]['isAdmin'] = $user['isAdmin'] ? true : false;
 			Logger::log(array(

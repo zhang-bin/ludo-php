@@ -59,7 +59,7 @@ body{
 <form class="form-horizontal" id="form1" method="post" action="<?=url('user/login')?>">
 	<h1><a href="<?=url()?>"></a></h1>
 	<div class="control-group">
-      	<input type="text" class="input-block-level" id="uname" name="uname" placeholder="用户名" />
+      	<input type="text" class="input-block-level" id="username" name="username" placeholder="用户名" />
       	<input type="password" class="input-block-level" id="password" name="password" placeholder="密码" />
 		<input type="hidden" id="timezoneOffset" name="timezoneOffset" />
 		<input id="submitBtn" type="submit" class="btn btn-large btn-primary" value="登录" />
@@ -68,7 +68,7 @@ body{
 <div id="loading">Loading</div>
 <script type="text/javascript">
 $(document).ready(function() {
-  	$('#uname').focus();
+  	$('#username').focus();
 
   	$('#form1').submit(function() {
         $.formSubmit(this);
