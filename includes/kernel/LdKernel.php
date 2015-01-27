@@ -16,14 +16,12 @@
  * The kernel of the framework which holds all available resource
  */
 class LdKernel {
-	private $_inStream = null; 
-	private $_inputData = array(); 
-	private $_outStream = null;
 	private $_mdb = null;//主db，用于insert update delete
 	private $_sdb = null;//副db，用于select
 	private $_tpl = null;
 	private $_lang = null;
-	private $_mem = null;
+    private $_kvDb = null;
+    private $_queue = null;
 
     static private $_instance = null;
 
@@ -41,23 +39,7 @@ class LdKernel {
         }
         return self::$_instance;
     }
-    
-    /**
-     * get the input stream array which include all input information like:
-     * $_GET, $_POST, $COOKIE, $SESSION
-     */
-    function &getInputData() {
-        return $this->_inputData;
-    }
-    
-    function getInputStream() {
-        return $this->_inStream;
-    }
-    
-    function getOutputStream() {
-        return $this->_outStream;
-    }
-	
+
     /**
      * 
      * @return LdTemplate
@@ -70,35 +52,26 @@ class LdKernel {
         }
 		return $this->_tpl;
 	}
+
     /**
-     * get a DBHandler, if DBHandler does't exist, default will init a new one.
+     * get a master DB Handler
      *
-     * @param  boolean $initialize whether to initialize DBH
      * @return LdDatabase an instance of DBHandler
      */
-    function getDBHandler($initialize = true) {
-        if (empty($this->_db) && $initialize) {
-			$this->_db = LdDatabase::getInstance(DB_HOST_M, DB_USER, DB_PASSWORD, DB_NAME, DB_PORT, DB_TYPE, DB_CONNECT);
-        }
-        
-        return $this->_db;
-    }
-    
-    /**
-     * get a DBHandler, if DBHandler does't exist, default will init a new one.
-     *
-     * @param  boolean $initialize whether to initialize DBH
-     * @return LdDatabase an instance of DBHandler
-     */
-    function getMDBHandler($initialize = true) {
-    	if (empty($this->_mdb) && $initialize) {
+    function getMDBHandler() {
+    	if (empty($this->_mdb)) {
     		$this->_mdb = LdDatabase::factory(DB_HOST_M, DB_USER, DB_PASSWORD, DB_NAME, DB_PORT, DB_TYPE, DB_CONNECT);
     	}
     	return $this->_mdb;
     }
-    
-    function getSDBHandler($initialize = true) {
-    	if (empty($this->_sdb) && $initialize) {
+
+    /**
+     * get a slave DB Handler
+     *
+     * @return LdDatabase an instance of DBHandler
+     */
+    function getSDBHandler() {
+    	if (empty($this->_sdb)) {
     		$this->_sdb = LdDatabase::factory(DB_HOST_S, DB_USER, DB_PASSWORD, DB_NAME, DB_PORT, DB_TYPE, DB_CONNECT);
     	}
     	return $this->_sdb;
@@ -110,5 +83,31 @@ class LdKernel {
      */
     function getLangHandler() {
         return $this->_lang;
+    }
+
+    /**
+     * get a kv db handler
+     *
+     * @return null|Redis
+     */
+    function getKvDBHandler() {
+        if (empty($this->_kvDb)) {
+            $this->_kvDb = new Redis();
+            $this->_kvDb->connect(KV_DB_HOST, KV_DB_PORT);
+        }
+        return $this->_kvDb;
+    }
+
+    /**
+     * get a queue handler
+     *
+     * @return null|Redis
+     */
+    function getQueueHandler() {
+        if (empty($this->_queue)) {
+            $this->_queue = new Redis();
+            $this->_queue->connect(QUEUE_HOST, QUEUE_PORT);
+        }
+        return $this->_queue;
     }
 }

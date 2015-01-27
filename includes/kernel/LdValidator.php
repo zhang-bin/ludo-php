@@ -25,38 +25,41 @@ class LdValidator {
 	 * @return bool true if valid
 	 */
 	public static function range($data, $min, $max) {
-		$len = strlen($data);
+		$len = mb_strlen($data, PROGRAM_CHARSET);
+		$min = intval($min);
+		$max = intval($max);
 		return $len >= $min && $len <= $max;
 	}
 	public static function len($data, $length) {
-		$len = strlen($data);
+		$len = mb_strlen($data, PROGRAM_CHARSET);
+		$length = intval($length);
 		return $len == $length;
 	}
-	public static function minlength($data, $min) {
-		return strlen($data) >= $min;
+	public static function minLength($data, $min) {
+		$len = mb_strlen($data, PROGRAM_CHARSET);
+		$min = intval($min);
+		return $len >= $min;
 	}
-	public static function maxlength($data, $max) {
-		return strlen($data) <= $max;
+	public static function maxLength($data, $max) {
+		$len = mb_strlen($data, PROGRAM_CHARSET);
+		$max = intval($max);
+		return $len <= $max;
 	}
 	public static function idCard($data) {
 		return IdCard::verify($data);
 	}
 	public static function chinese($data) {
-		if (strtolower(PROGRAM_CHARSET) == 'utf-8') {
-			return preg_match('/^[\x{4e00}-\x{9fa5}]+$/u', $data);
-		} else {
-			return preg_match('/^[\x80-\xff]+$/', $data); //gb2312 Chinese character
-		}
+		return preg_match('/^[\x{4e00}-\x{9fa5}]+$/u', $data);
 	}
 	
 	public static function postcode($data) {
-		return !empty($data) &&  preg_match('/^\d{6}$/', $data);
+		return !empty($data) && preg_match('/^\d{6}$/', $data);
 	}
 	
 	/**
 	 * whether data is an valid ip format
 	 * @param String $data ip string
-	 * @return bool true for well formated ip, vise versa.
+	 * @return bool true for well formatted ip, vise versa.
 	 */
 	public static function ip($data) {
 		if (empty($data)) return false;
@@ -191,4 +194,3 @@ class IdCard {
 		return self::idcard_checksum18($idcard);
 	}
 }
-?>

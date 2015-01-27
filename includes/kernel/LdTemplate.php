@@ -136,4 +136,3 @@ class LdTemplate {
 		include(TPL_ROOT.'/'.trim($path).tpl);
 	}
 }
-?>

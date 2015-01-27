@@ -54,4 +54,3 @@ final class LdFactory {
 		 return new $ctrlName;
 	}
 }
-?>

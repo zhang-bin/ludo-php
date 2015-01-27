@@ -17,7 +17,7 @@
  * These fields: $fields, $join, $orderFields, $orderMode, $group
  * are only used by select() and other read-only method, not by the method
  * which will change the data of table like update(), insert(), delete()
- * And another fields share in the two (read-only and changable):
+ * And another fields share in the two (read-only and changeable):
  * $db, $tableName, $tableAlias, $condition
  *
  * @author Libok.Zhou <libkhorse@gmail.com>
@@ -66,11 +66,6 @@ class LdTable {
 	/** @var limit rows, start */
 	private $_limit = '';
 	
-	/** @var whether repared */
-//	private $prepared = false;
-	/** @var whether repared */
-//	private $preparedSql = '';
-
     /*=== CONSTS ===*/
     /** @var String left join */
     const LEFT_JOIN = 'LEFT JOIN';
@@ -80,6 +75,7 @@ class LdTable {
     const RIGHT_JOIN = 'RIGHT JOIN';
 
     /**
+	 * @param LdDatabase $dbObj
      * @param String $tableName	table name without prefix
      * @param String $tableAlias alias of table, Default equals table name without prefix
      */
@@ -107,6 +103,7 @@ class LdTable {
      * set or get sql
      *
      * @param string $sql if empty will return last sql condition
+	 * @param string|array $params
      * @return LdTable $this or String sql
      */
 	function sql($sql = '', $params = NULL) {
@@ -155,6 +152,7 @@ class LdTable {
 	 * whether to distinct search for the fields.
 	 * 
 	 * @param bool $distinct whether to distinct rows, default is false;
+	 * @return LdTable
 	 */
 	function distinct($distinct = false) {
 		$this->_distinct = $distinct;
@@ -163,7 +161,7 @@ class LdTable {
 
     /**
      * used by $this->join()
-     * @param $fields field part of joined table
+     * @param string $fields field part of joined table
      * @return LdTable
      */
 	private function addJoinField($fields) {
@@ -180,13 +178,13 @@ class LdTable {
      * @param String $table the table will be joined, which can have alias like "user u" or "user as u"
      * @param String $on on condition
      * @param String $fields the fields came from the joined table
-     * @param String $type join type: LdTable::LEFT_JOIN OR LdTable::RIGHT_JOIN OR LdTable::INNER_JOIN.
+     * @param String $join join type: LdTable::LEFT_JOIN OR LdTable::RIGHT_JOIN OR LdTable::INNER_JOIN.
      * @return LdTable
      */
-    function join($table, $on = '', $fields = '', $jointype = LdTable::INNER_JOIN) {
+    function join($table, $on = '', $fields = '', $join = LdTable::INNER_JOIN) {
     	$as = $table;
     	//if $table have ' ' which means $table have a alias,
-    	//so replace the as if have and seperate the table name and alias name.
+    	//so replace the as if have and separate the table name and alias name.
     	if (strchr($table, ' ')) {
     		$tmp = explode(' ', str_replace(' as ', ' ', $table));
     		$table = $tmp[0];
@@ -199,7 +197,7 @@ class LdTable {
 
         $on = $on ? 'ON '.$on : '';
 
-        $this->_join .= " {$jointype} {$table} {$as} {$on} ";
+        $this->_join .= " {$join} {$table} {$as} {$on} ";
         return $this;
      }
 	 
@@ -290,7 +288,8 @@ class LdTable {
     /**
     * set group part in query clause
     *
-	* @param String $group e.g. 'field1'
+	* @param int $rows
+	* @param int $start
 	* @return LdTable
     */
     function limit($rows = 0, $start = 0) {
@@ -304,7 +303,7 @@ class LdTable {
 
 	/**
 	 * construct all the given information to a sql clause. often used by read-only query.
-	 * @param bool $return true: return the sql caluse (Default is true). false: assign sql clause to this->sql.
+	 * @param bool $return true: return the sql clause (Default is true). false: assign sql clause to this->sql.
 	 * @return void
 	 */
 	private function constructSql($return = true) {
@@ -352,14 +351,14 @@ class LdTable {
 	}
    /**
     * get one row from table into an array
-    * @param const $fetchMode PDO::FETCH_ASSOC, PDO::FETCH_NUM, PDO::FETCH_BOTH
+    * @param int $fetchMode PDO::FETCH_ASSOC, PDO::FETCH_NUM, PDO::FETCH_BOTH
     * @param String|Array $multi_call_params params used for multi call, assign only if you wanna using multi-call
     * 	A multi-call means that sql have been prepared to do multiple call with different params.
     *   if $multi_call_params is not null, means this is an multi-call.
     *
     * @return array|bool represent one row in a table, or false if failure
     */
-	function fetch($multi_call_params = NULL, $fetchMode = PDO::FETCH_BOTH) {
+	function fetch($multi_call_params = NULL, $fetchMode = PDO::FETCH_ASSOC) {
 		$this->limit(1);
 		return $this->query($multi_call_params)->fetch($fetchMode);
 	}
@@ -373,7 +372,7 @@ class LdTable {
     * PDO::FETCH_COLUMN|PDO::FETCH_GROUP: To return an associative array grouped by the values of a specified column
     * @return array represents an table
     */
-	function fetchAll($multi_call_params = NULL, $fetchMode = PDO::FETCH_BOTH) {
+	function fetchAll($multi_call_params = NULL, $fetchMode = PDO::FETCH_ASSOC) {
 		return $this->query($multi_call_params)->fetchAll($fetchMode);
 	}
    /**
@@ -576,4 +575,3 @@ class LdTable {
 		return $params;
 	}
 }
-?>

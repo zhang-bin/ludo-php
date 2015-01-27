@@ -83,6 +83,8 @@ require LD_KERNEL_PATH.'/LdTemplate'.php;
 require LD_KERNEL_PATH.'/LdValidator'.php;
 require LD_KERNEL_PATH.'/LdFilter'.php;
 require LD_KERNEL_PATH.'/LdFactory'.php;
+require LD_KERNEL_PATH.'/LdKvDB'.php;
+require LD_KERNEL_PATH.'/LdQueue'.php;
 
 require LD_UTIL_PATH.'/utils'.php;
 require LD_HELPER_PATH.'/userUtils'.php;

@@ -10,6 +10,12 @@ define('DB_TYPE',			'mysql');
 define('DB_CONNECT',		0); //0: connect; 1: pconnect
 define('TABLE_PREFIX',		'');
 
+define('KV_DB_HOST',        'localhost');
+define('KV_DB_PORT',        6379);
+
+define('QUEUE_HOST',        'localhost');
+define('QUEUE_PORT',        6379);
+
 define('SITE_ROOT',			dirname(__FILE__)); //no trailing slash
 define('SITE_URL',			'http://'.$_SERVER['SERVER_NAME'].'/ludo-php'); //no trailing slash. You can leave blank if your application will stay in the Document Root of your Web Server
 

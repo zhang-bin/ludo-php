@@ -49,7 +49,7 @@ abstract class LdBaseCtrl {
 	 * used when you need to specify the http header information. <br>
 	 * e.g.: when you sent gbk data back to ajax request, it should using header('Content-Type: text/html;charset:GBK') to prevent mash code.<br>
 	 * another example is using header("Content-Disposition", "attachment;filename=xxxx.zip"); to popup a SaveAS dialog. <br>
-	 * when using more than one header comman, you should use array here.
+	 * when using more than one header common, you should use array here.
 	 *
 	 * @var String|Array
 	 */

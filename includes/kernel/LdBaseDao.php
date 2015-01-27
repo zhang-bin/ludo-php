@@ -17,65 +17,57 @@ require LD_KERNEL_PATH.'/LdTable.php';
 
 abstract class LdBaseDao {
 	/**
-	 * Handler of LdKernel
+	 * Handler of LdDatabase
 	 *
-	 * @var LdKernel
+	 * @var LdDatabase
 	 */
-	protected $kernel = null;
-	
+	protected $mDbh = null;
+
 	/**
 	 * Handler of LdDatabase
 	 *
 	 * @var LdDatabase
 	 */
-	protected $dbh = null;
-	
+	protected $sDbh = null;
+
 	/**
 	 * Instance of LdTable
 	 *
 	 * @var LdTable
 	 */
-	protected $tbl = null;
-	
-	protected $tblName = null;
-	protected $one2many = null;
-	
-	/**
-	 * master type of db handler
-	 * @var String
-	 */
-	const MASTER = 'm';
-	
-	/**
-	 * slave type of db handler
-	 * @var String
-	 */
-	const SLAVE = 's';
+	protected $mTbl = null;
 
-	function __construct($tblName, $dbh=null) {
-		$this->kernel = $GLOBALS['ldKernel'];
-		$this->dbh['m'] = $dbh ? $dbh : $this->kernel->getMDBHandler();
-		$this->dbh['s'] = $dbh ? $dbh : $this->kernel->getSDBHandler();
+	/**
+	 * Instance of LdTable
+	 *
+	 * @var LdTable
+	 */
+	protected $sTbl = null;
+
+	protected $tblName = null;
+
+	function __construct($tblName, $dbh = null) {
 		$this->tblName = $tblName;
-		foreach ($this->dbh as $k=>$v) {
-			$this->tbl[$k] = new LdTable($v, $tblName);
-		}
+		$this->mDbh = $dbh ? $dbh : LdKernel::getInstance()->getMDBHandler();
+		$this->sDbh = $dbh ? $dbh : LdKernel::getInstance()->getSDBHandler();
+		$this->mTbl = new LdTable($this->mDbh, $tblName);
+		$this->sTbl = new LdTable($this->sDbh, $tblName);
 	}
 
 	/**
 	 * insert data into DB
 	 *
 	 * @param Array $arr array('field'=>value, 'field2'=>value2);
-	 * @return int Last insert id if insert successful, else SqlException will be throwed
+	 * @return int Last insert id if insert successful, else SqlException will be throw
 	 */
 	function add($arr) {
-		return $this->tbl['m']->insert($arr);
+		return $this->mTbl->insert($arr);
 	}
 	/**
 	 * identical to LdBaseDao::add($arr);
 	 *
 	 * @param Array $arr array('field'=>value, 'field2'=>value2);
-	 * @return int Last insert id if insert successful, else SqlException will be throwed
+	 * @return int Last insert id if insert successful, else SqlException will be throw
 	 */
 	function insert($arr) {
 		return $this->add($arr);
@@ -88,9 +80,10 @@ abstract class LdBaseDao {
 	 * 	assoc array: 			array(array('field'=>value, 'field2'=>value2), array('field'=>value, 'field2'=>value2));
 	 * 	or just indexed array:	array(array(value1, value2), array(value1, value2)); //if use indexedNames, the 2nd argument "$fieldNames" must be passed.
 	 * @param Array|String $fieldNames [Optional] only needed in indexed Data. field names for batch insert
-	 * @return true if insert successful, else SqlException will be throwed
+	 * @param bool $ignore
+	 * @return true if insert successful, else SqlException will be throw
 	 */
-	function batchInsert($arr, $fieldNames=array(), $ignore = false) {
+	function batchInsert($arr, $fieldNames = array(), $ignore = false) {
 		if (empty($arr)) return false;
 		
 		$keys = '(';
@@ -98,17 +91,17 @@ abstract class LdBaseDao {
 			if (is_array($fieldNames)) {
 				$comma = '';
 				foreach ($fieldNames as $field) {
-					$keys .= $comma.$this->dbh['m']->quoteIdentifier($field);
+					$keys .= $comma.$this->mDbh->quoteIdentifier($field);
 					$comma = ',';
 				}
 			} else {
-				$keys = $this->dbh['m']->quoteIdentifier($fieldNames);
+				$keys = $this->mDbh->quoteIdentifier($fieldNames);
 			}
 		} else {
 			$fields = array_keys($arr[0]);
 			$comma = '';
 			foreach ($fields as $field) {
-				$keys .= $comma.$this->dbh['m']->quoteIdentifier($field);
+				$keys .= $comma.$this->mDbh->quoteIdentifier($field);
 				$comma = ',';
 			}
 		}
@@ -116,7 +109,7 @@ abstract class LdBaseDao {
 			
 		$sql = 'INSERT';
 		if ($ignore) $sql .= ' IGNORE ';
-		$sql .= ' INTO '.$this->dbh['m']->quoteIdentifier($this->tblName)." {$keys} VALUES ";
+		$sql .= ' INTO '.$this->mDbh->quoteIdentifier($this->tblName)." {$keys} VALUES ";
 		
 		$comma = '';
 		$params = array();
@@ -131,85 +124,145 @@ abstract class LdBaseDao {
 			$sql .= ')';
 			$comma = ',';
 		}
-		return $this->tbl['m']->exec($sql, $params);
+		return $this->mTbl->exec($sql, $params);
 	}
 	
 	/**
-	 * update filelds of object with id=$id
+	 * update fields of object with id=$id
 	 *
 	 * @param Int $id
 	 * @param Array $arr
+	 * @return affected
 	 */
 	function update($id, $arr) {
-		return $this->updateWhere($arr, 'id=?', array($id));
+		return $this->updateWhere($arr, 'id = ?', array($id));
 	}
+
 	/**
-	 * update filelds of object with some conditions
+	 * update fields of object with some conditions
 	 *
 	 * @param Array $newData
 	 * @param String $condition
-	 * @param mixed 
+	 * @param mixed
+	 * @return affected
 	 */
-	function updateWhere($newData, $condition, $params=array()) {
-		return $this->tbl['m']->update($newData, array($condition, $params));
+	function updateWhere($newData, $condition, $params = array()) {
+		return $this->mTbl->update($newData, array($condition, $params));
 	}
+
 	/**
-	 * same as update
+	 * delete record with id=$id
 	 *
-	 * @param Int $id
-	 * @param Array $arr
+	 * @param $id
+	 * @return affected
 	 */
-	function edit($id, $arr) {
-		return $this->update($id, $arr);
-	}
 	function delete($id) {
 		return $this->deleteWhere('id = ?', $id);
 	}
-	function deleteWhere($condition, $params=null) {
-		return $this->tbl['m']->delete($condition, $params);		
+
+	/**
+	 * delete record with condition
+	 *
+	 * @param string $condition
+	 * @param null|array $params
+	 * @return affected
+	 */
+	function deleteWhere($condition, $params = null) {
+		return $this->mTbl->delete($condition, $params);
 	}
 
 	/**
 	 * get one row from table by ID
 	 *
 	 * @param $id
-	 * @param String $fields fields needs to be fetched, comma seperated
+	 * @param String $fields fields needs to be fetched, comma separated
+	 * @param int $fetchMode
 	 * @return Array key is field name and value is field value.
 	 */
-	function fetch($id, $fields = '', $fetchMode = PDO::FETCH_BOTH) {
-		if (!empty($fields)) $this->tbl['s']->setField($fields);
-		$this->tbl['s']->where($this->tblName.'.id=?', $id);
-		$result = $this->tbl['s']->fetch(NULL, $fetchMode);
-		if ($this->one2many) {
-			foreach($this->one2many as $daoName=>$relKey) {
-				$dao = LdFactory::dao($daoName);
-				$relKey = $this->dbh['s']->quoteIdentifier($relKey);
-				$result[$dao->daoName(false, true).'List'] = $dao->findAll(array("$relKey=?", $id));
-			}
-		}
-		return $result;
+	function fetch($id, $fields = '', $fetchMode = PDO::FETCH_ASSOC) {
+		if (!empty($fields)) $this->sTbl->setField($fields);
+		$this->sTbl->where($this->tblName.'.id = ?', $id);
+		return $this->sTbl->fetch(NULL, $fetchMode);
 	}
 
-	function find($condition, $params, $fields = '', $fetchMode = PDO::FETCH_BOTH) {
-		if (!empty($fields)) $this->tbl['s']->setField($fields);
-		return $this->tbl['s']->where($condition, $params)->fetch(NULL, $fetchMode);
+	/**
+	 * get one row from table by condition
+	 *
+	 * @param string $condition
+	 * @param array $params
+	 * @param string $fields fields needs to be fetched, comma separated
+	 * @param int $fetchMode
+	 * @return array|bool
+	 */
+	function find($condition, $params, $fields = '', $fetchMode = PDO::FETCH_ASSOC) {
+		if (!empty($fields)) $this->sTbl->setField($fields);
+		return $this->sTbl->where($condition, $params)->fetch(NULL, $fetchMode);
 	}
+
+	/**
+	 * get one column string from table by condition
+	 *
+	 * @param string $condition
+	 * @param string|array $params
+	 * @param string $column
+	 * @return String
+	 */
 	function findColumn($condition, $params, $column) {
-		if (!empty($column)) $this->tbl['s']->setField($column);
-		return $this->tbl['s']->where($condition, $params)->fetchColumn();		
+		if (!empty($column)) $this->sTbl->setField($column);
+		return $this->sTbl->where($condition, $params)->fetchColumn();
 	}
+
+	/**
+	 * get one column string from table by id
+	 *
+	 * @param int $id
+	 * @param string $column
+	 * @return String
+	 */
 	function fetchColumn($id, $column) {
-		if (!empty($column)) $this->tbl['s']->setField($column);
-		return $this->tbl['s']->where($this->tblName.'.id=?', array($id))->fetchColumn();
+		if (!empty($column)) $this->sTbl->setField($column);
+		return $this->sTbl->where($this->tblName.'.id = ?', array($id))->fetchColumn();
 	}
-	function fetchAll($rows = 0, $start = 0, $order = '', $fields = '*', $fetchMode = PDO::FETCH_BOTH) {
-		return $this->tbl['s']->field($fields)->limit($rows, $start)->orderby($order)->fetchAll(NULL, $fetchMode);
+
+	/**
+	 * get record from table
+	 *
+	 * @param int $rows
+	 * @param int $start
+	 * @param string $order
+	 * @param string $fields
+	 * @param int $fetchMode
+	 * @return array
+	 */
+	function fetchAll($rows = 0, $start = 0, $order = '', $fields = '*', $fetchMode = PDO::FETCH_ASSOC) {
+		return $this->sTbl->field($fields)->limit($rows, $start)->orderby($order)->fetchAll(NULL, $fetchMode);
 	}
+
+	/**
+	 * get one column list from table
+	 *
+	 * @param string $fields
+	 * @param int $rows
+	 * @param int $start
+	 * @param string $order
+	 * @return array
+	 */
 	function fetchAllUnique($fields = '*', $rows = 0, $start = 0, $order = '') {
-		return $this->tbl['s']->field($fields)->limit($rows, $start)->orderby($order)->fetchAllUnique();
+		return $this->sTbl->field($fields)->limit($rows, $start)->orderby($order)->fetchAllUnique();
 	}
-	
-	function findAll($condition = '', $rows = 0, $start = 0, $order='', $fields = '*', $fetchMode = PDO::FETCH_BOTH) {
+
+	/**
+	 * get record from table by condition
+	 *
+	 * @param string $condition
+	 * @param int $rows
+	 * @param int $start
+	 * @param string $order
+	 * @param string $fields
+	 * @param int $fetchMode
+	 * @return array
+	 */
+	function findAll($condition = '', $rows = 0, $start = 0, $order='', $fields = '*', $fetchMode = PDO::FETCH_ASSOC) {
 		if (is_array($condition)) {
 			$where = $condition[0];
 			$params = $condition[1];
@@ -218,8 +271,19 @@ abstract class LdBaseDao {
 			$params = null;
 		}
 
-		return $this->tbl['s']->field($fields)->where($where, $params)->orderby($order)->limit($rows, $start)->fetchAll(NULL, $fetchMode);
+		return $this->sTbl->field($fields)->where($where, $params)->orderby($order)->limit($rows, $start)->fetchAll(NULL, $fetchMode);
 	}
+
+	/**
+	 * get one column list from table by condition
+	 *
+	 * @param string $condition
+	 * @param string $fields
+	 * @param int $rows
+	 * @param int $start
+	 * @param string $order
+	 * @return array
+	 */
 	function findAllUnique($condition = '', $fields = '', $rows = 0, $start = 0, $order = '') {
 		if (is_array($condition)) {
 			$where = $condition[0];
@@ -229,9 +293,19 @@ abstract class LdBaseDao {
 			$params = null;
 		}
 
-		return $this->tbl['s']->field($fields)->where($where, $params)->orderby($order)->limit($rows, $start)->fetchAllUnique();
+		return $this->sTbl->field($fields)->where($where, $params)->orderby($order)->limit($rows, $start)->fetchAllUnique();
 	}
-	
+
+	/**
+	 * get key=>value formatted result from table
+	 *
+	 * @param string $condition
+	 * @param string $fields
+	 * @param int $rows
+	 * @param int $start
+	 * @param string $order
+	 * @return array
+	 */
 	function findAllKvPair($condition = '', $fields = '', $rows = 0, $start = 0, $order='') {
 		if (is_array($condition)) {
 			$where = $condition[0];
@@ -241,35 +315,22 @@ abstract class LdBaseDao {
 			$params = null;
 		}
 	
-		return $this->tbl['s']->field($fields)->where($where, $params)->orderby($order)->limit($rows, $start)->fetchAllKvPair();
+		return $this->sTbl->field($fields)->where($where, $params)->orderby($order)->limit($rows, $start)->fetchAllKvPair();
 	}
-	
+
 	/**
-	 * Do query, and return the PDOStatement Object
+	 * count records
 	 *
-	 * @param String $condition
-	 * @param int $rows
-	 * @param int $start
-	 * @param String $order
-	 * @param String $fields
-	 * @return PDOStatement
+	 * @param string $condition
+	 * @param null $params
+	 * @param bool $distinct
+	 * @return int
 	 */
-	function queryAll($condition = '', $rows = 0, $start = 0, $order = 'id DESC', $fields = '') {
-		if (is_array($condition)) {
-			$where = $condition[0];
-			$params = $condition[1];
-		} else {
-			$where = $condition;
-			$params = null;
-		}
-		return $this->tbl['s']->field($fields)->where($where)->orderby($order)->limit($rows, $start)->query($params);
-	}
-	
 	function count($condition = '', $params = null, $distinct = false) {
 		if (!empty($condition)) {
-			$this->tbl['s']->where($condition, $params);
+			$this->sTbl->where($condition, $params);
 		}
-		return $this->tbl['s']->recordsCount($distinct);
+		return $this->sTbl->recordsCount($distinct);
 	}
 
 	/**
@@ -281,7 +342,7 @@ abstract class LdBaseDao {
 	 */
 	function exists($condition = '', $params = null) {
 		if (!is_array($params)) $params = array($params);
-		$cnt = $this->tbl['s']->setField('count(*)')->where($condition, $params)->fetchColumn();
+		$cnt = $this->sTbl->setField('count(*)')->where($condition, $params)->fetchColumn();
 		return $cnt > 0 ? true : false;
 	}
 
@@ -291,11 +352,13 @@ abstract class LdBaseDao {
 	 * If exists, result[1] will store the "1st db row" result
 	 * 
 	 * @param String $condition
+	 * @param string|array $params
+	 * @param string $fields
 	 * @return Array list(exists, row) = Array(0=>true/false, 1=>rowArray/false)
 	 */
 	function existsRow($condition='', $params = null, $fields = null) {
-		if (!empty($fields)) $this->tbl['s']->setField($fields);
-		$row = $this->tbl['s']->where($condition, $params)->fetch(NULL, PDO::FETCH_BOTH);
+		if (!empty($fields)) $this->sTbl->setField($fields);
+		$row = $this->sTbl->where($condition, $params)->fetch(NULL, PDO::FETCH_BOTH);
 		$exists = empty($row) ? false : true;
 		return array($exists, $row);
 	}
@@ -306,13 +369,13 @@ abstract class LdBaseDao {
 	 * @return int the max id
 	 */
 	function maxId() {
-		return $this->tbl['s']->setField('id')->orderby('id DESC')->fetchColumn();
+		return $this->sTbl->setField('id')->orderby('id DESC')->fetchColumn();
 	}
 	/**
 	 * one to one relation.
 	 * 
 	 * @param String $table table name [and alias] which need to be joined. eg. User as Author
-	 * @param String $fields the fields you need to retrive. default is all. E.G. Author.uname as authorUname, Author.nickname as nickname.
+	 * @param String $fields the fields you need to retrieve. default is all. E.G. Author.uname as authorUname, Author.nickname as nickname.
 	 * @param String $foreignKey ForeignKey field name. default is null which will use tableName+Id as its FK. eg. userId, productId
 	 * @param String $joinType one of the three [inner, left, right]. default is left. 
 	 * @return LdBaseDao
@@ -329,60 +392,62 @@ abstract class LdBaseDao {
 		}
 		
 		$foreignKey = $foreignKey ? $foreignKey : lcfirst($tblName).'Id';
-		$foreignKey = $this->dbh['s']->quoteIdentifier($foreignKey);
+		$foreignKey = $this->sDbh->quoteIdentifier($foreignKey);
 		$joinType = $joinType.' JOIN';
 		
-		$tblName = $this->dbh['s']->quoteIdentifier($tblName);
-		$this->tbl['s']->join("$tblName $tblAlias", "$this->tblName.$foreignKey=$tblAlias.id", $fields, $joinType);
+		$tblName = $this->sDbh->quoteIdentifier($tblName);
+		$this->sTbl->join("$tblName $tblAlias", "$this->tblName.$foreignKey=$tblAlias.id", $fields, $joinType);
 
 		return $this;
 	}
 
-	function belongs2($table, $fields, $foreignKey = null){
-		$this->hasA($table, $fields, $foreignKey);
-	}
-
-	function hasMany($daoName, $relKey = null) {
-		if ($relKey == null) $relKey = $this->tblName.'Id';
-		$this->one2many[$daoName] = $relKey;
-		return $this;
-	}
 	function beginTransaction() {
-		$this->dbh['m']->beginTransaction();
+		$this->mDbh->beginTransaction();
 	}
 	function commit() {
-		$this->dbh['m']->commit();
+		$this->mDbh->commit();
 	}
 	function rollback() {
-		$this->dbh['m']->rollback();
+		$this->mDbh->rollback();
 	}
-	function debug($dbhType = 's') {
-		return $this->dbh[$dbhType]->debug();
+	function debug($dbh = null) {
+		if (is_null($dbh)) $dbh = $this->sDbh;
+		return $dbh->debug();
 	}
-	function lastSql($dbhType = 's') {
-		return $this->tbl[$dbhType]->sql();
+	function lastSql($tbl = null) {
+		if (is_null($tbl)) $tbl = $this->sTbl;
+		return $tbl->sql();
 	}
 	/**
-	 * return the table handler object
+	 * return the slave table handler object
 	 *
 	 * @return LdTable
 	 */
-	function tbl($dbhType = 's') {
-		return $this->tbl[$dbhType];
+	function sTbl() {
+		return $this->sTbl;
 	}
+
+	/**
+	 * return the master table handler object
+	 *
+	 * @return LdTable
+	 */
+	function mTbl() {
+		return $this->mTbl;
+	}
+
 	function tblName() {
 		return $this->tblName;
 	}
-	function daoName($trailingDao = true, $lcfirst=false) {
+	function daoName($trailingDao = true, $lcFirst=false) {
 		$daoName = get_class($this);
 		if (!$trailingDao) {
 			$daoName = substr($daoName, 0, strpos($daoName, 'Dao'));
 		}
-		if ($lcfirst) $daoName[0] = strtolower($daoName[0]);
+		if ($lcFirst) $daoName[0] = strtolower($daoName[0]);
 		return $daoName;
 	}
 	function truncate() {
-		$this->tbl['m']->exec('TRUNCATE '.$this->tblName);
+		$this->mTbl->exec('TRUNCATE '.$this->tblName);
 	}
 }
-?>

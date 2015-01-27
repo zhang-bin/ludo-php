@@ -57,4 +57,3 @@ class SqlException extends LdException {
         return $this->_sql;
     }
 }
-?>

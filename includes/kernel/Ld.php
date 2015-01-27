@@ -13,7 +13,7 @@
 */
 
 /**
- * separate the real error messge with vivid message (which is comprehensive for the end user)
+ * separate the real error message with vivid message (which is comprehensive for the end user)
  */
 class Ld {
 	static $err = array(
@@ -26,4 +26,3 @@ class Ld {
 		6 => 'Tpl file: [%s] does not exist',
 	);
 }
-?>

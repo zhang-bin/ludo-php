@@ -92,10 +92,13 @@ class LdDatabase {
     
     /**
      * query database, return the recordset object. common use to query database
-     * @param sql clause
+	 *
+     * @param string $sql
+	 * @param string $params
      * @return PDOStatement
+	 * @throws SqlException
      */
-    function query($sql, $params=NULL) {
+    function query($sql, $params = NULL) {
 		$this->logStart($sql, $params);
         $this->prepare($sql);
         $result = is_null($params) ? $this->_stmt->execute() : $this->_stmt->execute($params);
@@ -115,8 +118,10 @@ class LdDatabase {
     }
     /**
      * execute insert, update, delete clause in database, return the affected rows
-     * @param sql clause
+     * @param string $sql
+	 * @param string|array $params
      * @return affected rows
+	 * @throws SqlException
      */    
     function exec($sql, $params=NULL) {
 		$this->logStart($sql, $params);
@@ -149,7 +154,8 @@ class LdDatabase {
     }
     /**
      * get last insert id
-     * 
+     *
+	 * @param string $name
      * @return last insert id
      */    
     function lastInsertId($name = 'id') {

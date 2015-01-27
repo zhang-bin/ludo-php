@@ -55,28 +55,28 @@ class LdFilter {
 	 * Sanitize the String to escape all html tags to HTML entities.
 	 * 
 	 * @param String $data
-	 * @param Enum $encodeType ENT_QUOTES or ENT_NOQUOTES  or ENT_COMPAT. Default is ENT_QUOTES
+	 * @param int $encodeType ENT_QUOTES or ENT_NOQUOTES  or ENT_COMPAT. Default is ENT_QUOTES
 	 * @return the clean string with no html tags.
 	 */
-	public static function str($data, $encodeType=ENT_QUOTES) {
+	public static function str($data, $encodeType = ENT_QUOTES) {
 		//make sure data with MB encoding have a correct/safe format. 
 		//prevent any <a href="http://ha.ckers.org/charsets.html">variable width encoding attacks</a>
 		$data = mb_convert_encoding($data, PROGRAM_CHARSET, PROGRAM_CHARSET);
-		return htmlSpecialChars(trim($data), $encodeType, PROGRAM_CHARSET);
+		return htmlspecialchars(trim($data), $encodeType, PROGRAM_CHARSET);
 	}
 	
 	/**
 	 * Sanitize the String to escape all html tags and non-ascii strings to HTML entities.
 	 * 
 	 * @param String $data
-	 * @param Enum $encodeType ENT_QUOTES or ENT_NOQUOTES  or ENT_COMPAT. Default is ENT_QUOTES
+	 * @param int $encodeType ENT_QUOTES or ENT_NOQUOTES  or ENT_COMPAT. Default is ENT_QUOTES
 	 * @return the clean string with no html tags.
 	 */
 	public static function entity($data, $encodeType=ENT_QUOTES) {
 		//make sure data with MB encoding have a correct/safe format. 
 		//prevent any <a href="http://ha.ckers.org/charsets.html">variable width encoding attacks</a>
 		$data = mb_convert_encoding($data, PROGRAM_CHARSET, PROGRAM_CHARSET);
-		return htmlEntities(trim($data), $encodeType, PROGRAM_CHARSET);
+		return htmlentities(trim($data), $encodeType, PROGRAM_CHARSET);
 	}
 	
 	/**

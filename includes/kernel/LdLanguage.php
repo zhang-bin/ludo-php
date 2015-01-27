@@ -64,4 +64,3 @@ class LdLanguage {
 		if (file_exists($filename)) include_once $filename;
 	}
 }
-?>
