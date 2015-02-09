@@ -57,7 +57,7 @@ class Log extends LdBaseCtrl {
 		$log = array();
 
 		//==log[uid]
-		if (empty(Logger::$log['userId'])) {
+		if (empty(self::$log['userId'])) {
 			if (User::logined()) {
 				$log['userId'] = $_SESSION[USER]['id'];
 			} else {
@@ -94,7 +94,7 @@ class Log extends LdBaseCtrl {
 		}
 
 		//==save log
-		Logger::log($log);
+		self::log($log);
 	}
 	
 	function beforeAction($action) {

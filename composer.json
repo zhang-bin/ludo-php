@@ -11,6 +11,7 @@
     }
   ],
   "require": {
-    "monolog/monolog": "1.*"
+    "monolog/monolog": "1.*",
+    "phpunit/phpunit": ">=4.5"
   }
 }
