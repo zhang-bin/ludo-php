@@ -1,11 +1,7 @@
 <?php
-class Logger extends LdBaseCtrl {
+class Log extends LdBaseCtrl {
 	function __construct() {
-		parent::__construct('Logger');
-	}
-
-	public function index() {
-    	$this->logList();
+		parent::__construct('Log');
 	}
 
 	/**
