@@ -12,6 +12,8 @@
   ],
   "require": {
     "monolog/monolog": "1.*",
-    "phpunit/phpunit": ">=4.5"
+    "phpunit/phpunit": ">=4.5",
+    "ezyang/htmlpurifier": ">=4.6",
+    "phpmailer/phpmailer": "5.2.*"
   }
 }

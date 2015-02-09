@@ -87,7 +87,6 @@ class LdFilter {
 	 * @return clean html string
 	 */
 	public static function html($dirtyHtml, $allowedTags='') {
-		require_once LD_UTIL_PATH.'/HTMLPurifer/HTMLPurifier.includes.php';
 		$config = HTMLPurifier_Config::createDefault();
 		$config->set('Core.Encoding', PROGRAM_CHARSET);
 		$config->set('Cache.SerializerPath', LD_UPLOAD_TMP_PATH);
