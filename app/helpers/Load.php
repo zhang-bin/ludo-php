@@ -33,30 +33,6 @@ class Load {
 				'common.js' => 'js',
 			),
 		),
-		'jquerytools' => array(
-			'base' => '/img/jquerytools/',
-			'files' => array(
-				'jquery.tools.min.js' => 'js',
-				'jquery.tools.css' => 'css',
-			)
-		),
-		'multiSelect' => array(
-			'base' => '/img/multiselect/',
-			'files' => array(
-				'js/jquery-ui.min.js' => 'js',
-				'js/jquery.multiselect.js' => 'js',
-				'jquery-ui.css' => 'css',
-				'jquery.multiselect.css' => 'css'
-			)
-		),
-		'amcharts' => array(
-			'base' => '/img/amcharts/',
-			'files' => array(
-				'amcharts.js' => 'js',
-				'serial.js' => 'js',
-                'pie.js' => 'js'
-			)
-		),
 		'bootstrap' => array(
 			'base' => '/img/bootstrap/',
 			'files' => array(
@@ -159,9 +135,6 @@ class Load {
 		'style' => array(
 			'file' => '/img/style.css',
 		),
-        'wizard' => array(
-            'file' => '/img/wizard.css',
-        )
 	);
 	
 	public static function js($jsname, $return=false) {
