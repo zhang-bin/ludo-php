@@ -31,6 +31,7 @@ define('LD_PORTAL_URL',		SITE_URL.'/'.LD_ENTRY.php);
 
 define('LD_CTRL_PATH',		LD_APP_PATH.'/controllers');
 define('LD_DAO_PATH',		LD_APP_PATH.'/daos');	
+define('LD_MODEL_PATH',		LD_APP_PATH.'/models');
 define('LD_LANGUAGE_PATH',	LD_APP_PATH.'/languages');
 define('LD_HELPER_PATH',	LD_APP_PATH.'/helpers');
 define('LD_CONF_PATH',		LD_APP_PATH.'/conf');
@@ -104,7 +105,9 @@ define('PAGE_SPAN', '6');
 function autoLoad($className) {
     if (class_exists($className)) return false;
 	if (substr($className, -3, 3) == 'Dao') {
-		$filename = LD_DAO_PATH.'/'.$className.php; 
+		$filename = LD_DAO_PATH.'/'.$className.php;
+	} else if (substr($className, -5, 5) == 'Model') {
+		$filename = LD_MODEL_PATH.'/'.$className.php;
 	} else {
 		$filename = LD_CTRL_PATH.'/'.$className.php; 
 	}
