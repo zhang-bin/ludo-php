@@ -21,7 +21,7 @@ class Module {
         $this->_moduleDescr = $descr;
 
         $sql = 'show full columns from ' . $this->_upper;
-        $dbh = LdKernel::getInstance()->getDBHandler();
+        $dbh = LdKernel::getInstance()->getMDBHandler();
         try {
             $this->_fields = $dbh->query($sql)->fetchAll(PDO::FETCH_ASSOC);
         } catch (SqlException $e) {
