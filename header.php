@@ -39,6 +39,7 @@ define('TPL_ROOT', 			LD_APP_PATH.'/templates');
 define('TPL_URL', 			SITE_URL.'/app/templates');
 define('THEME_ROOT',		TPL_ROOT. (THEME ? '/'.THEME : '') );
 define('THEME_URL',			TPL_URL. (THEME ? '/'.THEME : '') );
+define('LD_LOG_PATH',		SITE_ROOT.'/log');
 
 /* ---[make all php configuration consistently]----- */
 //timezone
@@ -85,6 +86,7 @@ require LD_KERNEL_PATH.'/LdValidator'.php;
 require LD_KERNEL_PATH.'/LdFilter'.php;
 require LD_KERNEL_PATH.'/LdFactory'.php;
 require LD_KERNEL_PATH.'/LdKvDB'.php;
+require LD_KERNEL_PATH.'/LdLogger'.php;
 
 require LD_UTIL_PATH.'/utils'.php;
 require LD_HELPER_PATH.'/userUtils'.php;
