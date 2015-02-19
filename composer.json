@@ -1,0 +1,14 @@
+{
+  "name": "ludo/ludo",
+  "minimum-stability": "stable",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "zhang bin",
+      "email": "hunter.zhangbin@gmail.com"
+    }
+  ],
+  "require": {
+    "ludo/framework": "dev-master"
+  }
+}

@@ -1,0 +1,46 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta content="width=device-width,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no" name="viewport">
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta content="telephone=no" name="format-detection" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="white" />
+    <link href="mobilecss/style.css" rel="stylesheet" type="text/css" media="all" />
+    <!--<meta name="apple-itunes-app" content="app-id=">-->
+    <?php
+  Load::js('mobilecss');
+ ?>
+    <meta name="Author" contect="Mr.T" />
+
+</head>
+<body>
+
+<div class="ui-index-warp">
+    <header>
+        <div class="ui-toolbar-container">
+            <div class="ui-toolbar">
+                <div class="ui-toolbar-title"><span>夏目客户端下载</span></div>
+            </div>
+        </div>
+    </header>
+    <div class="index-view-w">
+        <div class="index-view-content">
+            <div class="index-view-info">
+                <header>
+                    <h1><img src="mobilecss/images/title.png" alt=""/></h1>
+                </header>
+                <div class="index-view-input-info">
+                    <?php if($singleData['ios']):?>
+                    <div class="iosBtn">
+                        <a href="itms-services://?action=download-manifest&url=https://security.123dby.com/ios/summer/summer.plist" class="button"><img src="mobilecss/images/iphone.png" alt="Iphone版下载" /></a>
+                    </div>
+                    <?php endif;?>
+                    <div style="text-align:center;"><img src="mobilecss/images/qr_code.png" /></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>
