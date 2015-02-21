@@ -1,4 +1,6 @@
 <?php
+define('SITE_ROOT', __DIR__);
+define('SITE_URL',			'http://'.$_SERVER['SERVER_NAME'].'/ludo-php');
 define('PROGRAM_CHARSET',       'UTF-8');
 define('SUCCESS',               'success');
 define('ALERT',                 'alert');
