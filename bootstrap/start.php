@@ -12,10 +12,6 @@ if (!get_cfg_var('short_open_tag')) {
         die('Pls turn on "short_open_tag" in your php.ini');
     }
 }
-if(!extension_loaded('mcrypt')) {
-    echo 'Mcrypt PHP extension required.'.PHP_EOL;
-    exit(1);
-}
 date_default_timezone_set(DEFAULT_TIME_ZONE);
 
 require __DIR__.'/paths.php';
