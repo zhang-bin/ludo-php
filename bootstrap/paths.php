@@ -1,5 +1,5 @@
 <?php
-define('SITE_ROOT', __DIR__);
+define('SITE_ROOT', __DIR__.'/../');
 define('SITE_URL',			'http://'.$_SERVER['SERVER_NAME'].'/ludo-php-2');
 define('LD_APP_PATH', SITE_ROOT.'/app');
 define('LD_CTRL_PATH', LD_APP_PATH.'/controllers');
