@@ -230,6 +230,7 @@ EOF;
 			return array(STATUS => ALERT, MSG => '删除失败!');
 		}
 	}
+
 EOF;
 
         } else {
@@ -241,7 +242,7 @@ EOF;
 		try {
 			$dao->beginTransaction();
 			$dao->delete($id);
-			Logger::log(array(
+			Log::log(array(
                 'name' => 'delete ludo_lower',
                 'old' => json_encode($old)
             ));
