@@ -445,11 +445,13 @@ EOF;
         </div>
     </div>
 </form>
+<?php View::startJs();?>
 <script type="text/javascript">
 $(document).ready(function(){
 
 });
 </script>
+<?php View::endJs();?>
 <?php include tpl('footer');?>
 EOF;
         $change = str_replace(
@@ -494,11 +496,13 @@ EOF;
 
         $view .= <<<'EOF'
 </div>
+<?php View::startJs();?>
 <script type="text/javascript">
 $(document).ready(function(){
 
 });
 </script>
+<?php View::endJs();?>
 <?php include tpl('footer');?>
 EOF;
         $view = str_replace(
