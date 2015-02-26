@@ -20,4 +20,8 @@ namespace {
     class Factory extends \Ludo\Support\Factory {
 
     }
+
+    class View extends \Ludo\View\View {
+
+    }
 }
