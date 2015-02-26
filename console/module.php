@@ -248,7 +248,7 @@ EOF;
             ));
 			$dao->commit();
 			return array(STATUS => SUCCESS, URL => url('ludo_lower'));
-		} catch (SqlException $e) {
+		} catch (Exception $e) {
 			$dao->rollback();
 			return array(STATUS => ALERT, MSG => '删除失败!');
 		}
