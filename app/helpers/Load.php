@@ -137,7 +137,7 @@ class Load {
 		),
 	);
 	
-	public static function js($jsname, $return=false) {
+	public static function js($jsname, $return = true, $loadToTemplate = true) {
 		$module = self::$jsModules[$jsname];
 		if (!$module) return;
 		
@@ -149,18 +149,22 @@ class Load {
 		$files = DEBUG && isset($module['debug_files']) ? $module['debug_files'] : $module['files'];
 
 		foreach ($files as $file => $type) {
-			$result .= sprintf($$type, $root_base.$base.$file);
+			$resource = sprintf($$type, $root_base.$base.$file);
+			$result .= $resource;
+			if ($loadToTemplate)  View::addResource($resource, $type);
 		}
 		if (!$return) 
 			echo $result;
 		else
 			return $result;
 	}
-	public static function css($jsname, $return=false) {
+	public static function css($jsname, $return = true, $loadToTemplate = true) {
 		$module = self::$cssModules[$jsname];
 		if (!$module) return;
 		$root_base = isset($module['root_base']) ? $module['root_base'] : LD_PUBLIC_PATH;
-		$result = '<link href="'. $root_base.$module['file'] .'" rel="stylesheet" type="text/css" media="all" />'."\n"; 
+		$result = '<link href="'. $root_base.$module['file'] .'" rel="stylesheet" type="text/css" media="all" />'."\n";
+		if ($loadToTemplate)  View::addResource($result);
+
 		if (!$return) 	echo $result;
 		else	return $result;
 	}

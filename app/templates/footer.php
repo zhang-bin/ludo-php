@@ -23,6 +23,7 @@
         <button type="button" class="btn btn-primary" id="confirmDel">确认</button>
 	</div>
 </div>
+<?php View::startJs();?>
 <script type="text/javascript">
 jQuery.extend({
 	alertSuccess: function(msg, callback) {
@@ -64,5 +65,8 @@ $(document).ready(function(){
 	$('.selectpicker').selectpicker();
 });
 </script>
+<?php View::endJs();?>
+<?php View::loadCss();?>
+<?php View::loadJs();?>
 </body>
 </html>

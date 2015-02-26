@@ -17,6 +17,7 @@
 		Load::helper('MenuHelper');
 		Load::js('bootstrap-select');
 		Load::js('bootstrap-switch');
+		View::loadCss();
 	?>
 </head>
 <body data-spy="scroll" data-target=".sidebar">
