@@ -20,6 +20,7 @@ Options:
     -h, --help          print help message
     -C, --install-module    fast create module, include controller file, dao file and templates file
     -D, --uninstall-module  remove module, include  controller file, dao file and templates file
+    -E, --exec              run script
 
 EOF;
 define('NEW_LINE', "\r\n");
@@ -64,6 +65,10 @@ switch ($argv[1]) {
         } else {
             echo 'Success Done!';
         }
+        break;
+    case '-E':
+    case '--exec':
+        $app->run($argv[2]);
         break;
     default:
         echo $help;
