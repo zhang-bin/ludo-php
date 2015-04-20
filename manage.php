@@ -18,9 +18,10 @@ $help = <<<EOF
 Usage: php manage.php Options [ARGS]
 Options:
     -h, --help          print help message
-    -C, --install-module    fast create module, include controller file, dao file and templates file
-    -D, --uninstall-module  remove module, include  controller file, dao file and templates file
-    -E, --exec              run script
+    -c, -C, --install-module    fast create module, include controller file, dao file and templates file
+    -d, -D, --uninstall-module  remove module, include  controller file, dao file and templates file
+    -e, -E, --exec              run script
+    task-queue        run task queue daemon
 
 EOF;
 define('NEW_LINE', "\r\n");
@@ -30,6 +31,7 @@ switch ($argv[1]) {
         echo $help;
         break;
     case '-C':
+    case '-c':
     case '--install-module':
         $moduleName = $argv[2];
         $moduleDescr = $argv[3];
@@ -51,6 +53,7 @@ switch ($argv[1]) {
         }
         break;
     case '-D':
+    case '-d':
     case '--uninstall-module':
         $moduleName = $argv[2];
         if (empty($moduleName)) {
@@ -67,8 +70,12 @@ switch ($argv[1]) {
         }
         break;
     case '-E':
+    case '-e':
     case '--exec':
         $app->run($argv[2]);
+        break;
+    case 'task-queue':
+        \Ludo\Support\ServiceProvider::getInstance()->taskQueueServer($argv[2]);
         break;
     default:
         echo $help;

@@ -24,4 +24,8 @@ namespace {
     class View extends \Ludo\View\View {
 
     }
+
+    class TaskQueue extends \Ludo\Task\TaskQueue {
+
+    }
 }
