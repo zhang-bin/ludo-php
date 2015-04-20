@@ -17,11 +17,11 @@ $argv = $_SERVER['argv'];
 $help = <<<EOF
 Usage: php manage.php Options [ARGS]
 Options:
-    -h, --help          print help message
-    -c, -C, --install-module    fast create module, include controller file, dao file and templates file
-    -d, -D, --uninstall-module  remove module, include  controller file, dao file and templates file
-    -e, -E, --exec              run script
-    task-queue        run task queue daemon
+    -h, --help                          print help message
+    -c, -C, --install-module            fast create module, include controller file, dao file and templates file
+    -d, -D, --uninstall-module          remove module, include  controller file, dao file and templates file
+    -e, -E, --exec                      run script
+    task-queue {start|stop|reload}      run task queue daemon
 
 EOF;
 define('NEW_LINE', "\r\n");
