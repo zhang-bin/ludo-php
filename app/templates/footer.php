@@ -36,6 +36,10 @@ jQuery.extend({
 	}
 });
 $(document).ready(function(){
+    $("form").each(function(){
+        $(this).append("<input type='hidden' name='_token' value='<?=csrf_token()?>' />")
+    });
+
 	$.placeholder.shim();
     $("input.switch").bootstrapSwitch("state", true, true);
 	$("a[name=del]").live("click", function(){
@@ -57,7 +61,7 @@ $(document).ready(function(){
 	$("form.form").submit(function(){
 		preSubmit();
 		$.post($(this).attr("action"), $(this).serialize(), function(result) {
-			ajaxHandler(result);
+//			ajaxHandler(result);
 			postSubmit();
 		}, "json");
 		return false;

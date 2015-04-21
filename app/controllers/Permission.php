@@ -495,11 +495,7 @@ class Permission extends BaseCtrl {
     }
     
     function beforeAction($action) {
-    	if (!logined()) {
-    		return gotoLogin();
-    	}
-    	if (!$_SESSION[USER]['isAdmin']) {
-    		redirect('error/accessDenied');
-    	}
+        $this->illegalRequest();
+        $this->admin();
     }
 }

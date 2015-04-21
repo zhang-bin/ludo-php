@@ -99,6 +99,7 @@ include tpl('header');
         </div>
     </form>
 </div>
+<?php View::startJs();?>
 <script type="text/javascript">
 $(document).ready(function(){
     $(".checkAll").click(function(){
@@ -110,4 +111,5 @@ $(document).ready(function(){
     });
 });
 </script>
+<?php View::endJs();?>
 <?php include tpl('footer');?>
