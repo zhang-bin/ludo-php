@@ -1,6 +1,6 @@
 <?php
 return array(
-    'task_queue' => array(
+    'task_queue' => [
         'host' => '127.0.0.1',
         'bind' => '127.0.0.1',
         'port' => '9321',
@@ -9,5 +9,5 @@ return array(
         'task_worker_num' => 1,
         'user' => 'root',
         'group' => 'root',
-    )
+    ]
 );
