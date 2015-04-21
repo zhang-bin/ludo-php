@@ -25,7 +25,7 @@ class BaseCtrl extends \Ludo\Routing\Controller
         //非法请求
         if (isset($_REQUEST['_token']) && !empty($_REQUEST['_token'])) {
             $token = trim($_REQUEST['_token']);
-            if ($token == $_SESSION[USER]['token']) {
+            if ($token != $_SESSION[USER]['token']) {
                 die;
             }
         }
