@@ -5,8 +5,10 @@
  * @author Libok.Zhou Libok.Zhou <libkhorse@gmail.com>
  * @version $Id: Mail.php 22 2012-07-20 12:30:10Z zhangbin $
  */
-class Mailer {
-	static function send($client, $title, $body, $smtp = array(),$path = array(), $name = array()) {
+class Mailer
+{
+	static function send($client, $title, $body, $smtp = array(),$path = array(), $name = array())
+    {
 		if (empty($body)) return false;
 		if (empty($smtp)) {
 			$dao = new BasicDao();

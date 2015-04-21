@@ -1,5 +1,6 @@
 <?php
-class Crypter {
+class Crypter
+{
     /**
      * Encrypt the given String with a private key.
      *
@@ -8,7 +9,8 @@ class Crypter {
      * @param string $algorithm encrypt algorithm
      * @return string encrypted data
      */
-    public static function encrypt($str, $mode='ecb', $algorithm='rijndael-128') {
+    public static function encrypt($str, $mode = 'ecb', $algorithm = 'rijndael-128')
+    {
     	if (empty($str)) return null;
         /* 开启加密算法/ */
         $td = mcrypt_module_open($algorithm, '', $mode, '');
@@ -38,7 +40,8 @@ class Crypter {
      * @param string $algorithm encrypt algorithm
      * @return string raw data
      */
-    public static function decrypt($str, $mode='ecb', $algorithm='rijndael-128') {
+    public static function decrypt($str, $mode = 'ecb', $algorithm = 'rijndael-128')
+    {
     	if (empty($str)) return null;
         /* 开启加密算法/ */
         $td = mcrypt_module_open($algorithm, '', $mode, '');

@@ -1,10 +1,12 @@
 <?php
-class Menu {
-	static $menu = null;
-	static $subMenuUrlCache = null;
-	static $currMenuId = null;
-	
-	static function init() {
+class Menu
+{
+	public static $menu = null;
+    public static $subMenuUrlCache = null;
+    public static $currMenuId = null;
+
+    public static function init()
+    {
         if (empty(self::$menu)) {
             self::$menu = Load::conf('Menu');
             self::$subMenuUrlCache = self::subMenuUrlCache(self::$menu);
@@ -21,8 +23,9 @@ class Menu {
             }
         }
 	}
-	
-	static function menuRender() {
+
+    public static function menuRender()
+    {
 		self::init();
 		$html = '<ul class="nav">';
 		foreach (self::$menu as $top=>$topMenus) {//1级菜单
@@ -52,8 +55,9 @@ class Menu {
 
 		return $html;
 	}
-	
-	static function navRender($title, $toolBox) {
+
+    public static function navRender($title, $toolBox)
+    {
 		self::init();
 		$html = '<ul class="breadcrumb">';
 		if (isset(self::$currMenuId['level1'])) {
@@ -76,8 +80,9 @@ class Menu {
 		$html .= '</ul>';
 		return $html;
 	}
-	
-	static function subMenuUrlCache($menuConf) {
+
+    public static function subMenuUrlCache($menuConf)
+    {
 		$cache = array();
         foreach ($menuConf as $menuId => $menu) {
             $cache[$menuId]['level'] = 1;
@@ -85,13 +90,14 @@ class Menu {
                 $cache[$menuId.'/index']['level'] = 1;
             }
             if (!empty($menu['children'])) {
-                self::_cache($menuId, $menu['children'], $cache, 2);
+                self::cache($menuId, $menu['children'], $cache, 2);
             }
         }
         return $cache;
     }
 
-    private static function _cache($parent, $menus, &$cache, $level) {
+    private static function cache($parent, $menus, &$cache, $level)
+    {
         foreach ($menus as $menuId => $menu) {
             $cache[$menuId]['parent'] = $parent;
             $cache[$menuId]['level'] = $level;
@@ -101,7 +107,7 @@ class Menu {
                     $cache[$url]['level'] = $level+1;
                 }
             }
-            if (!empty($menu['children'])) self::_cache($menuId, $menu['children'], $cache, $level+1);
+            if (!empty($menu['children'])) self::cache($menuId, $menu['children'], $cache, $level+1);
         }
     }
 }

@@ -1,5 +1,6 @@
 <?php
-class Session {
+class Session
+{
     /**
      * Flash a key / value pair to the session.
      *
@@ -7,7 +8,8 @@ class Session {
      * @param string $value
      * @return void
      */
-    public static function flash($key, $value) {
+    public static function flash($key, $value)
+    {
         $_SESSION[$key] = $value;
         $_SESSION['flash.new'][] = $key;
     }
@@ -17,7 +19,8 @@ class Session {
      *
      * @return void
      */
-    public static function reflash() {
+    public static function reflash()
+    {
         $new = array_merge($_SESSION['flash.old'], $_SESSION['flash.new']);
         $_SESSION['flash.new'] = array_unique($new);
         $_SESSION['flash.old'] = array();
@@ -29,7 +32,8 @@ class Session {
      * @param sting $key
      * @return void
      */
-    public static function keep($key) {
+    public static function keep($key)
+    {
         $new = $_SESSION['flash.new'];
         $_SESSION['flash.new'] = array_unique(array_merge($new, (array)$key));
         $old = $_SESSION['flash.old'];
@@ -41,7 +45,8 @@ class Session {
      *
      * @return void
      */
-    public static function ageFlashData() {
+    public static function ageFlashData()
+    {
         $old = array_get($_SESSION, 'flash.old', array());
         if (!is_array($old)) {
             $old = array($old);

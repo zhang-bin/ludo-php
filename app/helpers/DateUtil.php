@@ -1,6 +1,8 @@
 <?php
-class DateUtil {
-	public static function humanEn($small_ts, $large_ts=false) {
+class DateUtil
+{
+	public static function humanEn($small_ts, $large_ts = false)
+    {
 		if (!ctype_digit($small_ts)) $small_ts = strtotime($small_ts);
 		if(!$large_ts) $large_ts = time();
 		$n = $large_ts - $small_ts;
@@ -22,7 +24,9 @@ class DateUtil {
 		if($n >= (60*60*24*7*4*12)) return 'about ' . round($n/(60*60*24*7*52)) . ' years ago'; 
 		return false;
 	}
-	public static function humanCn($small_ts, $large_ts=false) {
+
+	public static function humanCn($small_ts, $large_ts = false)
+    {
 		if (!ctype_digit($small_ts)) $small_ts = strtotime($small_ts);
 		if(!$large_ts) $large_ts = time();
 		$n = $large_ts - $small_ts;
@@ -45,7 +49,9 @@ class DateUtil {
 		if($n >= (60*60*24*7*4*12)) return date($small_ts); 
 		return false;
 	}
-	public static function thisYear($small_ts, $large_ts=false) {
+
+	public static function thisYear($small_ts, $large_ts = false)
+    {
 		if (!ctype_digit($small_ts)) $small_ts = strtotime($small_ts);
 		if(!$large_ts) $large_ts = time();
 		$n = $large_ts - $small_ts;
@@ -58,4 +64,3 @@ class DateUtil {
 		return date('Y-m-d H:i', $small_ts);
 	}
 }
-?>

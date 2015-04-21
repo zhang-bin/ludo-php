@@ -1,5 +1,6 @@
 <?php
-class Load {
+class Load
+{
 	/**
 	 * 'jsname' => array(
 	 * 		'root_base' => SITE_URL or THEME_URL. [optional, default is SITE_URL]
@@ -137,7 +138,8 @@ class Load {
 		),
 	);
 	
-	public static function js($jsname, $return = true, $loadToTemplate = true) {
+	public static function js($jsname, $return = true, $loadToTemplate = true)
+    {
 		$module = self::$jsModules[$jsname];
 		if (!$module) return;
 		
@@ -158,7 +160,9 @@ class Load {
 		else
 			return $result;
 	}
-	public static function css($jsname, $return = true, $loadToTemplate = true) {
+
+	public static function css($jsname, $return = true, $loadToTemplate = true)
+    {
 		$module = self::$cssModules[$jsname];
 		if (!$module) return;
 		$root_base = isset($module['root_base']) ? $module['root_base'] : LD_PUBLIC_PATH;
@@ -168,12 +172,16 @@ class Load {
 		if (!$return) 	echo $result;
 		else	return $result;
 	}
-	public static function helper($name) {
+
+	public static function helper($name)
+    {
 		if (!class_exists($name, false)) {
 			include LD_HELPER_PATH.'/'.$name.php;
 		}
 	}
-	public static function conf($name) {
+
+	public static function conf($name)
+    {
 		return include LD_CONF_PATH.'/'.ucfirst($name).'.conf'.php;
 	}
 }
