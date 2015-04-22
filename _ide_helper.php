@@ -32,4 +32,8 @@ namespace {
     class QueryException extends \Ludo\Database\QueryException {
 
     }
+
+    class Counter extends Ludo\Counter\Counter {
+
+    }
 }
