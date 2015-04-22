@@ -24,7 +24,7 @@ class Module {
         $dbh = \Ludo\Support\ServiceProvider::getInstance()->getDBHandler();
         try {
             $this->_fields = $dbh->select($sql);
-        } catch (\Ludo\Database\QueryException $e) {
+        } catch (QueryException $e) {
             return $e->getMessage();
         }
 
@@ -33,11 +33,11 @@ class Module {
 
             if (preg_match('/^((?:var)?char)\((\d+)\)/', $field['Type'], $matches)) {
                 $row['Type'] = $matches[1];
-            } else if (preg_match('/^decimal\((\d+),(\d+)\)/', $field['Type'], $matches)) {
+            } elseif (preg_match('/^decimal\((\d+),(\d+)\)/', $field['Type'], $matches)) {
                 $row['Type'] = 'decimal';
-            } else if (preg_match('/^float\((\d+),(\d+)\)/', $field['Type'], $matches)) {
+            } elseif (preg_match('/^float\((\d+),(\d+)\)/', $field['Type'], $matches)) {
                 $row['Type'] = 'float';
-            } else if (preg_match('/^((?:big|medium|small|tiny)?int)\((\d+)\)/', $field['Type'], $matches)) {
+            } elseif (preg_match('/^((?:big|medium|small|tiny)?int)\((\d+)\)/', $field['Type'], $matches)) {
                 $row['Type'] = $matches[1];
             }
 
@@ -161,7 +161,7 @@ Class ludo_upper extends BaseCtrl {
                 ));
 				$dao->commit();
 				return array(STATUS => SUCCESS, URL => url('ludo_lower'));
-			} catch (Exception $e) {
+			} catch (QueryException $e) {
 				$dao->rollback();
 				return array(STATUS => ALERT, MSG => '添加失败!');
 			}
@@ -191,7 +191,7 @@ Class ludo_upper extends BaseCtrl {
                 ));
 				$dao->commit();
 				return array(STATUS => SUCCESS, URL => url('ludo_lower'));
-			} catch (Exception $e) {
+			} catch (QueryException $e) {
 				$dao->rollback();
 				return array(STATUS => ALERT, MSG => '修改失败!');
 			}
@@ -225,7 +225,7 @@ EOF;
             ));
 			$dao->commit();
 			return array(STATUS => SUCCESS, URL => url('ludo_lower'));
-		} catch (Exception $e) {
+		} catch (QueryException $e) {
 			$dao->rollback();
 			return array(STATUS => ALERT, MSG => '删除失败!');
 		}
@@ -248,7 +248,7 @@ EOF;
             ));
 			$dao->commit();
 			return array(STATUS => SUCCESS, URL => url('ludo_lower'));
-		} catch (Exception $e) {
+		} catch (QueryException $e) {
 			$dao->rollback();
 			return array(STATUS => ALERT, MSG => '删除失败!');
 		}

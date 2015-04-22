@@ -28,4 +28,8 @@ namespace {
     class TaskQueue extends \Ludo\Task\TaskQueue {
 
     }
+
+    class QueryException extends \Ludo\Database\QueryException {
+
+    }
 }

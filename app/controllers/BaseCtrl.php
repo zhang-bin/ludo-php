@@ -1,9 +1,15 @@
 <?php
 class BaseCtrl extends \Ludo\Routing\Controller
 {
+    /**
+     * @var \Monolog\Logger
+     */
+    protected $log;
+
     public function __construct($name)
     {
         parent::__construct($name);
+        $this->log = \Ludo\Support\ServiceProvider::getInstance()->getLogHandler();
     }
 
     public function beforeAction($action)

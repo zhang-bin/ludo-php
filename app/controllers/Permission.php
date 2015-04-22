@@ -96,7 +96,7 @@ class Permission extends BaseCtrl {
 				));
 				$dao->commit();
                 return array(STATUS => SUCCESS, URL => url('permission'));
-			} catch (Exception $e) {
+			} catch (QueryException $e) {
 				$dao->rollback();
                 return array(STATUS => ALERT, MSG => '添加角色失败');
 			}
@@ -174,7 +174,7 @@ class Permission extends BaseCtrl {
 				$dao->commit();
 				unset($_SESSION[USER]['formId']);
                 return array(STATUS => SUCCESS, URL => url('permission'));
-			} catch (Exception $e) {
+			} catch (QueryException $e) {
 				$dao->rollback();
                 return array(STATUS => ALERT, MSG => '修改角色失败');
 			}
@@ -193,7 +193,7 @@ class Permission extends BaseCtrl {
 			));
 			$dao->commit();
             return array(STATUS => SUCCESS, URL => url('permission'));
-		} catch (Exception $e) {
+		} catch (QueryException $e) {
 			$dao->rollback();
             return array(STATUS => ALERT, MSG => '删除角色失败');
 		}
@@ -311,7 +311,7 @@ class Permission extends BaseCtrl {
     			$dao->commit();
     			unset($_SESSION[USER]['formId']);
 				return array(STATUS => SUCCESS, URL => url('permission/users'));
-    		} catch (Exception $e) {
+    		} catch (QueryException $e) {
     			$dao->rollback();
 				return array(STATUS => ALERT, MSG => '添加用户失败');
     		}
@@ -361,7 +361,7 @@ class Permission extends BaseCtrl {
     			$dao->commit();
     			unset($_SESSION[USER]['formId']);
 				return array(STATUS => SUCCESS, URL => url('permission/users'));
-    		} catch (Exception $e) {
+    		} catch (QueryException $e) {
     			$dao->rollback();
 				return array(STATUS => ALERT, MSG => '修改用户失败');
     		}
@@ -395,7 +395,7 @@ class Permission extends BaseCtrl {
 				$dao->commit();
 				unset($_SESSION[USER]['formId']);
 				return array(STATUS => SUCCESS, URL => url('permission/users'));
-			} catch (Exception $e) {
+			} catch (QueryException $e) {
 				$dao->rollback();
 				return array(STATUS => ALERT, MSG => '修改密码失败');
 			}
@@ -414,7 +414,7 @@ class Permission extends BaseCtrl {
     		));
     		$dao->commit();
 			return array(STATUS => SUCCESS, URL => url('permission/users'));
-    	} catch (Exception $e) {
+    	} catch (QueryException $e) {
     		$dao->rollback();
 			return array(STATUS => ALERT, MSG => '删除用户失败');
     	}
@@ -442,7 +442,7 @@ class Permission extends BaseCtrl {
     		));
     		$dao->commit();
 			return array(STATUS => SUCCESS, URL => url('permission/users'));
-    	} catch (Exception $e) {
+    	} catch (QueryException $e) {
     		$dao->rollback();
 			return array(STATUS => ALERT, MSG => '操作失败');
     	}
@@ -460,7 +460,7 @@ class Permission extends BaseCtrl {
     		));
     		$dao->commit();
 			return array(STATUS => SUCCESS, URL => url('permission/users'));
-    	} catch (Exception $e) {
+    	} catch (QueryException $e) {
     		$dao->rollback();
 			return array(STATUS => ALERT, MSG => '操作失败');
     	}

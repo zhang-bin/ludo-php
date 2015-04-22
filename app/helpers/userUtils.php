@@ -150,7 +150,7 @@ function getDownloadFileName($name)
 {
     if (preg_match('/MSIE/', $_SERVER['HTTP_USER_AGENT'])) {
         header("Content-Disposition: attachment; filename=".$name);
-    } else if (preg_match('/Firefox/', $_SERVER['HTTP_USER_AGENT'])) {
+    } elseif (preg_match('/Firefox/', $_SERVER['HTTP_USER_AGENT'])) {
         header("Content-Disposition: attachment; filename*='utf8'".$name);
     } else {
         header("Content-Disposition: attachment; filename=".urldecode($name));
