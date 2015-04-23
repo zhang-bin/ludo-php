@@ -53,7 +53,7 @@ class Crypter
         /* 初始化加密模块，用以解密 */
         mcrypt_generic_init($td, $keyStr, $iv);
         /* 解密 */
-        $encrypted = pack( "H*", $str);
+        $encrypted = pack("H*", $str);
         $decrypted = mdecrypt_generic($td, $encrypted);
         /* 关闭解密句柄，并关闭模块 */
         mcrypt_generic_deinit($td);

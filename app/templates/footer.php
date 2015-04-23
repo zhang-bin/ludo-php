@@ -2,12 +2,12 @@
 <footer class="footer">
 	<div class="container">
 		<p>
-			Lenovo Mobile Service System(CRM) © 2012-2013 All Rights Reserved. |
+			Ludo-PHP © 2014-2015 All Rights Reserved. |
 			<?php if (DEBUG) { ?><span>Process time: <?=sprintf('%.3f', (microtime(true) - SYS_START_TIME)*1000)?> ms.</span>
 			<a href="<?=LD_UPLOAD_URL?>/debug_console.php" target="debug_console">debug_console</a>
 			<?php } ?>
 		</p>
-		<p><a href="mailto:support@lenovomobileservice.com"> System Support </a> |<a href="termsofuse.php">  Terms of Use </a></p>
+		<p><a href="mailto:hunter.zhangbin@gmail.com"> System Support </a></p>
 	</div>
 </footer>
 <div class="modal-del modal hide fade">
