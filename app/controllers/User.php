@@ -5,7 +5,7 @@ class User extends BaseCtrl {
     }
 	
     function index() {
-    	if (!self::logined()) {
+    	if (!logined()) {
     		$this->tpl->setFile('user/login')->assign('jurl', trim($_GET['jurl']))->display();
     	} else {
 			redirect('index');
@@ -13,7 +13,7 @@ class User extends BaseCtrl {
     }
 
     function login(){
-    	$dao = new AdminDao();
+    	$dao = new UserDao();
     	if (empty($_POST)){
 			$this->tpl->setFile('user/login')->display();
     	} else {
@@ -39,10 +39,6 @@ class User extends BaseCtrl {
     	}
     }
     
-    static function logined() {
-    	return !empty($_SESSION[USER]);
-    }
-
 	public function logout() {
 		unset($_SESSION);
 		session_destroy();

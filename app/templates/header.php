@@ -33,7 +33,7 @@
           	<div class="nav-collapse collapse">
           		<?=Menu::menuRender()?>
           		<div class="pull-right" style="color:#93C0E6;margin-top:10px;">
-					<?php if(User::logined()) { ?>
+					<?php if(logined()) { ?>
                         欢迎, <?=$_SESSION[USER]['nickname']?> <span>|</span>
 						<a href="<?=url('user/logout')?>">退出</a>
 					<?php } ?>
