@@ -15,7 +15,10 @@ class BaseCtrl extends \Ludo\Routing\Controller
     public function beforeAction($action)
     {
         $this->login();
-        $this->illegalRequest();
+        if($_SESSION[USER]['first'] == 1) { //首次登录
+            return redirect('user/changePassword');
+        }
+//        $this->illegalRequest();
     }
 
     public function afterAction($action, $result)

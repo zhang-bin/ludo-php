@@ -27,17 +27,17 @@ class Menu
     public static function menuRender()
     {
 		self::init();
-		$html = '<ul class="nav">';
+		$html = '<ul class="nav navbar-nav">';
 		foreach (self::$menu as $top=>$topMenus) {//1级菜单
 			$active = self::$currMenuId['level1'] == $top ? 'active' : '';
 			$li = '<li class="dropdown '.$active.'">';
             if (empty($topMenus['children'])) {
                 $li .= '<a href="'.url($top).'">'.$topMenus['name'].'</a>';
             } else {
-                $li .= '<a href="javascript:;" class="dropdown-toggle" data-toggle="dropdown">'.$topMenus['name'].'</a><ul class="dropdown-menu">';
+                $li .= '<a href="javascript:;" class="dropdown-toggle" data-toggle="dropdown">'.$topMenus['name'].'</a><ul class="dropdown-menu" role="menu">';
 				foreach ($topMenus['children'] as $second=>$secondMenus) {//2级菜单
 					if (!empty($secondMenus['children'])) {
-						$li .= '<li class="offset-right dropdown"><a href="javascript:;">'.$secondMenus['name'].'</a><ul class="dropdown-menu">';
+						$li .= '<li class="offset-right dropdown"><a href="javascript:;">'.$secondMenus['name'].'</a><ul class="dropdown-menu" role="menu">';
 						foreach ($secondMenus['children'] as $third => $thirdMenus) {//3级菜单
 							$li .= '<li><a href="'.url($third).'">'.$thirdMenus['name'].'</a></li>';
 						}
@@ -59,25 +59,25 @@ class Menu
     public static function navRender($title, $toolBox)
     {
 		self::init();
-		$html = '<ul class="breadcrumb">';
+		$html = '<ol class="breadcrumb">';
 		if (isset(self::$currMenuId['level1'])) {
 			$menu = self::$currMenuId['level1'];
             $curMenu = self::$menu[$menu];
-			$html .= '<li><a href="'.url($menu).'">'.$curMenu['name'].'</a></li>';
+			$html .= '<li><a href="'.url($menu).'">'.$curMenu['name'].'</a></li>'.PHP_EOL;
 		}
 		if (isset(self::$currMenuId['level2'])) {
 			$subMenu = self::$currMenuId['level2'];
             $curMenu = $curMenu['children'][$subMenu];
-			$html .= '<li><span class="divider">/</span><a href="'.url($subMenu).'">'.$curMenu['name'].'</a></li>';
+			$html .= '<li><a href="'.url($subMenu).'">'.$curMenu['name'].'</a></li>'.PHP_EOL;
 		}
 		if (isset(self::$currMenuId['level3'])) {
 			$subSubMenu = self::$currMenuId['level3'];
             $curMenu = $curMenu['children'][$subSubMenu];
-			$html .= '<li><span class="divider">/</span><a href="'.url($subSubMenu).'">'.$curMenu['name'].'</a></li>';
+			$html .= '<li><a href="'.url($subSubMenu).'">'.$curMenu['name'].'</a></li>'.PHP_EOL;
 		}
-        if (!empty($title)) $html .= '<li class="active"><span class="divider">/</span>'.$title.'</li>';
+        if (!empty($title)) $html .= '<li class="active">'.$title.'</li>';
 		$html .= '<span style="float:right;">'.$toolBox.'</span>';
-		$html .= '</ul>';
+		$html .= '</ol>';
 		return $html;
 	}
 

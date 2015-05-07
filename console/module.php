@@ -163,7 +163,7 @@ Class ludo_upper extends BaseCtrl {
 				return array(STATUS => SUCCESS, URL => url('ludo_lower'));
 			} catch (QueryException $e) {
 				$dao->rollback();
-				return array(STATUS => ALERT, MSG => '添加失败!');
+				return array(STATUS => ALERT, MSG => OPERATION_FAILED);
 			}
 		}
     }
@@ -193,7 +193,7 @@ Class ludo_upper extends BaseCtrl {
 				return array(STATUS => SUCCESS, URL => url('ludo_lower'));
 			} catch (QueryException $e) {
 				$dao->rollback();
-				return array(STATUS => ALERT, MSG => '修改失败!');
+				return array(STATUS => ALERT, MSG => OPERATION_FAILED);
 			}
 		}
     }
@@ -207,6 +207,7 @@ Class ludo_upper extends BaseCtrl {
 				->assign('ludo_lower', $ludo_lower)
 				->display();
 	}
+
 
 EOF;
         if ($this->_hasDeleted) {
@@ -227,10 +228,9 @@ EOF;
 			return array(STATUS => SUCCESS, URL => url('ludo_lower'));
 		} catch (QueryException $e) {
 			$dao->rollback();
-			return array(STATUS => ALERT, MSG => '删除失败!');
+			return array(STATUS => ALERT, MSG => OPERATION_FAILED);
 		}
 	}
-
 EOF;
 
         } else {
@@ -250,7 +250,7 @@ EOF;
 			return array(STATUS => SUCCESS, URL => url('ludo_lower'));
 		} catch (QueryException $e) {
 			$dao->rollback();
-			return array(STATUS => ALERT, MSG => '删除失败!');
+			return array(STATUS => ALERT, MSG => OPERATION_FAILED);
 		}
 	}
 EOF;
@@ -317,10 +317,10 @@ $gTitle = 'ludo_module_descr列表';
 $gToolbox = '<a href="'.url('ludo_lower/add').'" class="add">添加ludo_module_descr</a>';
 include tpl('header');
 ?>
-<form class="form-inline" action="<?=url('ludo_lower/index')?>">
-    <input type="submit" class="btn btn-small btn-primary" value="搜索" />
+<form class="form form-inline" action="<?=url('ludo_lower/index')?>">
+    <input type="submit" class="btn btn-small btn-primary" value="<?=SEARCH?>" />
 </form>
-<table class="table table-hover">
+<table class="table table-hover table-bordered">
     <thead>
     	<tr>
 
@@ -334,7 +334,7 @@ EOF;
 EOF;
         }
         $index .= <<<'EOF'
-            <th>操作</th>
+            <th><?=ACTION?></th>
         </tr>
     </thead>
     <tbody>
@@ -354,16 +354,22 @@ EOF;
 
         <td>
             <div class="btn-group">
-                <button class="btn btn-small btn-primary dropdown-toggle" data-toggle="dropdown" href="#">
-                    操作
+                <button class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+                    <?=ACTION?>
                     <span class="caret"></span>
                 </button>
-                <ul class="dropdown-menu pull-right" style = "min-width: 100px;">
+                <ul class="dropdown-menu pull-right" role="menu">
                     <li>
-                        <a href="<?=url('ludo_lower/change/'.$ludo_lower['id'])?>">编辑</a>
+                        <a href="<?=url('ludo_lower/change/'.$ludo_lower['id'])?>">
+                            <span class="glyphicon glyphicon-edit" aria-hidden="true"></span>
+                            <?=MODIFY?>
+                        </a>
                     </li>
                     <li>
-                        <a name="del" title="删除ludo_module_descr" body="确认删除？" href="<?=url('ludo_lower/del/'.$ludo_lower['id'])?>">删除</a>
+                        <a name="del" title="删除ludo_module_descr" body="<?=CONFIRM_DELETE?>" href="<?=url('ludo_lower/del/'.$ludo_lower['id'])?>">
+                            <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
+                            <?=DELETE?>
+                        </a>
                     </li>
                 </ul>
             </div>
@@ -401,7 +407,7 @@ $change = isset($_GET['id']) ? true : false;
 $gTitle = $change ? '修改ludo_module_descr' : '添加ludo_module_descr';
 include tpl('header');
 ?>
-<form method="post" class="form-horizontal form" action="<?=$change ? url('ludo_lower/change') : url('ludo_lower/add')?>">
+<form method="post" class="form-horizontal" action="<?=$change ? url('ludo_lower/change') : url('ludo_lower/add')?>">
 
 EOF;
         $ignore = array('id', 'deleted', 'createDate', 'createTime');
@@ -413,10 +419,10 @@ EOF;
                 case 'text':
                 case 'longtext':
                   $change .= <<<EOF
-    <div class="control-group">
-        <label class="control-label"><strong>{$field['Comment']}</strong></label>
-        <div class="controls">
-            <textarea style="width:400px;height:100px;" name="{$field['Field']}"><?=\$ludo_lower['{$field['Field']}']?></textarea>
+    <div class="form-group">
+        <label for="{$field['Field']}" class="col-sm-2 control-label">{$field['Comment']}</label>
+        <div class="col-sm-4">
+            <textarea class="form-control" style="width:400px;height:100px;" name="{$field['Field']}" id="{$field['Field']}"><?=\$ludo_lower['{$field['Field']}']?></textarea>
         </div>
     </div>
 
@@ -424,10 +430,10 @@ EOF;
                     break;
                 default:
                     $change .= <<<EOF
-    <div class="control-group">
-        <label class="control-label"><strong>{$field['Comment']}</strong></label>
-        <div class="controls">
-            <input type="text" class="span3" name="{$field['Field']}" value="<?=\$ludo_lower['{$field['Field']}']?>" />
+    <div class="form-group">
+        <label for="{$field['Field']}" class="col-sm-2 control-label">{$field['Comment']}</label>
+        <div class="col-sm-4">
+            <input type="text" id="{$field['Field']}" class="form-control" name="{$field['Field']}" value="<?=\$ludo_lower['{$field['Field']}']?>" />
         </div>
     </div>
 
@@ -437,11 +443,11 @@ EOF;
         }
 
         $change .= <<<'EOF'
-    <div class="control-group">
-        <div class="controls">
+    <div class="form-group">
+        <div class="col-sm-offset-2 col-sm-4">
             <input type="hidden" id="id" name="id" value="<?=$ludo_lower['id']?>"/>
-            <input id="submitBtn" type="submit" value="提交" class="btn btn-success" />
-            <input type="button" onclick="javascript:history.back();" value="取消" class="btn" />
+            <input id="submitBtn" type="submit" value="<?=SUBMIT?>" class="btn btn-success" />
+            <input type="button" onclick="javascript:history.back();" value="<?=CANCEL?>" class="btn btn-default" />
         </div>
     </div>
 </form>
@@ -484,9 +490,9 @@ EOF;
         foreach ($this->_fields as $field) {
             if (in_array($field['Field'], $ignore)) continue;
             $view .= <<<EOF
-    <div class="control-group">
-        <label class="control-label"><strong>{$field['Comment']}</strong></label>
-        <div class="controls">
+    <div class="form-group">
+        <label for="{$field['Field']}" class="col-sm-2 control-label">{$field['Comment']}</label>
+        <div class="col-sm-10">
             <p class="form-control-static"><?=\$ludo_lower['{$field['Field']}']?></p>
         </div>
     </div>

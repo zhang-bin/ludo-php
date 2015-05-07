@@ -9,11 +9,11 @@ class Log extends BaseCtrl {
 	 *
 	 * @var array
 	 */
-	public static $log = array();
+	public static $logData = array();
 
 	public static function log($arr, $autoWrite=true) {
-		if (empty(self::$log)) {
-			self::$log = array(
+		if (empty(self::$logData)) {
+			self::$logData = array(
 				'userId' => $_SESSION[USER]['id'] ? $_SESSION[USER]['id'] : 0,
 				'uname' => $_SESSION[USER]['uname'],
 				'createTime' => date(TIME_FORMAT),
@@ -35,19 +35,19 @@ class Log extends BaseCtrl {
 				$rip = getenv('REMOTE_ADDR') ? ', getenv(REMOTE_ADDR):'.getenv('REMOTE_ADDR') : '';
 				$srip = $_SERVER['REMOTE_ADDR'] ? ', SERVER[REMOTE_ADDR]'.$_SERVER['REMOTE_ADDR'] : '';
 
-				self::$log['proxyIp'] = $cip.$xip.$rip.$srip;
+				self::$logData['proxyIp'] = $cip.$xip.$rip.$srip;
 			}
 		}
 		if (!empty($arr)) {
-			self::$log = array_merge(self::$log, $arr);
+			self::$logData = array_merge(self::$logData, $arr);
 		}
 		if ($autoWrite) self::write();
 	}
 
 	static function write() {
-		if (!empty(self::$log)) {
-			Factory::dao('log')->add(self::$log);
-			self::$log = array();
+		if (!empty(self::$logData)) {
+			Factory::dao('log')->add(self::$logData);
+			self::$logData = array();
 		}
 	}
 }

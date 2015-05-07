@@ -1,11 +1,3 @@
-body {
-	padding-top: 40px;
-}
-@media (max-width: 979px) {
-	body {
-		padding-top: 0;
-	}
-}
 #loading {
 	right: 0;
 	top: 0;
@@ -77,7 +69,7 @@ strong.p_info {
 	border-radius:3px;
 }
 .footer {
-	background-color:#f5f5f5;
+	background-color:#595C64;
 	border-top:1px solid #e5e5e5;
 	padding:30px 0;
 	margin-top:70px;
@@ -87,9 +79,6 @@ strong.p_info {
 	color: #aaa;
 	border-bottom: 1px solid #777;
 	text-decoration: none;
-}
-.table th{
-	background:#ccc;
 }
 a.excel {
     background: url("excel.png") no-repeat scroll 0 0 transparent;
@@ -329,10 +318,6 @@ section{
 .text-error-important {
 	color: #b94a48 !important;
 }
-.form-horizontal .form-control-static{
-    padding-top: 5px;
-    margin-bottom: 0;
-}
 .portlet {
     clear: both;
     margin-top: 0px;
@@ -371,4 +356,29 @@ section{
     padding: 10px;
     background-color: #fff;
     border-radius: 0px 0px 4px 4px;
+}
+
+.ludo-menu {
+    border-top: 1px solid #999;
+    filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#595C64', endColorstr='#1B1B1C');
+    background: -webkit-linear-gradient(top, #595C64, #1B1B1C);
+    background: -moz-linear-gradient(top, #595C64, #1B1B1C);
+    background: -o-linear-gradient(top, #595C64, #1B1B1C);
+    background: -ms-linear-gradient(top, #595C64, #1B1B1C);
+    background: linear-gradient(top, #595C64, #1B1B1C);
+}
+.ludo-nav {
+    margin-bottom: 0;
+    border-bottom: 0;
+}
+.ludo-crumbs {
+    margin: 30px 0 20px;
+}
+
+.form {
+    margin-bottom: 20px;
+}
+
+.ludo-tabs .nav-tabs {
+    margin-bottom: 15px;
 }

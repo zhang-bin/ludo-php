@@ -1,18 +1,18 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
-
+<!DOCTYPE html>
+<html lang="en">
 <head>
-	<meta http-equiv="Content-Type" content="text/html; charset=<?=PROGRAM_CHARSET?>" />
-	<title><?=SITE_TITLE.' : '.(isset($gTitle) ? strip_tags($gTitle) : '')?></title>
-	<meta name="author" content="The great c2ms team" />
-	<meta name="Copyright" content="版权声明 C2MS@2009 ALL RIGHTS RESERVED" />
-	<meta name="description" content="" />
-	<meta name="keywords" content="c2ms" />
-	<link rel="shortcut icon" href="<?=rurl('img/favicon.ico')?>" type="image/x-icon" />
+    <meta charset="<?=PROGRAM_CHARSET?>">
+    <title><?=SITE_TITLE?></title>
+    <meta name="author" content="Maitrox" />
+    <meta name="Copyright" content="Maitrox" />
+    <meta name="description" content="" />
+    <meta http-equiv="X-UA-Compatible" content="IE=badge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<?php
 		Load::js('jquery');
 		Load::js('bootstrap');
 		Load::js('common');
+        View::loadCss();
 	?>
 <style>
 body{
@@ -58,15 +58,20 @@ body{
 <body style="padding-top:40px;">
 <form class="form-horizontal" id="form1" method="post" action="<?=url('user/login')?>">
 	<h1><a href="<?=url()?>"></a></h1>
-	<div class="control-group">
-      	<input type="text" class="input-block-level" id="username" name="username" placeholder="用户名" />
-      	<input type="password" class="input-block-level" id="password" name="password" placeholder="密码" />
+    <div class="form-group">
+      	<input type="text" class="form-control input-block-level" id="username" name="username" placeholder="用户名" />
+    </div>
+    <div class="form-group">
+      	<input type="password" class="form-control input-block-level" id="password" name="password" placeholder="密码" />
+    </div>
+    <div class="form-group">
 		<input type="hidden" id="timezoneOffset" name="timezoneOffset" />
-		<input id="submitBtn" type="submit" class="btn btn-large btn-primary" value="登录" />
+		<input id="submitBtn" type="submit" class="btn btn-lg btn-primary" value="<?=SIGN_IN?>" />
 		<input type="hidden" id="jurl" name="jurl" value="<?=$_GET['jurl']?>" />
   	</div>
 </form>
 <div id="loading">Loading</div>
+<?php View::loadJs();?>
 <script type="text/javascript">
 $(document).ready(function() {
   	$('#username').focus();

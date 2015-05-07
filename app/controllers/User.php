@@ -27,7 +27,10 @@ class User extends BaseCtrl {
     		$_SESSION[USER]['id'] = $user['id'];
     		$_SESSION[USER]['username'] = $user['username'];
     		$_SESSION[USER]['nickname'] = $user['nickname'];
+            $_SESSION[USER]['first'] = $user['first'];
             $_SESSION[USER]['isAdmin'] = $user['isAdmin'] ? true : false;
+            $_SESSION[USER]['menu'] = RoleModel::parseMenuPermissionsForUser($user['id']);
+            $_SESSION[USER]['permissions'] = RoleModel::parseModulePermissionsForUser($user['id']);
 			unset($_POST['password']);
 			Log::log(array(
 				'name' => 'User Login',
@@ -44,6 +47,42 @@ class User extends BaseCtrl {
 		session_destroy();
 		redirect();
 	}
+
+    /**
+     * 用户首次登录修改密码
+     */
+    public function changePassword() {
+        if (empty($_POST)) {
+            $this->tpl->setFile('user/changePassword')
+                ->assign('user', (new UserDao())->fetch($_SESSION[USER]['id']))
+                ->display();
+        } else {
+            $dao = new UserDao();
+            $id = intval($_POST['id']);
+            $newPassword = trim($_POST['newPassword']);
+            $confirmPassword = trim($_POST['confirmPassword']);
+            if (empty($newPassword)) return array(STATUS => ALERT, MSG => '新密码为空');
+            if (empty($confirmPassword)) return array(STATUS => ALERT, MSG => '确认密码为空');
+            if ($newPassword != $confirmPassword) return array(STATUS => ALERT, MSG => '两次密码不一致');
+
+            $add['password'] = password_hash($newPassword, PASSWORD_DEFAULT, array('salt' => PASSWORD_SALT));
+            $_SESSION[USER]['first'] = $add['first'] = 0;
+
+            try {
+                $dao->beginTransaction();
+                $dao->update($id, $add);
+                Log::log(array(
+                    'name' => 'change userPassword',
+                    'new' => $id
+                ));
+                $dao->commit();
+                return redirect();
+            } catch (Exception $e) {
+                $dao->rollback();
+                return array(STATUS => ALERT, MSG => '修改用户密码失败');
+            }
+        }
+    }
 
 	public static function can($action = CURRENT_ACTION) {
 		if ($_SESSION[USER]['isAdmin']) return true;

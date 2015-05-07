@@ -19,86 +19,88 @@ include tpl('header');
         border: 0;
         width: auto;
     }
-    input[type='checkbox'] {
-        margin-top: 0px;
-    }
     .resource {
         font-size: 14px;
     }
+    .checkbox-inline {
+        padding-top: 0 !important;
+    }
 </style>
-<div class="row-fluid">
-    <form id="addRole" class="form-horizontal form" action="<?=$change ? url('permission/changeRole') : url('permission/addRole')?>">
-        <div class="control-group">
-            <label class="control-label">角色名称
-                <span class='red'>*</span>
-            </label>
-            <div class="controls">
-                <input type="text" name="role" id="role" value="<?=$role['role']?>" required="required" />
-            </div>
+<form id="addRole" class="form-horizontal" action="<?=$change ? url('permission/changeRole') : url('permission/addRole')?>">
+    <div class="form-group">
+        <label for="role" class="col-sm-2 control-label">角色名称</label>
+        <div class="col-sm-4">
+            <input type="text" name="role" id="role" class="form-control" value="<?=$role['role']?>" required="required" />
         </div>
-        <div class="control-group">
-            <label class="control-label">角色描述
-                <span class='red'>*</span>
-            </label>
-            <div class="controls">
-                <input type="text" name="descr" id="descr" value="<?=$role['descr']?>" />
-            </div>
+    </div>
+    <div class="form-group">
+        <label for="descr" class="col-sm-2 control-label">角色描述</label>
+        <div class="col-sm-4">
+            <input type="text" name="descr" class="form-control" id="descr" value="<?=$role['descr']?>" />
         </div>
-        <div class="control-group">
-            <div class="controls">
-                <ul class="nav nav-tabs">
-                    <li class="active"><a href="#function" data-toggle="tab">功能模块</a></li>
-                    <li><a href="#menu" data-toggle="tab">菜单</a></li>
-                </ul>
-                <div class="tab-content">
-                    <div class="tab-pane active" id="function">
-                        <?php foreach ($modulePermissions as $resource => $operations) {?>
-                            <fieldset class="permission">
-                                <legend>
-                                    <div class="resource">
-                                        <?=$resource?> -- <input type="checkbox" class="checkAll" />
-                                    </div>
-                                </legend>
-                                <div class="operation">
-                                    <?php foreach ($operations as $operation => $operationId) {?>
-                                        <input type="checkbox" name="permission[<?=$operationId['id']?>]" <?=($operationId['checked']) ? 'checked' : ''?>  class="checkOne" />
-                                        &nbsp;
-                                        <span><?=$operation?></span>
-                                        &emsp;
-                                    <?php }?>
+    </div>
+    <div class="form-group">
+        <div class="col-sm-offset-2 col-sm-10 ludo-tabs">
+            <ul class="nav nav-tabs">
+                <li class="active"><a href="#function" data-toggle="tab">功能模块</a></li>
+                <li><a href="#menu" data-toggle="tab">菜单</a></li>
+            </ul>
+            <div class="tab-content">
+                <div class="tab-pane active" id="function">
+                    <?php foreach ($modulePermissions as $resource => $operations) {?>
+                        <fieldset class="permission">
+                            <legend>
+                                <div class="resource">
+                                    <label class="checkbox-inline">
+                                        <input type="checkbox" class="checkAll" />
+                                        <?=$resource?>
+                                    </label>
                                 </div>
-                            </fieldset>
-                        <?php }?>
-                    </div>
-                    <div class="tab-pane" id="menu">
-                        <?php foreach ($menuPermissions as $resource => $resourceId) {?>
-                            <fieldset class="permission">
-                                <legend>
-                                    <div class="resource">
-                                        <?=$resource?> -- <input type="checkbox" class="checkAll" name="permission[<?=$resourceId['id']?>]" <?=($resourceId['checked']) ? 'checked' : ''?> />
-                                    </div>
-                                </legend>
-                                <div class="operation">
-                                    <?php foreach ($subMenuPermissions[$resource] as $operation => $operationId) {?>
+                            </legend>
+                            <div class="operation">
+                                <?php foreach ($operations as $operation => $operationId) {?>
+                                    <label class="checkbox-inline">
                                         <input type="checkbox" name="permission[<?=$operationId['id']?>]" <?=($operationId['checked']) ? 'checked' : ''?>  class="checkOne" />
-                                        &nbsp;
-                                        <span><?=$operation?></span>
-                                        &emsp;
-                                    <?php }?>
+                                        <?=$operation?>
+                                    </label>
+                                <?php }?>
+                            </div>
+                        </fieldset>
+                    <?php }?>
+                </div>
+                <div class="tab-pane" id="menu">
+                    <?php foreach ($menuPermissions as $resource => $resourceId) {?>
+                        <fieldset class="permission">
+                            <legend>
+                                <div class="resource">
+                                    <label class="checkbox-inline">
+                                        <input type="checkbox" class="checkAll" name="permission[<?=$resourceId['id']?>]" <?=($resourceId['checked']) ? 'checked' : ''?> />
+                                        <?=$resource?>
+                                    </label>
                                 </div>
-                            </fieldset>
-                        <?php }?>
-                    </div>
+                            </legend>
+                            <div class="operation">
+                                <?php foreach ($subMenuPermissions[$resource] as $operation => $operationId) {?>
+                                    <label class="checkbox-inline">
+                                        <input type="checkbox" name="permission[<?=$operationId['id']?>]" <?=($operationId['checked']) ? 'checked' : ''?>  class="checkOne" />
+                                        <?=$operation?>
+                                    </label>
+                                <?php }?>
+                            </div>
+                        </fieldset>
+                    <?php }?>
                 </div>
             </div>
         </div>
-        <div class="form-actions">
+    </div>
+    <div class="form-group">
+        <div class="col-sm-offset-2 col-sm-10">
             <input type="hidden" id="id" name="id" value="<?=$role['id']?>" />
-            <button type="submit" class="btn btn-primary">保存</button>
-            <a href="javascript:history.go(-1);" class="btn">返回</a>
+            <button type="submit" class="btn btn-success"><?=SUBMIT?></button>
+            <a href="javascript:history.go(-1);" class="btn btn-default"><?=CANCEL?></a>
         </div>
-    </form>
-</div>
+    </div>
+</form>
 <?php View::startJs();?>
 <script type="text/javascript">
 $(document).ready(function(){

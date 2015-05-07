@@ -3,7 +3,7 @@ $gTitle = '角色管理';
 $gToolbox .= '<a href="'.url('permission/addRole').'" class="add">添加角色</a>';
 include tpl('header'); 
 ?>
-<table class="table table-hover">
+<table class="table table-hover table-bordered">
     <thead>
         <tr>
             <th>角色名称</th>
@@ -22,13 +22,24 @@ include tpl('header');
         <td><a href="<?=url('permission/user/roleId/'.$role['id'])?>">查看用户</a></td>
         <td>
             <div class="btn-group">
-                <button type="button" class="btn btn-default btn-small dropdown-toggle" data-toggle="dropdown">操作 <span class="caret"></span></button>
-                <ul class="dropdown-menu">
-                    <li><a class="edit" title="修改" href="<?=url('permission/changeRole/'.$role['id'])?>"><i class="icon-edit"></i> 修改</a></li>
+                <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+                    <?=ACTION?>
+                    <span class="caret"></span>
+                </button>
+                <ul class="dropdown-menu" role="menu">
                     <li>
-                        <?php if (!$role['reserved']) {?>
-                            <a class="del" title="删除" href="javascript:del('<?=url('permission/delRole/'.$role['id'])?>');"><i class="icon-trash"></i> 删除</a>
-                        <?php }?>
+                        <a href="<?=url('permission/changeRole/'.$role['id'])?>">
+                            <span class="glyphicon glyphicon-edit" aria-hidden="true"></span>
+                            <?=MODIFY?>
+                        </a>
+                    </li>
+                    <li>
+                    <?php if (!$role['reserved']) {?>
+                        <a name="del" title="删除角色" body="<?=CONFIRM_DELETE?>" href="<?=url('permission/delRole/'.$role['id'])?>">
+                            <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
+                            <?=DELETE?>
+                        </a>
+                    <?php }?>
                     </li>
                 </ul>
             </div>

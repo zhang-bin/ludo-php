@@ -10,18 +10,22 @@
 		<p><a href="mailto:hunter.zhangbin@gmail.com"> System Support </a></p>
 	</div>
 </footer>
-<div class="modal-del modal hide fade">
-    <div class="modal-header">
-   		<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-   		<h4 class="modal-title">Delete</h4>
-   	</div>
-	<div class="modal-body">
-		<p style="text-align: center;">确认删除</p>
-	</div>
-	<div class="modal-footer">
-        <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
-        <button type="button" class="btn btn-primary" id="confirmDel">确认</button>
-	</div>
+<div class="modal-del modal fade" role="dialog" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title"><?=DELETE?></h4>
+            </div>
+            <div class="modal-body">
+                <p style="text-align: center;"><?=CONFIRM_DELETE?></p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal"><?=CANCEL?></button>
+                <button type="button" class="btn btn-primary" id="confirmDel"><?=CONFIRM?></button>
+            </div>
+        </div>
+    </div>
 </div>
 <?php View::startJs();?>
 <script type="text/javascript">
@@ -41,8 +45,7 @@ $(document).ready(function(){
     });
 
 	$.placeholder.shim();
-    $("input.switch").bootstrapSwitch("state", true, true);
-	$("a[name=del]").live("click", function(){
+    $(".table").on("click", "a[name=del]", function(){
 		$(".modal-del").modal();
 		$(".modal-del .modal-title").text($(this).attr("title"));
 		if ($(this).attr("body") != '') {

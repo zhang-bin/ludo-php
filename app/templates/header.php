@@ -16,32 +16,38 @@
 		Load::js('common');
 		Load::helper('MenuHelper');
 		Load::js('bootstrap-select');
-		Load::js('bootstrap-switch');
 		View::loadCss();
 	?>
+    <!--[if lt IE 9]>
+    <script src="<?=LD_PUBLIC_PATH.'/img/html5shiv.min.js'?>"></script>
+    <script src="<?=LD_PUBLIC_PATH.'/img/respond.min.js'?>"></script>
+    <![endif]-->
 </head>
-<body data-spy="scroll" data-target=".sidebar">
-<div class="navbar navbar-inverse navbar-fixed-top">
-	<div class="navbar-inner">
-		<div class="container">
-			<button type="button" class="btn btn-navbar collapsed" data-toggle="collapse" data-target=".nav-collapse">
-            	<span class="icon-bar"></span>
-            	<span class="icon-bar"></span>
-            	<span class="icon-bar"></span>
-          	</button>
-          	<a href="<?=url()?>" class="brand">Ludo-PHP</a>
-          	<div class="nav-collapse collapse">
-          		<?=Menu::menuRender()?>
-          		<div class="pull-right" style="color:#93C0E6;margin-top:10px;">
-					<?php if(logined()) { ?>
-                        欢迎, <?=$_SESSION[USER]['nickname']?> <span>|</span>
-						<a href="<?=url('user/logout')?>">退出</a>
-					<?php } ?>
-				</div>
-          	</div>
+<body>
+<header class="navbar navbar-inverse navbar-static-top ludo-nav" id="top" role="banner">
+    <div class="row">
+        <div class="pull-right" style="color:#93C0E6;margin: 5px 50px 5px 0;">
+            <?php if(logined()) { ?>
+                欢迎, <?=$_SESSION[USER]['nickname']?> |
+            <?php } ?>
+            <a href="<?=url('user/logout')?>">退出</a>
         </div>
-	</div>
-</div>
+    </div>
+    <div class="row ludo-menu" style="padding: 0 10px;">
+        <div class="navbar-header">
+            <button class="navbar-toggle collapsed" type="button" data-toggle="collapse" data-target=".bs-navbar-collapse">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a href="<?=url()?>" class="navbar-brand">Ludo-PHP</a>
+        </div>
+        <nav class="collapse navbar-collapse bs-navbar-collapse">
+            <?=Menu::menuRender()?>
+        </nav>
+    </div>
+</header>
 <div id="loading">Loading</div>
 <div class="alert-messages hide" id="message-drawer">
     <div class="message">
@@ -52,6 +58,6 @@
 	</div>
 </div>
 <div class="container" style="min-height: 458px;">
-	<div class="row-fluid page-header crumbs" style="padding:0px:">
+	<div class="row-fluid page-header crumbs ludo-crumbs" style="padding:0px;">
 		<?=Menu::navRender($gTitle, $gToolbox)?>
 	</div>

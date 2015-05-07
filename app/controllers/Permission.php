@@ -13,18 +13,35 @@ class Permission extends BaseCtrl {
     }
     
     public function init() {
-    	$dao = new PermissionDao();
-    	$dao->truncate();
-    	$conf = Load::conf('Permission');
-    	foreach ($conf as $resource => $operations) {
-    		foreach ($operations['operations'] as $operation => $urls) {
-    			$dao->insert(array(
+        $dao = new PermissionDao();
+        $dao->truncate();
+        $conf = Load::conf('Permission');
+        foreach ($conf as $resource => $operations) {
+            foreach ($operations['operations'] as $operation => $urls) {
+                $dao->insert(array(
                     'resource' => $resource,
                     'operation' => $operation,
                     'type' => self::RESOURCE_TYPE_MODULE
                 ));
-    		}
-    	}
+            }
+        }
+
+        $conf = Load::conf('Menu');
+        foreach ($conf as $topMenu => $subMenus) {
+            if (in_array($topMenu, array('index', 'permission'))) continue;
+            $dao->insert(array(
+                'resource' => $topMenu,
+                'operation' => null,
+                'type' => self::RESOURCE_TYPE_MENU
+            ));
+            foreach ($subMenus['children'] as $subMenu => $v) {
+                $dao->insert(array(
+                    'resource' => $topMenu,
+                    'operation' => $subMenu,
+                    'type' => self::RESOURCE_TYPE_MENU
+                ));
+            }
+        }
     }
     
     public function index() {
@@ -155,16 +172,18 @@ class Permission extends BaseCtrl {
 				$add['role'] = trim($_POST['role']);
 				$add['descr'] = trim($_POST['descr']);
 				$dao->update($id, $add);
-				
-				foreach ($_POST['permission'] as $permissionId => $v) {
-					$permissions[] = array(
-                        'roleId' => $id,
-                        'permissionId' => $permissionId
-					);
-				}
-				$oldPermissions = $rolePermissionDao->findAll(array('roleId = ?', $id));
-				$rolePermissionDao->deleteWhere('roleId = ?', array($id));
-				$rolePermissionDao->batchInsert($permissions);
+
+                if (!empty($_POST['permission'])) {
+                    foreach ($_POST['permission'] as $permissionId => $v) {
+                        $permissions[] = array(
+                            'roleId' => $id,
+                            'permissionId' => $permissionId
+                        );
+                    }
+                    $oldPermissions = $rolePermissionDao->findAll(array('roleId = ?', $id));
+                    $rolePermissionDao->deleteWhere('roleId = ?', array($id));
+                    $rolePermissionDao->batchInsert($permissions);
+                }
 				
 				Log::log(array(
 					'name' => 'change role',
@@ -172,7 +191,6 @@ class Permission extends BaseCtrl {
 					'old' => json_encode(array('role' => $old, 'permission' => $oldPermissions))
 				));
 				$dao->commit();
-				unset($_SESSION[USER]['formId']);
                 return array(STATUS => SUCCESS, URL => url('permission'));
 			} catch (QueryException $e) {
 				$dao->rollback();
@@ -278,18 +296,17 @@ class Permission extends BaseCtrl {
 
     public function addUser() {
     	if (empty($_POST)) {
-    		$_SESSION[USER]['formId'] = uniqid(time());
     		$roles = Factory::dao('role')->findAll('deleted = 0');
     		$this->tpl->setFile('user/change')
     				->assign('roles', $roles)
     				->assign('userRoles', array())
     				->display();
     	} else {
-    		if (empty($_SESSION[USER]['formId']) || $_SESSION[USER]['formId'] != trim($_POST['uniqueFormId'])) die;
     		$dao = new UserDao();
     		$userRoleDao = new UserRoleDao();
-    		$add = $_POST;
-    		$add['password'] = password_hash(self::DEFAULT_PASSWORD, PASSWORD_DEFAULT);
+    		$add['username'] = trim($_POST['username']);
+    		$add['nickname'] = trim($_POST['nickname']);
+            $add['password'] = password_hash(self::DEFAULT_PASSWORD, PASSWORD_DEFAULT, array('salt' => PASSWORD_SALT));
     		try {
     			$dao->beginTransaction();
     			$add['createTime'] = date(TIME_FORMAT);
@@ -309,8 +326,7 @@ class Permission extends BaseCtrl {
     				'new' => json_encode(array('user' => $add, 'role' => $userRole)),
     			));
     			$dao->commit();
-    			unset($_SESSION[USER]['formId']);
-				return array(STATUS => SUCCESS, URL => url('permission/users'));
+				return array(STATUS => SUCCESS, URL => url('permission/user'));
     		} catch (QueryException $e) {
     			$dao->rollback();
 				return array(STATUS => ALERT, MSG => '添加用户失败');
@@ -320,7 +336,6 @@ class Permission extends BaseCtrl {
     
     public function changeUser() {
     	if (empty($_POST)) {
-    		$_SESSION[USER]['formId'] = uniqid(time());
     		$id = intval($_GET['id']);
     		$dao = new UserDao();
     		$user = $dao->fetch($id);
@@ -332,10 +347,9 @@ class Permission extends BaseCtrl {
     		->assign('roles', $roles)
     		->display();
     	} else {
-    		if (empty($_SESSION[USER]['formId']) || $_SESSION[USER]['formId'] != trim($_POST['uniqueFormId'])) die;
     		$dao = new UserDao();
     		$userRoleDao = new UserRoleDao();
-    		$add = $_POST;
+            $add['nickname'] = trim($_POST['nickname']);
     		$id = intval($_POST['id']);
     		try {
     			$dao->beginTransaction();
@@ -359,8 +373,7 @@ class Permission extends BaseCtrl {
 	    			'old' => json_encode(array('old' => $old, 'role' => $oldRole))
     			));
     			$dao->commit();
-    			unset($_SESSION[USER]['formId']);
-				return array(STATUS => SUCCESS, URL => url('permission/users'));
+				return array(STATUS => SUCCESS, URL => url('permission/user'));
     		} catch (QueryException $e) {
     			$dao->rollback();
 				return array(STATUS => ALERT, MSG => '修改用户失败');
@@ -370,7 +383,6 @@ class Permission extends BaseCtrl {
     
     public function changePassword() {
     	if (empty($_POST)) {
-    		$_SESSION[USER]['formId'] = uniqid(time());
     		$id = intval($_GET['id']);
     		$dao = new UserDao();
     		$user = $dao->fetch($id);
@@ -378,7 +390,6 @@ class Permission extends BaseCtrl {
     		->assign('user', $user)
     		->display();
     	} else {
-    		if (empty($_SESSION[USER]['formId']) || $_SESSION[USER]['formId'] != trim($_POST['uniqueFormId'])) die;
     		$dao = new UserDao();
     		$id = intval($_POST['id']);
     		$new = trim($_POST['newPassword']);
@@ -393,8 +404,7 @@ class Permission extends BaseCtrl {
 					'new' => $id
 				));
 				$dao->commit();
-				unset($_SESSION[USER]['formId']);
-				return array(STATUS => SUCCESS, URL => url('permission/users'));
+				return array(STATUS => SUCCESS, URL => url('permission/user'));
 			} catch (QueryException $e) {
 				$dao->rollback();
 				return array(STATUS => ALERT, MSG => '修改密码失败');
@@ -413,7 +423,7 @@ class Permission extends BaseCtrl {
     			'old' => $id
     		));
     		$dao->commit();
-			return array(STATUS => SUCCESS, URL => url('permission/users'));
+			return array(STATUS => SUCCESS, URL => url('permission/user'));
     	} catch (QueryException $e) {
     		$dao->rollback();
 			return array(STATUS => ALERT, MSG => '删除用户失败');
@@ -441,7 +451,7 @@ class Permission extends BaseCtrl {
 	    		'old' => $id
     		));
     		$dao->commit();
-			return array(STATUS => SUCCESS, URL => url('permission/users'));
+			return array(STATUS => SUCCESS, URL => url('permission/user'));
     	} catch (QueryException $e) {
     		$dao->rollback();
 			return array(STATUS => ALERT, MSG => '操作失败');
@@ -459,7 +469,7 @@ class Permission extends BaseCtrl {
 	    		'old' => $id
     		));
     		$dao->commit();
-			return array(STATUS => SUCCESS, URL => url('permission/users'));
+			return array(STATUS => SUCCESS, URL => url('permission/user'));
     	} catch (QueryException $e) {
     		$dao->rollback();
 			return array(STATUS => ALERT, MSG => '操作失败');
@@ -495,7 +505,7 @@ class Permission extends BaseCtrl {
     }
     
     function beforeAction($action) {
-        $this->illegalRequest();
+        $this->login();
         $this->admin();
     }
 }

@@ -2,17 +2,17 @@
 $gTitle = '查看角色权限';
 include tpl('header');
 ?>
-<div class="row-fluid form-horizontal">
-    <div class="control-group">
-        <label class="control-label">角色名称: </label>
-        <div class="controls"><p class="form-control-static"><?=$role['role']?></p></div>
+<div class="form-horizontal">
+    <div class="form-group">
+        <label for="role" class="col-sm-2 control-label">角色名称: </label>
+        <div class="col-sm-4"><p class="form-control-static"><?=$role['role']?></p></div>
     </div>
-    <div class="control-group">
-        <label class="control-label">角色描述: </label>
-        <div class="controls"><p class="form-control-static"><?=$role['descr']?></p></div>
+    <div class="form-group">
+        <label for="role" class="col-sm-2 control-label">角色描述: </label>
+        <div class="col-sm-4"><p class="form-control-static"><?=$role['descr']?></p></div>
     </div>
-    <div class="control-group">
-        <div class="controls">
+    <div class="form-group">
+        <div class="col-sm-offset-2 col-sm-10 ludo-tabs">
             <ul class="nav nav-tabs">
                 <li class="active"><a href="#function" data-toggle="tab">功能模块</a></li>
                 <li><a href="#menu" data-toggle="tab">菜单</a></li>
@@ -26,10 +26,10 @@ include tpl('header');
                             </legend>
                             <div class="operation">
                                 <?php foreach ($operations as $operation) {?>
-                                    <input type="checkbox" checked disabled />
-                                    &nbsp;
-                                    <span><?=$operation?></span>
-                                    &emsp;
+                                    <label class="checkbox-inline">
+                                        <input type="checkbox" checked disabled />
+                                        <?=$operation?>
+                                    </label>
                                 <?php }?>
                             </div>
                         </fieldset>
@@ -43,9 +43,10 @@ include tpl('header');
                             </legend>
                             <div class="operation">
                                 <?php foreach ($operations as $operation) {?>
-                                    <input type="checkbox" checked disabled />
-                                    &nbsp;
-                                    <span><?=$operation?></span>
+                                    <label class="checkbox-inline">
+                                        <input type="checkbox" checked disabled />
+                                        <?=$operation?>
+                                    </label>
                                 <?php }?>
                             </div>
                         </fieldset>
@@ -54,9 +55,11 @@ include tpl('header');
             </div>
         </div>
     </div>
-    <div class="form-actions">
-        <a href="<?=url('permission/changeRole/'.$role['id'])?>" class="btn btn-primary">编辑</a>
-        <a href="javascript:history.go(-1);" class="btn">返回</a>
+    <div class="form-group">
+        <div class="col-sm-offset-2 col-sm-10">
+            <a href="<?=url('permission/changeRole/'.$role['id'])?>" class="btn btn-primary"><?=MODIFY?></a>
+            <a href="javascript:history.go(-1);" class="btn btn-default"><?=CANCEL?></a>
+        </div>
     </div>
 </div>
 <?php include tpl('footer');?>

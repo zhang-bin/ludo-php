@@ -12,10 +12,10 @@ class Load
 	private static $jsModules = array(
 		'jquery' => array(
 			'files' => array(
-				'jquery-1.8.2.min.js' => 'js',
+				'jquery-1.11.3.min.js' => 'js',
 			),
 			'debug_files' => array(
-				'jquery-1.8.2.js' => 'js',
+				'jquery-1.11.3.js' => 'js',
 			),
 		),
 		'placeholder' => array(
@@ -39,16 +39,10 @@ class Load
 			'files' => array(
 				'js/bootstrap.min.js' => 'js',
 				'css/bootstrap.min.css' => 'css',
-				'css/font-awesome.min.css' => 'css',
-				'css/font-awesome-ie7.min.css' => 'css',
-				'css/bootstrap-responsive.min.css' => 'css'
 			),
 			'debug_files' => array(
 				'js/bootstrap.js' => 'js',
 				'css/bootstrap.css' => 'css',
-				'css/font-awesome.css' => 'css',
-				'css/font-awesome-ie7.css' => 'css',
-				'css/bootstrap-responsive.css' => 'css'
 			)
 		),
 		'bootstrap-datetimepicker' => array(
@@ -65,12 +59,12 @@ class Load
 		'bootstrap-select' => array(
 			'base' => '/img/bootstrap-select/',
 			'files' => array(
-				'bootstrap-select.min.js' => 'js',
-				'bootstrap-select.min.css' => 'css'
+				'js/bootstrap-select.min.js' => 'js',
+				'css/bootstrap-select.min.css' => 'css'
 			),
 			'debug_files' => array(
-				'bootstrap-select.js' => 'js',
-				'bootstrap-select.css' => 'css'
+				'js/bootstrap-select.js' => 'js',
+				'css/bootstrap-select.css' => 'css'
 			)
 		),
 		'bootstrap-multiselect' => array(

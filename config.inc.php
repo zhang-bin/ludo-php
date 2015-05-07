@@ -24,3 +24,4 @@ define('PAGE_SIZE',    10);
 define('PAGE_SPAN',    6);
 
 define('API_SALT', 'Ludo-PHP');
+define('PASSWORD_SALT',     'r#@k1#@55%r7*w!t^g8=&f');

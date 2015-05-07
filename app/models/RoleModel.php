@@ -18,12 +18,12 @@ class RoleModel {
 	
 	static function parseModulePermissionsForUser($uid) {
 		$conf = Load::conf('Permission');
-		$roles = LdFactory::dao('UserRole')->hasA('Role')->findAllUnique(array('userId = ? and Role.deleted = 0', $uid), 'roleId');
+		$roles = Factory::dao('UserRole')->hasA('Role')->findAllUnique(array('userId = ? and Role.deleted = 0', $uid), 'roleId');
 		if (empty($roles)) return;
 		
 		$permissions = array();
 		foreach ($roles as $role) {
-			$permList = LdFactory::dao('RolePermission')->hasA('Permission', 'Permission.resource,Permission.operation')->findAll(array('roleId = ? and Permission.type = ?', array($role, Permission::RESOURCE_TYPE_MODULE)));
+			$permList = Factory::dao('RolePermission')->hasA('Permission', 'Permission.resource,Permission.operation')->findAll(array('roleId = ? and Permission.type = ?', array($role, Permission::RESOURCE_TYPE_MODULE)));
 			if (empty($permList)) continue;
 			foreach($permList as $perm) {
 				$urls = $conf[$perm['resource']]['operations'][$perm['operation']]['url'];
@@ -48,12 +48,12 @@ class RoleModel {
 	}
 	
 	static function parseMenuPermissionsForUser($uid) {
-		$roles = LdFactory::dao('UserRole')->hasA('Role')->findAllUnique(array('userId = ? and Role.deleted = 0', $uid), 'roleId');
+		$roles = Factory::dao('UserRole')->hasA('Role')->findAllUnique(array('userId = ? and Role.deleted = 0', $uid), 'roleId');
 		if (empty($roles)) return;
 		
 		$permissions = array();
 		foreach ($roles as $role) {
-			$permList = LdFactory::dao('RolePermission')->hasA('Permission', 'Permission.resource,Permission.operation')->findAll(array('roleId = ? and Permission.type = ?', array($role, Permission::RESOURCE_TYPE_MENU)));
+			$permList = Factory::dao('RolePermission')->hasA('Permission', 'Permission.resource,Permission.operation')->findAll(array('roleId = ? and Permission.type = ?', array($role, Permission::RESOURCE_TYPE_MENU)));
 			if (empty($permList)) continue;
 			foreach($permList as $perm) {
 				if (is_null($perm['operation'])) {
