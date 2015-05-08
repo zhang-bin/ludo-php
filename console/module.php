@@ -1,11 +1,12 @@
 <?php
-class Module {
-    private $_upper;
-    private $_lower;
-    private $_fields = array();
-    private $_hasDeleted = false;
-    private $_daoName;
-    private $_moduleDescr;
+class Module
+{
+    private $upper;
+    private $lower;
+    private $fields = array();
+    private $hasDeleted = false;
+    private $daoName;
+    private $moduleDescr;
 
     /**
      * 生成模块
@@ -14,21 +15,22 @@ class Module {
      * @param $descr string
      * @return bool
      */
-    public function install($module, $descr) {
-        $this->_upper = ucfirst($module);
-        $this->_lower = lcfirst($module);
-        $this->_daoName = $this->_upper . 'Dao';
-        $this->_moduleDescr = $descr;
+    public function install($module, $descr)
+    {
+        $this->upper = ucfirst($module);
+        $this->lower = lcfirst($module);
+        $this->daoName = $this->upper . 'Dao';
+        $this->moduleDescr = $descr;
 
-        $sql = 'show full columns from ' . $this->_upper;
+        $sql = 'show full columns from ' . $this->upper;
         $dbh = \Ludo\Support\ServiceProvider::getInstance()->getDBHandler();
         try {
-            $this->_fields = $dbh->select($sql);
+            $this->fields = $dbh->select($sql);
         } catch (QueryException $e) {
             return $e->getMessage();
         }
 
-        foreach ($this->_fields as &$field) {
+        foreach ($this->fields as &$field) {
             $field['Comment'] = preg_replace('/([^(]*)(\(.*\))/isU', '$1', $field['Comment']);
 
             if (preg_match('/^((?:var)?char)\((\d+)\)/', $field['Type'], $matches)) {
@@ -42,7 +44,7 @@ class Module {
             }
 
             if ($field['Field'] == 'deleted') {
-                $this->_hasDeleted = true;
+                $this->hasDeleted = true;
                 break;
             }
         }
@@ -58,18 +60,19 @@ class Module {
      * @param $module string
      * @return bool
      */
-    public function uninstall($module) {
-        $this->_upper = ucfirst($module);
-        $this->_lower = lcfirst($module);
-        $this->_daoName = $this->_upper . 'Dao';
+    public function uninstall($module)
+    {
+        $this->upper = ucfirst($module);
+        $this->lower = lcfirst($module);
+        $this->daoName = $this->upper . 'Dao';
 
-        $controllerFile = LD_CTRL_PATH . DIRECTORY_SEPARATOR . $this->_upper . '.php';
+        $controllerFile = LD_CTRL_PATH . DIRECTORY_SEPARATOR . $this->upper . '.php';
         file_exists($controllerFile) && unlink($controllerFile);
 
-        $daoFile = LD_DAO_PATH . DIRECTORY_SEPARATOR . $this->_upper . 'Dao.php';
+        $daoFile = LD_DAO_PATH . DIRECTORY_SEPARATOR . $this->upper . 'Dao.php';
         file_exists($daoFile) && unlink($daoFile);
 
-        $tplDir = TPL_ROOT . DIRECTORY_SEPARATOR . $this->_lower;
+        $tplDir = TPL_ROOT . DIRECTORY_SEPARATOR . $this->lower;
         exec("rm -fr ".$tplDir);
         return true;
     }
@@ -79,21 +82,22 @@ class Module {
      *
      * @return bool
      */
-    private function _controller() {
-        $controllerFile = LD_CTRL_PATH . DIRECTORY_SEPARATOR . $this->_upper . '.php';
+    private function _controller()
+    {
+        $controllerFile = LD_CTRL_PATH . DIRECTORY_SEPARATOR . $this->upper . '.php';
         if (file_exists($controllerFile)) return true;
-        $condition = $this->_hasDeleted ? '$condition = \'' . $this->_upper . '.deleted = 0\';' : '$condition = \'\';';
+        $condition = $this->hasDeleted ? '$condition = \'' . $this->upper . '.deleted = 0\';' : '$condition = \'\';';
 
         $ignore = array('id', 'deleted');
         $update = $add = '';
-        if ($this->_hasDeleted) {
+        if ($this->hasDeleted) {
             $update .= <<<'EOF'
             $add['deleted'] = 0;
 EOF;
             $update .= NEW_LINE;
         }
         $add = $update;
-        foreach ($this->_fields as $field) {
+        foreach ($this->fields as $field) {
             $column = $field['Field'];
             if (in_array($column, $ignore)) continue;
             switch ($column) {
@@ -210,7 +214,7 @@ Class ludo_upper extends BaseCtrl {
 
 
 EOF;
-        if ($this->_hasDeleted) {
+        if ($this->hasDeleted) {
             $controller .= <<<'EOF'
     public function del() {
 		$id = intval($_GET['id']);
@@ -262,7 +266,7 @@ EOF;
 
         $controller = str_replace(
             array('ludo_upper', 'ludo_lower', 'module_dao_name'),
-            array($this->_upper, $this->_lower, $this->_daoName),
+            array($this->upper, $this->lower, $this->daoName),
             $controller);
         $controller = sprintf($controller, $condition, $add, $update);
         file_put_contents($controllerFile, $controller);
@@ -274,8 +278,9 @@ EOF;
      *
      * @return bool
      */
-    private function _dao() {
-        $daoFile = LD_DAO_PATH . DIRECTORY_SEPARATOR . $this->_upper . 'Dao.php';
+    private function _dao()
+    {
+        $daoFile = LD_DAO_PATH . DIRECTORY_SEPARATOR . $this->upper . 'Dao.php';
         if (file_exists($daoFile)) return true;
         $dao = <<<'EOF'
 <?php
@@ -285,7 +290,7 @@ Class ludo_upperDao extends BaseDao {
     }
 }
 EOF;
-        $dao = str_replace(array('ludo_upper'), array($this->_upper),  $dao);
+        $dao = str_replace(array('ludo_upper'), array($this->upper),  $dao);
         file_put_contents($daoFile, $dao);
         return true;
     }
@@ -293,8 +298,9 @@ EOF;
     /**
      * tpl文件
      */
-    private function _tpl() {
-        $tplDir = TPL_ROOT . DIRECTORY_SEPARATOR . $this->_lower;
+    private function _tpl()
+    {
+        $tplDir = TPL_ROOT . DIRECTORY_SEPARATOR . $this->lower;
         !is_dir($tplDir) && mkdir($tplDir);
         $this->_index($tplDir);
         $this->_change($tplDir);
@@ -307,7 +313,8 @@ EOF;
      * @param $dir string
      * @return bool
      */
-    private function _index($dir) {
+    private function _index($dir)
+    {
         $tplIndexFile = $dir . DIRECTORY_SEPARATOR . 'index.php';
         if (file_exists($tplIndexFile)) return true;
 
@@ -326,7 +333,7 @@ include tpl('header');
 
 EOF;
         $ignore = array('id', 'deleted', 'createDate');
-        foreach ($this->_fields as $field) {
+        foreach ($this->fields as $field) {
             if (in_array($field['Field'], $ignore)) continue;
             $index .= <<<EOF
             <th>{$field['Comment']}</th>
@@ -342,7 +349,7 @@ EOF;
     <tr>
 
 EOF;
-        foreach ($this->_fields as $field) {
+        foreach ($this->fields as $field) {
             if (in_array($field['Field'], $ignore)) continue;
             $index .= <<<EOF
 
@@ -385,7 +392,7 @@ EOF;
 
         $index = str_replace(
             array('ludo_lower', 'ludo_module_descr'),
-            array($this->_lower, $this->_moduleDescr),
+            array($this->lower, $this->moduleDescr),
             $index);
         file_put_contents($tplIndexFile, $index);
         return true;
@@ -397,7 +404,8 @@ EOF;
      * @param $dir string
      * @return bool
      */
-    private function _change($dir) {
+    private function _change($dir)
+    {
         $tplChangeFile = $dir . DIRECTORY_SEPARATOR . 'change.php';
         if (file_exists($tplChangeFile)) return true;
 
@@ -411,7 +419,7 @@ include tpl('header');
 
 EOF;
         $ignore = array('id', 'deleted', 'createDate', 'createTime');
-        foreach ($this->_fields as $field) {
+        foreach ($this->fields as $field) {
             if (in_array($field['Field'], $ignore)) continue;
             switch ($field['Type']) {
                 case 'tinytext':
@@ -462,7 +470,7 @@ $(document).ready(function(){
 EOF;
         $change = str_replace(
             array('ludo_lower', 'ludo_module_descr'),
-            array($this->_lower, $this->_moduleDescr),
+            array($this->lower, $this->moduleDescr),
             $change);
         file_put_contents($tplChangeFile, $change);
         return true;
@@ -474,7 +482,8 @@ EOF;
      * @param $dir string
      * @return bool
      */
-    private function _view($dir) {
+    private function _view($dir)
+    {
         $tplViewFile = $dir . DIRECTORY_SEPARATOR . 'view.php';
         if (file_exists($tplViewFile)) return true;
 
@@ -487,7 +496,7 @@ include tpl('header');
 
 EOF;
         $ignore = array('id', 'deleted', 'createDate', 'createTime');
-        foreach ($this->_fields as $field) {
+        foreach ($this->fields as $field) {
             if (in_array($field['Field'], $ignore)) continue;
             $view .= <<<EOF
     <div class="form-group">
@@ -513,7 +522,7 @@ $(document).ready(function(){
 EOF;
         $view = str_replace(
             array('ludo_lower', 'ludo_module_descr'),
-            array($this->_lower, $this->_moduleDescr),
+            array($this->lower, $this->moduleDescr),
             $view);
         file_put_contents($tplViewFile, $view);
         return true;

@@ -1,10 +1,13 @@
 <?php
-class User extends BaseCtrl {
-    function __construct() {
+class User extends BaseCtrl
+{
+    function __construct()
+    {
         parent::__construct('User');
     }
 	
-    function index() {
+    function index()
+    {
     	if (!logined()) {
     		$this->tpl->setFile('user/login')->assign('jurl', trim($_GET['jurl']))->display();
     	} else {
@@ -12,7 +15,8 @@ class User extends BaseCtrl {
     	}
     }
 
-    function login(){
+    function login()
+    {
     	$dao = new UserDao();
     	if (empty($_POST)){
 			$this->tpl->setFile('user/login')->display();
@@ -42,7 +46,8 @@ class User extends BaseCtrl {
     	}
     }
     
-	public function logout() {
+	public function logout()
+    {
 		unset($_SESSION);
 		session_destroy();
 		redirect();
@@ -51,7 +56,8 @@ class User extends BaseCtrl {
     /**
      * 用户首次登录修改密码
      */
-    public function changePassword() {
+    public function changePassword()
+    {
         if (empty($_POST)) {
             $this->tpl->setFile('user/changePassword')
                 ->assign('user', (new UserDao())->fetch($_SESSION[USER]['id']))
@@ -84,7 +90,8 @@ class User extends BaseCtrl {
         }
     }
 
-	public static function can($action = CURRENT_ACTION) {
+	public static function can($action = CURRENT_ACTION)
+    {
 		if ($_SESSION[USER]['isAdmin']) return true;
 		$permissions = Load::conf('permission');
 		$group = $_SESSION[USER]['usergroup'];
@@ -94,7 +101,8 @@ class User extends BaseCtrl {
 		return false;
 	}
 	
-	function beforeAction($action) {
+	function beforeAction($action)
+    {
         return true;
 	}
 }

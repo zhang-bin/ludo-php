@@ -7,7 +7,7 @@
  */
 class Mailer
 {
-	static function send($client, $title, $body, $smtp = array(),$path = array(), $name = array())
+	static function send($client, $title, $body, $smtp = array(), $path = array(), $name = array())
     {
 		if (empty($body)) return false;
 		if (empty($smtp)) {

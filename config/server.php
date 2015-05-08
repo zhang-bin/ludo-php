@@ -1,5 +1,5 @@
 <?php
-return array(
+return [
     'task_queue' => [
         'host' => '127.0.0.1',
         'bind' => '127.0.0.1',
@@ -10,4 +10,4 @@ return array(
         'user' => 'root',
         'group' => 'root',
     ]
-);
+];

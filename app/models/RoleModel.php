@@ -4,7 +4,8 @@
  * @author libok
  *
  */
-class RoleModel {
+class RoleModel
+{
 	const ROLE_BUSINESS_MANAGER = 1;
 	const ROLE_BUSINESS_SUPERVISOR = 2;
 	const ROLE_IT_SPECIALIST = 3;
@@ -16,7 +17,8 @@ class RoleModel {
 	const ROLE_BUSINESS_MARKETING = 9;
 	
 	
-	static function parseModulePermissionsForUser($uid) {
+	static function parseModulePermissionsForUser($uid)
+    {
 		$conf = Load::conf('Permission');
 		$roles = Factory::dao('UserRole')->hasA('Role')->findAllUnique(array('userId = ? and Role.deleted = 0', $uid), 'roleId');
 		if (empty($roles)) return;
@@ -47,7 +49,8 @@ class RoleModel {
 		return $permissions;
 	}
 	
-	static function parseMenuPermissionsForUser($uid) {
+	static function parseMenuPermissionsForUser($uid)
+    {
 		$roles = Factory::dao('UserRole')->hasA('Role')->findAllUnique(array('userId = ? and Role.deleted = 0', $uid), 'roleId');
 		if (empty($roles)) return;
 		
@@ -64,6 +67,5 @@ class RoleModel {
 			}
 		}
 		return $permissions;
-		
 	}
 }

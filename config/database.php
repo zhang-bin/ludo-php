@@ -1,22 +1,22 @@
 <?php
-return array(
+return [
     'default' => 'mysql',
 
     'connections' => [
         'mysql' => [
             'driver'    => 'mysql',
-            'read' => array(
+            'read' => [
                 'host'      => 'localhost',
                 'database'  => 'ludo-php',
                 'username'  => 'root',
                 'password'  => '64297881',
-            ),
-            'write' => array(
+            ],
+            'write' => [
                 'host'      => 'localhost',
                 'database'  => 'ludo-php',
                 'username'  => 'root',
                 'password'  => '64297881',
-            ),
+            ],
             'charset'   => 'utf8',
             'collation' => 'utf8_general_ci',
             'prefix'    => '',
@@ -26,4 +26,4 @@ return array(
             'port' => 6379
         ]
     ],
-);
+];

@@ -1,6 +1,8 @@
 <?php
-class Log extends BaseCtrl {
-	public function __construct() {
+class Log extends BaseCtrl
+{
+	public function __construct()
+    {
 		parent::__construct('Log');
 	}
 
@@ -11,7 +13,8 @@ class Log extends BaseCtrl {
 	 */
 	public static $logData = array();
 
-	public static function log($arr, $autoWrite=true) {
+	public static function log($arr, $autoWrite = true)
+    {
 		if (empty(self::$logData)) {
 			self::$logData = array(
 				'userId' => $_SESSION[USER]['id'] ? $_SESSION[USER]['id'] : 0,
@@ -33,9 +36,9 @@ class Log extends BaseCtrl {
 				$cip = getenv('HTTP_CLIENT_IP') ? 'HTTP_CLIENT_IP:'.getenv('HTTP_CLIENT_IP') : '';
 				$xip = getenv('HTTP_X_FORWARDED_FOR') ? ', HTTP_X_FORWARDED_FOR:'.getenv('HTTP_X_FORWARDED_FOR') : '';
 				$rip = getenv('REMOTE_ADDR') ? ', getenv(REMOTE_ADDR):'.getenv('REMOTE_ADDR') : '';
-				$srip = $_SERVER['REMOTE_ADDR'] ? ', SERVER[REMOTE_ADDR]'.$_SERVER['REMOTE_ADDR'] : '';
+				$sRip = $_SERVER['REMOTE_ADDR'] ? ', SERVER[REMOTE_ADDR]'.$_SERVER['REMOTE_ADDR'] : '';
 
-				self::$logData['proxyIp'] = $cip.$xip.$rip.$srip;
+				self::$logData['proxyIp'] = $cip.$xip.$rip.$sRip;
 			}
 		}
 		if (!empty($arr)) {
@@ -44,7 +47,8 @@ class Log extends BaseCtrl {
 		if ($autoWrite) self::write();
 	}
 
-	static function write() {
+	static function write()
+    {
 		if (!empty(self::$logData)) {
 			Factory::dao('log')->add(self::$logData);
 			self::$logData = array();

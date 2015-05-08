@@ -30,8 +30,7 @@ function curlPost($url, $data, $otherOpt = array())
 function curlGet($url)
 {
 	$ch = curl_init();
-	$cookie = LD_UPLOAD_PATH.'/cookie.txt';
-	
+
 	$options = array(
 		CURLOPT_URL => $url,
 		CURLOPT_HEADER => 0,
@@ -44,31 +43,6 @@ function curlGet($url)
 	$result = curl_exec($ch);
 	curl_close($ch);
 	return $result;
-}
-
-function socketSend($ip, $port, $msg, &$err)
-{
-	/* Create a TCP/IP socket. */
-	$socket = socket_create(AF_INET, SOCK_STREAM, SOL_TCP);
-	if ($socket === false) {
-	    $err = "socket_create() failed: reason: " . socket_strerror(socket_last_error()) . "\n";
-		return false;
-	}
-	
-	$result = socket_connect($socket, $ip, $port);
-	if ($result === false) {
-	    $err = "socket_connect() failed.\nReason: ($result) " . socket_strerror(socket_last_error($socket)) . "\n";
-		return false;
-	}
-	
-	$in = "reload\n";
-	socket_write($socket, $in, strlen($in));
-	
-	$out = '';
-	while ($out .= socket_read($socket, 2048)) {}
-	
-	socket_close($socket);
-	return $out;
 }
 
 /**
@@ -100,8 +74,8 @@ function thumbnail($img)
  * This is very useful when you post/get data(including chinese text) through Ajax to the server, 
  * you should use this function to convert the encoding, or you will got messy code and unexpected result will occur.   
  *
- * @param unknown_type $str
- * @return unknown
+ * @param string $str
+ * @return string
  */
 function utf2gbk($str)
 {
@@ -141,7 +115,7 @@ function downloadLink($filename, $downloadName)
         header("X-Sendfile:".$filename);//Apache
     } else {
         $filename = str_replace(SITE_ROOT, '', $filename);
-        header('X-Accel-Redirect:'.$filename);//Nginx
+        header('X-Accel-Redirect:'.$filename);//nginx
     }
     exit;
 }

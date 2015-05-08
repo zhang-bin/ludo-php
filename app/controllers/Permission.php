@@ -1,5 +1,6 @@
 <?php
-class Permission extends BaseCtrl {
+class Permission extends BaseCtrl
+{
 	const RESOURCE_TYPE_MODULE = 1;
 	const RESOURCE_TYPE_MENU = 2;
 
@@ -8,11 +9,13 @@ class Permission extends BaseCtrl {
 	const USER_ENABLED = 1;
 	const USER_DISABLED = 0;
 
-    public function __construct() {
+    public function __construct()
+    {
         parent::__construct('Permission');
     }
     
-    public function init() {
+    public function init()
+    {
         $dao = new PermissionDao();
         $dao->truncate();
         $conf = Load::conf('Permission');
@@ -44,7 +47,8 @@ class Permission extends BaseCtrl {
         }
     }
     
-    public function index() {
+    public function index()
+    {
     	$dao = new RoleDao();
 		$pager = pager(array(
 	    	'base' => 'permission/index',
@@ -60,7 +64,8 @@ class Permission extends BaseCtrl {
 
     }
     
-	public function addRole() {
+	public function addRole()
+    {
 		if (empty($_POST)) {
 			list($modules, $menus, $subMenus) = $this->_transformPermissions();
 			
@@ -120,7 +125,8 @@ class Permission extends BaseCtrl {
 		}
 	}
 	
-	public function changeRole() {
+	public function changeRole()
+    {
 		if(empty($_POST)) {
 			$id = intval($_GET['id']);
 			$roleDao = new RoleDao();
@@ -199,7 +205,8 @@ class Permission extends BaseCtrl {
 		}
 	}
 		
-	public function delRole() {
+	public function delRole()
+    {
 		$id = intval($_GET['id']);
 		$dao = new RoleDao();
 		try {
@@ -217,7 +224,8 @@ class Permission extends BaseCtrl {
 		}
 	}
 	
-    public function permissions() {
+    public function permissions()
+    {
         $roleId = intval($_GET['id']);
         $role = Factory::dao('role')->fetch($roleId);
         
@@ -260,7 +268,8 @@ class Permission extends BaseCtrl {
 	 * 查看用户信息
 	 * added by sarah
 	 */
-    public function user(){
+    public function user()
+    {
     	$roles = Factory::dao('role')->findAll('deleted = 0');
     	
     	$condition = 'deleted = 0';
@@ -294,7 +303,8 @@ class Permission extends BaseCtrl {
             ->display();
     }
 
-    public function addUser() {
+    public function addUser()
+    {
     	if (empty($_POST)) {
     		$roles = Factory::dao('role')->findAll('deleted = 0');
     		$this->tpl->setFile('user/change')
@@ -334,7 +344,8 @@ class Permission extends BaseCtrl {
     	}
     }
     
-    public function changeUser() {
+    public function changeUser()
+    {
     	if (empty($_POST)) {
     		$id = intval($_GET['id']);
     		$dao = new UserDao();
@@ -381,7 +392,8 @@ class Permission extends BaseCtrl {
     	}
     }
     
-    public function changePassword() {
+    public function changePassword()
+    {
     	if (empty($_POST)) {
     		$id = intval($_GET['id']);
     		$dao = new UserDao();
@@ -412,7 +424,8 @@ class Permission extends BaseCtrl {
     	}
     }
     
-    public function delUser() {
+    public function delUser()
+    {
     	$id = intval($_GET['id']);
     	$dao = new UserDao();
     	try {
@@ -430,7 +443,8 @@ class Permission extends BaseCtrl {
     	}
     }
     
-    public function viewUser() {
+    public function viewUser()
+    {
     	$id = intval($_GET['id']);
     	$user = Factory::dao('user')->fetch($id);
     	$userRoles = Factory::dao('userRole')->hasA('Role', 'Role.role')->findAll(array('userId = ?', $id));
@@ -440,7 +454,8 @@ class Permission extends BaseCtrl {
     			->display();
     }
     
-    public function disabledUser() {
+    public function disabledUser()
+    {
     	$id = intval($_GET['id']);
     	$dao = new UserDao();
     	try {
@@ -458,7 +473,8 @@ class Permission extends BaseCtrl {
     	}
     }
     
-    public function enableUser() {
+    public function enableUser()
+    {
     	$id = intval($_GET['id']);
     	$dao = new UserDao();
     	try {
@@ -476,7 +492,8 @@ class Permission extends BaseCtrl {
     	}
     }
     
-    private function _transformPermissions() {
+    private function _transformPermissions()
+    {
     	$permissions = Factory::dao('permission')->fetchAll();
     	$modules = $menus = $subMenus = array();
     	foreach ($permissions as $permission) {
@@ -498,13 +515,15 @@ class Permission extends BaseCtrl {
     	return array($modules, $menus, $subMenus);
     }
     
-    private function _checkPermission($permissionId, $permissions) {
+    private function _checkPermission($permissionId, $permissions)
+    {
     	$checked = false;
     	if (in_array($permissionId, $permissions)) $checked = true;
     	return $checked;
     }
     
-    function beforeAction($action) {
+    function beforeAction($action)
+    {
         $this->login();
         $this->admin();
     }
