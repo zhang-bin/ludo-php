@@ -521,8 +521,8 @@ class Permission extends BaseCtrl
     	if (in_array($permissionId, $permissions)) $checked = true;
     	return $checked;
     }
-    
-    function beforeAction($action)
+
+    public function beforeAction($action)
     {
         $this->login();
         $this->admin();

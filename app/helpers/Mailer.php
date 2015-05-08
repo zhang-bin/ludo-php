@@ -7,14 +7,9 @@
  */
 class Mailer
 {
-	static function send($client, $title, $body, $smtp = array(), $path = array(), $name = array())
+    public static function send($client, $title, $body, $smtp, $path = array(), $name = array())
     {
 		if (empty($body)) return false;
-		if (empty($smtp)) {
-			$dao = new BasicDao();
-			$smtp = $dao->findColumn('name = ?', Setting::NAME_SMTP, 'value');
-			$smtp = json_decode($smtp, true);
-		}
 
 		$mail = new PHPMailer();           // SMTP服务器地址
 		$mail->isSMTP();

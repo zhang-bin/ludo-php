@@ -1,12 +1,12 @@
 <?php
 class User extends BaseCtrl
 {
-    function __construct()
+    public function __construct()
     {
         parent::__construct('User');
     }
-	
-    function index()
+
+    public function index()
     {
     	if (!logined()) {
     		$this->tpl->setFile('user/login')->assign('jurl', trim($_GET['jurl']))->display();
@@ -15,7 +15,7 @@ class User extends BaseCtrl
     	}
     }
 
-    function login()
+    public function login()
     {
     	$dao = new UserDao();
     	if (empty($_POST)){
@@ -100,8 +100,8 @@ class User extends BaseCtrl
 		if (in_array($action, $permissions[$group][lcfirst(CURRENT_CONTROLLER)])) return true;
 		return false;
 	}
-	
-	function beforeAction($action)
+
+    public function beforeAction($action)
     {
         return true;
 	}

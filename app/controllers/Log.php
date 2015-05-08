@@ -47,7 +47,7 @@ class Log extends BaseCtrl
 		if ($autoWrite) self::write();
 	}
 
-	static function write()
+	public static function write()
     {
 		if (!empty(self::$logData)) {
 			Factory::dao('log')->add(self::$logData);

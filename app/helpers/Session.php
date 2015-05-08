@@ -29,7 +29,7 @@ class Session
     /**
      * Reflash a subset of the current flash data.
      *
-     * @param sting $key
+     * @param string $key
      * @return void
      */
     public static function keep($key)

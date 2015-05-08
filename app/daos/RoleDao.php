@@ -1,7 +1,7 @@
 <?php
 class RoleDao extends BaseDao
 {
-    function __construct()
+    public function __construct()
     {
         parent::__construct('Role');
     }

@@ -1,12 +1,12 @@
 <?php
 class Index extends BaseCtrl
 {
-	function __construct()
+    public function __construct()
     {
 		parent::__construct('Index');
 	}
-	
-	function index()
+
+    public function index()
     {
 		$this->tpl->setFile('index/index')->display();
 	}
