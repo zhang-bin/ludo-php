@@ -18,7 +18,7 @@
                 <h4 class="modal-title"><?=DELETE?></h4>
             </div>
             <div class="modal-body">
-                <p style="text-align: center;"><?=CONFIRM_DELETE?></p>
+                <p class="text-center"><?=CONFIRM_DELETE?></p>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal"><?=CANCEL?></button>
@@ -44,7 +44,6 @@ $(document).ready(function(){
         $(this).append("<input type='hidden' name='_token' value='<?=csrf_token()?>' />")
     });
 
-	$.placeholder.shim();
     $(".table").on("click", "a[name=del]", function(){
 		$(".modal-del").modal();
 		$(".modal-del .modal-title").text($(this).attr("title"));

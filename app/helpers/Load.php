@@ -9,116 +9,87 @@ class Load
 	 * 		'file' => eg: 'xxxx.js', 'images/zzz.css'
 	 * ),
 	 */
-	private static $jsModules = array(
-		'jquery' => array(
-			'files' => array(
+	private static $jsModules = [
+		'jquery' => [
+			'files' => [
 				'jquery-1.11.3.min.js' => 'js',
-			),
-			'debug_files' => array(
+			],
+			'debug_files' => [
 				'jquery-1.11.3.js' => 'js',
-			),
-		),
-		'placeholder' => array(
-			'files' => array(
-					'placeholder.js' => 'js',
-			),
-			'debug_files' => array(
-					'placeholder.js' => 'js',
-			),
-		),
-		'common' => array(
-			'files' => array(
+			],
+		],
+		'placeholder' => [
+			'files' => [
+                'placeholder.js' => 'js',
+			],
+			'debug_files' => [
+                'placeholder.js' => 'js',
+			],
+		],
+		'common' => [
+			'files' => [
 				'common.js' => 'js',
-			),
-			'debug_files' => array(
+			],
+			'debug_files' => [
 				'common.js' => 'js',
-			),
-		),
-		'bootstrap' => array(
+			],
+		],
+		'bootstrap' => [
 			'base' => '/img/bootstrap/',
-			'files' => array(
+			'files' => [
 				'js/bootstrap.min.js' => 'js',
 				'css/bootstrap.min.css' => 'css',
-			),
-			'debug_files' => array(
+			],
+			'debug_files' => [
 				'js/bootstrap.js' => 'js',
 				'css/bootstrap.css' => 'css',
-			)
-		),
-		'bootstrap-datetimepicker' => array(
+			]
+		],
+		'bootstrap-datetimepicker' => [
 			'base' => '/img/bootstrap-datetimepicker/',
-			'files' => array(
+			'files' => [
 				'js/bootstrap-datetimepicker.min.js' => 'js',
 				'css/bootstrap-datetimepicker.min.css' => 'css',
-			),
-			'debug_files' => array(
+			],
+			'debug_files' => [
 				'js/bootstrap-datetimepicker.js' => 'js',
 				'css/bootstrap-datetimepicker.css' => 'css',
-			),
-		),
-		'bootstrap-select' => array(
+			],
+		],
+		'bootstrap-select' => [
 			'base' => '/img/bootstrap-select/',
-			'files' => array(
+			'files' => [
 				'js/bootstrap-select.min.js' => 'js',
 				'css/bootstrap-select.min.css' => 'css'
-			),
-			'debug_files' => array(
+			],
+			'debug_files' => [
 				'js/bootstrap-select.js' => 'js',
 				'css/bootstrap-select.css' => 'css'
-			)
-		),
-		'bootstrap-multiselect' => array(
-			'base' => '/img/bootstrap-multiselect/',
-			'files' => array(
-				'js/bootstrap-multiselect.js' => 'js',
-				'css/bootstrap-multiselect.css' => 'css'
-			)
-		),
-		'uploadify' => array(
-			'base' => '/img/uploadify/',
-			'files' => 	array(
-				'jquery.uploadify.min.js' => 'js',
-				'uploadify.min.css' => 'css'
-			),
-			'debug_files' => array(
-				'jquery.uploadify.js' => 'js',
-				'uploadify.css' => 'css'
-			),
-		),
-		'bootstrap-editable' => array(
+			]
+		],
+		'bootstrap-editable' => [
 			'base' => '/img/bootstrap-editable/',
-			'files' => array(
+			'files' => [
 				'js/bootstrap-editable.min.js' => 'js',
 				'css/bootstrap-editable.css' => 'css',
-			),
-			'debug_files' => array(
+			],
+			'debug_files' => [
 				'js/bootstrap-editable.js' => 'js',
 				'css/bootstrap-editable.css' => 'css',
-			),
-		),
-		'autocomplete' => array(
-			'base' => '/img/autocomplete/',
-			'files' => array(
-				'jquery.autocomplete.min.js' => 'js',
-				'styles.min.css' => 'css'
-			),
-			'debug_files' => array(
-				'jquery.autocomplete.js' => 'js',
-				'styles.css' => 'css'
-			)
-		),
-        'bootstrap-switch' => array(
-            'base' => '/img/bootstrap-switch/',
-            'files' => array(
-                'bootstrap-switch.min.css' => 'css',
-                'bootstrap-switch.min.js' => 'js'
-            ),
-            'debug_files' => array(
-                'bootstrap-switch.css' => 'css',
-                'bootstrap-switch.js' => 'js'
-            )
-        ),
-	);
+			],
+		],
+        'bootstrap-fileinput' => [
+            'base' => '/img/bootstrap-fileinput/',
+            'files' => [
+                'js/fileinput.min.js' => 'js',
+                'css/fileinput.min.css' => 'css'
+            ],
+            'debug_files' => [
+                'js/fileinput.js' => 'js',
+                'css/fileinput.css' => 'css'
+            ]
+        ]
+	];
 	
 	/**
 	 * 'cssname' => array(
@@ -126,15 +97,15 @@ class Load
 	 * 		'file' => eg: '/img/xxxx.css', '/css/zzz.css'
 	 * )
 	 */
-	private static $cssModules = array(
-		'style' => array(
+	private static $cssModules = [
+		'style' => [
 			'file' => '/img/common/style.css',
-		),
-	);
+		],
+	];
 	
-	public static function js($jsname, $return = true, $loadToTemplate = true)
+	public static function js($jsName, $return = true, $loadToTemplate = true)
     {
-		$module = self::$jsModules[$jsname];
+		$module = self::$jsModules[$jsName];
 		if (!$module) return;
 		
 		$result = '';
@@ -155,9 +126,9 @@ class Load
 			return $result;
 	}
 
-	public static function css($jsname, $return = true, $loadToTemplate = true)
+	public static function css($cssName, $return = true, $loadToTemplate = true)
     {
-		$module = self::$cssModules[$jsname];
+		$module = self::$cssModules[$cssName];
 		if (!$module) return;
 		$root_base = isset($module['root_base']) ? $module['root_base'] : LD_PUBLIC_PATH;
 		$result = '<link href="'. $root_base.$module['file'] .'" rel="stylesheet" type="text/css" media="all" />'."\n";

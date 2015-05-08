@@ -12,6 +12,7 @@
 		Load::js('jquery');
 		Load::js('bootstrap');
 		Load::js('common');
+        Load::js('placeholder');
         View::loadCss();
 	?>
 <style>
@@ -59,7 +60,7 @@ body{
 <form class="form-horizontal" id="form1" method="post" action="<?=url('user/login')?>">
 	<h1><a href="<?=url()?>"></a></h1>
     <div class="form-group">
-      	<input type="text" class="form-control input-block-level" id="username" name="username" placeholder="用户名" />
+        <input type="text" class="form-control input-block-level" id="username" name="username" placeholder="用户名" />
     </div>
     <div class="form-group">
       	<input type="password" class="form-control input-block-level" id="password" name="password" placeholder="密码" />
