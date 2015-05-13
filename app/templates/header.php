@@ -23,8 +23,8 @@
     <script src="<?=LD_PUBLIC_PATH.'/img/respond.min.js'?>"></script>
     <![endif]-->
 </head>
-<body>
-<header class="navbar navbar-inverse navbar-static-top ludo-nav" id="top" role="banner">
+<body style="padding-top: 70px;background-color: #595C64;">
+<header class="navbar navbar-inverse ludo-nav navbar-fixed-top" id="top" role="banner">
     <div class="row">
         <div class="pull-right" style="color:#93C0E6;margin: 5px 50px 5px 0;">
             <?php if(logined()) { ?>
@@ -57,7 +57,8 @@
   		</div>
 	</div>
 </div>
-<div class="container" style="min-height: 458px;">
+<div style="min-height: 600px;background-color: #ffffff;padding-bottom: 70px;">
+<div class="container" >
 	<div class="row-fluid page-header crumbs ludo-crumbs" style="padding:0px;">
 		<?=Menu::navRender($gTitle, $gToolbox)?>
 	</div>
