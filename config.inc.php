@@ -25,3 +25,11 @@ define('PAGE_SPAN',    6);
 
 define('API_SALT', 'Ludo-PHP');
 define('PASSWORD_SALT',     'r#@k1#@55%r7*w!t^g8=&f');
+
+define('LOGGER_LEVEL_DEBUG',		1);
+define('LOGGER_LEVEL_INFO',			2);
+define('LOGGER_LEVEL_WARN',			3);
+define('LOGGER_LEVEL_ERROR',		4);
+define('LOGGER_LEVEL_FATAL',		5);
+
+define('LOGGER_LEVEL_DEFAULT', LOGGER_LEVEL_DEBUG);
