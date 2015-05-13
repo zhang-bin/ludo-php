@@ -18,7 +18,6 @@ class BaseCtrl extends \Ludo\Routing\Controller
         if($_SESSION[USER]['first'] == 1) { //首次登录
             return redirect('user/changePassword');
         }
-        $this->illegalRequest();
     }
 
     public function afterAction($action, $result)
@@ -26,19 +25,9 @@ class BaseCtrl extends \Ludo\Routing\Controller
         Session::ageFlashData();
     }
 
-    /**
-     * 判断是否合法请求
-     */
-    protected function illegalRequest()
-    {
-        //非法请求
-        if (isset($_REQUEST['_token']) && !empty($_REQUEST['_token'])) {
-            if (!csrf_token_validate($_REQUEST['_token'])) {
-                die;
-            }
-        }
+    public function illegalRequest() {
+        return !csrf_token_validate($_REQUEST['_token']);
     }
-
     /**
      * 判断是否管理员
      */

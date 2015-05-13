@@ -35,6 +35,7 @@ class User extends BaseCtrl
             $_SESSION[USER]['isAdmin'] = $user['isAdmin'] ? true : false;
             $_SESSION[USER]['menu'] = RoleModel::parseMenuPermissionsForUser($user['id']);
             $_SESSION[USER]['permissions'] = RoleModel::parseModulePermissionsForUser($user['id']);
+            csrf_token();//生成token
 			unset($_POST['password']);
 			Log::log(array(
 				'name' => 'User Login',

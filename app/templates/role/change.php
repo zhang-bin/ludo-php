@@ -26,7 +26,7 @@ include tpl('header');
         padding-top: 0 !important;
     }
 </style>
-<form id="addRole" class="form-horizontal" action="<?=$change ? url('permission/changeRole') : url('permission/addRole')?>">
+<form id="addRole" class="form form-horizontal" action="<?=$change ? url('permission/changeRole') : url('permission/addRole')?>">
     <div class="form-group">
         <label for="role" class="col-sm-2 control-label">角色名称</label>
         <div class="col-sm-4">
@@ -97,6 +97,7 @@ include tpl('header');
         <div class="col-sm-offset-2 col-sm-10">
             <input type="hidden" id="id" name="id" value="<?=$role['id']?>" />
             <button type="submit" class="btn btn-success"><?=SUBMIT?></button>
+            <input type="hidden" name="_token" value="<?=csrf_token()?>" />
             <a href="javascript:history.go(-1);" class="btn btn-default"><?=CANCEL?></a>
         </div>
     </div>

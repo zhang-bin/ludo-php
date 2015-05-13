@@ -36,6 +36,7 @@ Load::js('bootstrap-multiselect');
         <div class="col-sm-offset-2 col-sm-10">
             <input type="hidden" id="id" name="id" value="<?=$user['id']?>" />
             <input id="submitBtn" type="submit" value="<?=SUBMIT?>" class="btn btn-success" />
+            <input type="hidden" name="_token" value="<?=csrf_token()?>" />
             <input type="button" onclick="javascript:history.back();" value="<?=CANCEL?>" class="btn btn-default" />
         </div>
     </div>

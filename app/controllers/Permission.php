@@ -94,6 +94,7 @@ class Permission extends BaseCtrl
 	        		->assign('subMenuPermissions', $subMenuPermissions)
 	        		->display();
 		} else {
+            if ($this->illegalRequest()) die;
 			$dao = new RoleDao();
 			$rolePermissionDao = new RolePermissionDao();
 			try {
@@ -102,14 +103,16 @@ class Permission extends BaseCtrl
 				$add['descr'] = trim($_POST['descr']);
 				$add['createTime'] = date(TIME_FORMAT);
 				$roleId = $dao->insert($add);
-				
-				foreach ($_POST['permission'] as $permissionId => $v) {
-					$permissions[] = array(
-                        'roleId' => $roleId,
-                        'permissionId' => $permissionId
-					);
-				}
-				$rolePermissionDao->batchInsert($permissions);
+
+                if (!empty($_POST['permission'])) {
+                    foreach ($_POST['permission'] as $permissionId => $v) {
+                        $permissions[] = array(
+                            'roleId' => $roleId,
+                            'permissionId' => $permissionId
+                        );
+                    }
+                    $rolePermissionDao->batchInsert($permissions);
+                }
 				
 				$add['id'] = $roleId;
 				Log::log(array(
@@ -168,6 +171,7 @@ class Permission extends BaseCtrl
 					->assign('role', $role)
 					->display();
 		} else {
+            if ($this->illegalRequest()) die;
 			$dao = new RoleDao();
 			$rolePermissionDao = new RolePermissionDao();
 			try {
@@ -312,6 +316,7 @@ class Permission extends BaseCtrl
     				->assign('userRoles', array())
     				->display();
     	} else {
+            if ($this->illegalRequest()) die;
     		$dao = new UserDao();
     		$userRoleDao = new UserRoleDao();
     		$add['username'] = trim($_POST['username']);
@@ -358,6 +363,7 @@ class Permission extends BaseCtrl
     		->assign('roles', $roles)
     		->display();
     	} else {
+            if ($this->illegalRequest()) die;
     		$dao = new UserDao();
     		$userRoleDao = new UserRoleDao();
             $add['nickname'] = trim($_POST['nickname']);
