@@ -50,10 +50,6 @@ jQuery.extend({
 	}
 });
 $(document).ready(function(){
-    $("form").each(function(){
-        $(this).append("<input type='hidden' name='_token' value='<?=csrf_token()?>' />")
-    });
-
     $(".table").on("click", "a[name=del]", function(){
 		$(".modal-del").modal();
 		$(".modal-del .modal-title").text($(this).attr("title"));

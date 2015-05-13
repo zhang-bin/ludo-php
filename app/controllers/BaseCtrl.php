@@ -2,7 +2,7 @@
 class BaseCtrl extends \Ludo\Routing\Controller
 {
     /**
-     * @var \Monolog\Logger
+     * @var \Ludo\Log\Logger
      */
     protected $log;
 
@@ -18,7 +18,7 @@ class BaseCtrl extends \Ludo\Routing\Controller
         if($_SESSION[USER]['first'] == 1) { //首次登录
             return redirect('user/changePassword');
         }
-//        $this->illegalRequest();
+        $this->illegalRequest();
     }
 
     public function afterAction($action, $result)
@@ -33,8 +33,7 @@ class BaseCtrl extends \Ludo\Routing\Controller
     {
         //非法请求
         if (isset($_REQUEST['_token']) && !empty($_REQUEST['_token'])) {
-            $token = trim($_REQUEST['_token']);
-            if ($token != $_SESSION[USER]['token']) {
+            if (!csrf_token_validate($_REQUEST['_token'])) {
                 die;
             }
         }
