@@ -68,6 +68,7 @@ $(document).ready(function(){
 		return false;
 	});
 	$("form.form").submit(function(){
+        if (this.method != 'post') return;
 		preSubmit();
 		$.post($(this).attr("action"), $(this).serialize(), function(result) {
 			ajaxHandler(result);

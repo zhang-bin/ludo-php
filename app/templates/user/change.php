@@ -10,7 +10,7 @@ Load::js('bootstrap-multiselect');
         <div class="col-sm-4">
             <?php if($user['id'] == '') {?>
                 <input type="text" name="username" id="username" class="form-control" value="<?=$user['username']?>" required="required" />
-                <span class="hint">初始密码: <?=Permission::DEFAULT_PASSWORD?></span>
+                <span class="help-block">初始密码: <?=Permission::DEFAULT_PASSWORD?></span>
             <?php } else {?>
                 <p class="form-control-static"><?=$user['username']?></p>
             <?php }?>
@@ -25,7 +25,7 @@ Load::js('bootstrap-multiselect');
     <div class="form-group">
         <label for="role" class="col-sm-2 control-label">角色</label>
         <div class="col-sm-4">
-            <select name="role[]" id="role" class="multiselect" multiple="multiple" class="form-control">
+            <select name="role[]" id="role" class="selectpicker" multiple="multiple" class="form-control" data-size="10">
                 <?php foreach ($roles as $role) {?>
                     <option value="<?=$role['id']?>" <?=(is_array($userRoles) && in_array($role['id'], $userRoles)) ? 'selected' : ''?>><?=$role['role']?></option>
                 <?php }?>
@@ -44,7 +44,7 @@ Load::js('bootstrap-multiselect');
 <?php View::startJs();?>
 <script type="text/javascript">
 $(document).ready(function(){
-	$('.multiselect').multiselect();
+
 });
 </script>
 <?php View::endJs();?>
