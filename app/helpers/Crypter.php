@@ -9,13 +9,13 @@ class Crypter
      * @param string $algorithm encrypt algorithm
      * @return string encrypted data
      */
-    public static function encrypt($str, $mode = 'ecb', $algorithm = 'rijndael-128')
+    public static function encrypt($str, $mode = MCRYPT_MODE_ECB, $algorithm = MCRYPT_RIJNDAEL_128)
     {
     	if (empty($str)) return null;
         /* 开启加密算法/ */
         $td = mcrypt_module_open($algorithm, '', $mode, '');
         /* 建立 IV，并检测 key 的长度 */
-        $iv = mcrypt_create_iv(mcrypt_enc_get_iv_size($td), MCRYPT_RAND);
+        $iv = mcrypt_create_iv(mcrypt_enc_get_iv_size($td), MCRYPT_DEV_URANDOM);
         $ks = mcrypt_enc_get_key_size($td);
         /* 生成 key */
         $keyStr = substr(md5(API_SALT), 0, $ks);
@@ -40,13 +40,13 @@ class Crypter
      * @param string $algorithm encrypt algorithm
      * @return string raw data
      */
-    public static function decrypt($str, $mode = 'ecb', $algorithm = 'rijndael-128')
+    public static function decrypt($str, $mode = MCRYPT_MODE_ECB, $algorithm = MCRYPT_RIJNDAEL_128)
     {
     	if (empty($str)) return null;
         /* 开启加密算法/ */
         $td = mcrypt_module_open($algorithm, '', $mode, '');
         /* 建立 IV，并检测 key 的长度 */
-        $iv = mcrypt_create_iv(mcrypt_enc_get_iv_size($td), MCRYPT_RAND);
+        $iv = mcrypt_create_iv(mcrypt_enc_get_iv_size($td), MCRYPT_DEV_URANDOM);
         $ks = mcrypt_enc_get_key_size($td);
         /* 生成 key */
         $keyStr = substr(md5(API_SALT), 0, $ks);
