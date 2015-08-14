@@ -14,7 +14,7 @@
 if (PHP_SAPI != 'cli') die('Pls run from command!');
 
 swoole_set_process_name('php git-hook.php manager');
-$setting = parse_ini_file(__DIR__.'/../setting.ini', true);
+$setting = parse_ini_file(__DIR__ . '/../setting.ini', true);
 $setting = $setting['git hook'];
 $http = new swoole_http_server($setting['bind'], $setting['port']);
 $http->set([
@@ -27,16 +27,16 @@ $http->set([
     'daemonize' => $setting['daemonize']
 ]);
 
-$http->on('request', function(swoole_http_request $request, swoole_http_response $response){
+$http->on('request', function (swoole_http_request $request, swoole_http_response $response) {
     $content = $request->rawContent();
-    file_put_contents('/tmp/swoole-git.log', date('Y-m-d H:i:s')."\n", FILE_APPEND);
-    file_put_contents('/tmp/swoole-git.log', $content."\n\n", FILE_APPEND);
+    file_put_contents('/tmp/swoole-git.log', date('Y-m-d H:i:s') . "\n", FILE_APPEND);
+    file_put_contents('/tmp/swoole-git.log', $content . "\n\n", FILE_APPEND);
     $response->end('Done!');
     global $http;
     $http->task($content);
 });
 
-$http->on('workerStart', function(swoole_http_server $server, $workerId){
+$http->on('workerStart', function (swoole_http_server $server, $workerId) {
     swoole_set_process_name('php git-hook.php event worker');
 });
 
@@ -70,26 +70,26 @@ $http->on('workerStart', function(swoole_http_server $server, $workerId){
  * }
  *
  */
-$http->on('task', function(swoole_http_server $server, $taskId, $fromId, $data){
+$http->on('task', function (swoole_http_server $server, $taskId, $fromId, $data) {
     $content = json_decode($data, true);
     //..do something
 });
 
-$http->on('finish', function(){
-   echo 'task finish';
+$http->on('finish', function () {
+    echo 'task finish';
 });
 
-$http->on('start', function(swoole_http_server $server){
+$http->on('start', function (swoole_http_server $server) {
     swoole_set_process_name('php git-hook.php master');
-    $setting = parse_ini_file(__DIR__.'/../setting.ini', true);
+    $setting = parse_ini_file(__DIR__ . '/../setting.ini', true);
     $setting = $setting['git hook'];
     //记录进程文件
     $dir = $setting['pidfile'];
     if (!is_dir($dir)) mkdir($dir);
-    $masterPidFile = $dir.'git-hook.master.pid';
+    $masterPidFile = $dir . 'git-hook.master.pid';
     file_put_contents($masterPidFile, $server->master_pid);
 
-    $managerPidFile = $dir.'git-hook.manager.pid';
+    $managerPidFile = $dir . 'git-hook.manager.pid';
     file_put_contents($managerPidFile, $server->manager_pid);
 });
 

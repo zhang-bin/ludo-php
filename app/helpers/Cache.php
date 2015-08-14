@@ -1,5 +1,6 @@
 <?php
-class Cache {
+class Cache
+{
     /**
      * @var Redis
      */
@@ -11,7 +12,8 @@ class Cache {
      * @param $port
      * @return Redis
      */
-    public static function redis($db = 2, $host = null, $port = null) {
+    public static function redis($db = 2, $host = null, $port = null)
+    {
         if (is_null(self::$_redis[$db])) {
             $redis = new Redis();
             is_null($host) && $host = Config::get('database.connections.redis.host');
@@ -30,7 +32,8 @@ class Cache {
      * @param $value
      * @param $expire
      */
-    public static function hSet($key, $hasKey, $value, $expire) {
+    public static function hSet($key, $hasKey, $value, $expire)
+    {
         $redis = self::redis();
         if ($redis->exists($key)) {
             $redis->hSet($key, $hasKey, $value);
