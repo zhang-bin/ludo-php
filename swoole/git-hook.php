@@ -1,5 +1,16 @@
 #!/usr/bin/php
 <?php
+/**
+ * If you use GitLab as version control system, you can run this script on testing server for auto deploy.
+ * Before use it, you need install swoole extension for php, you can get it from http://www.swoole.com/
+ * After that, you need run it according to the following steps.
+ *
+ * 1 Login GitLab, goto Project->Settings->Web Hooks, input hook url like 'http://your-testing-server:9723', and check Push events.
+ * 2 Login your testing server, enter in the project home directory, run the command: php swoole/git-hook.php
+ *
+ * And last, enjoy it!!!
+ */
+
 if (PHP_SAPI != 'cli') die('Pls run from command!');
 
 swoole_set_process_name('php git-hook.php manager');
