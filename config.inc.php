@@ -4,6 +4,7 @@ define('SITE_URL',			'http://'.$_SERVER['SERVER_NAME'].'/ludo-php');
 define('PROGRAM_CHARSET',       'UTF-8');
 define('SUCCESS',               'success');
 define('ALERT',                 'alert');
+define('ALERT2GO',              'alert2go');
 define('STATUS',                'status');
 define('GO',                    'go');
 define('MSG',                   'msg');
