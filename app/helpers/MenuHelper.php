@@ -28,14 +28,18 @@ class Menu
     {
 		self::init();
 		$html = '<ul class="nav navbar-nav">';
-		foreach (self::$menu as $top=>$topMenus) {//1级菜单
+		foreach (self::$menu as $top => $topMenus) {//1级菜单
+            if (!UserModel::canMenu($top)) continue;
+
 			$active = self::$currMenuId['level1'] == $top ? 'active' : '';
 			$li = '<li class="dropdown '.$active.'">';
             if (empty($topMenus['children'])) {
                 $li .= '<a href="'.url($top).'">'.$topMenus['name'].'</a>';
             } else {
                 $li .= '<a href="javascript:;" class="dropdown-toggle" data-toggle="dropdown">'.$topMenus['name'].'</a><ul class="dropdown-menu" role="menu">';
-				foreach ($topMenus['children'] as $second=>$secondMenus) {//2级菜单
+				foreach ($topMenus['children'] as $second => $secondMenus) {//2级菜单
+                    if (!UserModel::canMenu($top, $second)) continue;
+
 					if (!empty($secondMenus['children'])) {
 						$li .= '<li class="offset-right dropdown"><a href="javascript:;">'.$secondMenus['name'].'</a><ul class="dropdown-menu" role="menu">';
 						foreach ($secondMenus['children'] as $third => $thirdMenus) {//3级菜单

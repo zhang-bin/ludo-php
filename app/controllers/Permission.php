@@ -120,10 +120,10 @@ class Permission extends BaseCtrl
 					'new' => json_encode(array('role' => $add, 'permission' => $permissions))
 				));
 				$dao->commit();
-                return array(STATUS => SUCCESS, URL => url('permission'));
+                return $this->success(url('permission'));
 			} catch (QueryException $e) {
 				$dao->rollback();
-                return array(STATUS => ALERT, MSG => '添加角色失败');
+                return $this->alert('添加角色失败');
 			}
 		}
 	}
@@ -201,10 +201,10 @@ class Permission extends BaseCtrl
 					'old' => json_encode(array('role' => $old, 'permission' => $oldPermissions))
 				));
 				$dao->commit();
-                return array(STATUS => SUCCESS, URL => url('permission'));
+                return $this->success(url('permission'));
 			} catch (QueryException $e) {
 				$dao->rollback();
-                return array(STATUS => ALERT, MSG => '修改角色失败');
+                return $this->alert('修改角色失败');
 			}
 		}
 	}
@@ -221,10 +221,10 @@ class Permission extends BaseCtrl
 				'old' => $id
 			));
 			$dao->commit();
-            return array(STATUS => SUCCESS, URL => url('permission'));
+            return $this->success(url('permission'));
 		} catch (QueryException $e) {
 			$dao->rollback();
-            return array(STATUS => ALERT, MSG => '删除角色失败');
+            return $this->alert('删除角色失败');
 		}
 	}
 	
@@ -341,10 +341,10 @@ class Permission extends BaseCtrl
     				'new' => json_encode(array('user' => $add, 'role' => $userRole)),
     			));
     			$dao->commit();
-				return array(STATUS => SUCCESS, URL => url('permission/user'));
+				return $this->success(url('permission/user'));
     		} catch (QueryException $e) {
     			$dao->rollback();
-				return array(STATUS => ALERT, MSG => '添加用户失败');
+				return $this->alert('添加用户失败');
     		}
     	}
     }
@@ -390,10 +390,10 @@ class Permission extends BaseCtrl
 	    			'old' => json_encode(array('old' => $old, 'role' => $oldRole))
     			));
     			$dao->commit();
-				return array(STATUS => SUCCESS, URL => url('permission/user'));
+				return $this->success(url('permission/user'));
     		} catch (QueryException $e) {
     			$dao->rollback();
-				return array(STATUS => ALERT, MSG => '修改用户失败');
+				return $this->alert('修改用户失败');
     		}
     	}
     }
@@ -422,10 +422,10 @@ class Permission extends BaseCtrl
 					'new' => $id
 				));
 				$dao->commit();
-				return array(STATUS => SUCCESS, URL => url('permission/user'));
+				return $this->success(url('permission/user'));
 			} catch (QueryException $e) {
 				$dao->rollback();
-				return array(STATUS => ALERT, MSG => '修改密码失败');
+				return $this->alert('修改密码失败');
 			}
     	}
     }
@@ -442,10 +442,10 @@ class Permission extends BaseCtrl
     			'old' => $id
     		));
     		$dao->commit();
-			return array(STATUS => SUCCESS, URL => url('permission/user'));
+			return $this->success(url('permission/user'));
     	} catch (QueryException $e) {
     		$dao->rollback();
-			return array(STATUS => ALERT, MSG => '删除用户失败');
+			return $this->alert('删除用户失败');
     	}
     }
     
@@ -472,10 +472,10 @@ class Permission extends BaseCtrl
 	    		'old' => $id
     		));
     		$dao->commit();
-			return array(STATUS => SUCCESS, URL => url('permission/user'));
+			return $this->success(url('permission/user'));
     	} catch (QueryException $e) {
     		$dao->rollback();
-			return array(STATUS => ALERT, MSG => '操作失败');
+			return $this->alert('操作失败');
     	}
     }
     
@@ -491,10 +491,10 @@ class Permission extends BaseCtrl
 	    		'old' => $id
     		));
     		$dao->commit();
-			return array(STATUS => SUCCESS, URL => url('permission/user'));
+			return $this->success(url('permission/user'));
     	} catch (QueryException $e) {
     		$dao->rollback();
-			return array(STATUS => ALERT, MSG => '操作失败');
+			return $this->alert('操作失败');
     	}
     }
     

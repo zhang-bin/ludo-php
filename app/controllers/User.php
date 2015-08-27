@@ -46,13 +46,6 @@ class User extends BaseCtrl
     		return redirect();
     	}
     }
-    
-	public function logout()
-    {
-		unset($_SESSION);
-		session_destroy();
-		redirect();
-	}
 
     /**
      * 用户首次登录修改密码
@@ -86,21 +79,10 @@ class User extends BaseCtrl
                 return redirect();
             } catch (Exception $e) {
                 $dao->rollback();
-                return array(STATUS => ALERT, MSG => '修改用户密码失败');
+                return $this->alert('修改用户密码失败');
             }
         }
     }
-
-	public static function can($action = CURRENT_ACTION)
-    {
-		if ($_SESSION[USER]['isAdmin']) return true;
-		$permissions = Load::conf('permission');
-		$group = $_SESSION[USER]['usergroup'];
-		if (!isset($permissions[$group][lcfirst(CURRENT_CONTROLLER)])) return false;
-		if ($permissions[$group][lcfirst(CURRENT_CONTROLLER)] == '*') return true;//表示所有操作都能执行
-		if (in_array($action, $permissions[$group][lcfirst(CURRENT_CONTROLLER)])) return true;
-		return false;
-	}
 
     public function beforeAction($action)
     {

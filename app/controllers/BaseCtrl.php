@@ -49,4 +49,35 @@ class BaseCtrl extends \Ludo\Routing\Controller
             return gotoLogin();
         }
     }
+
+    /**
+     * 弹出警告框
+     *
+     * @param $msg
+     * @return array
+     */
+    protected function alert($msg) {
+        return array(STATUS => ALERT, MSG => $msg);
+    }
+
+    /**
+     * 成功返回跳转页面
+     *
+     * @param $url
+     * @return array
+     */
+    protected function success($url) {
+        return array(STATUS => SUCCESS, URL => $url);
+    }
+
+    /**
+     * 弹出警告框，并且跳转页面
+     *
+     * @param $msg
+     * @param $url
+     * @return array
+     */
+    protected function alert2go($msg, $url) {
+        return array(STATUS => ALERT2GO, MSG => $msg, URL => $url);
+    }
 }
