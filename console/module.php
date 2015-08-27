@@ -48,9 +48,9 @@ class Module
                 break;
             }
         }
-        $this->_controller();
-        $this->_dao();
-        $this->_tpl();
+        $this->controller();
+        $this->dao();
+        $this->tpl();
         return true;
     }
 
@@ -82,7 +82,7 @@ class Module
      *
      * @return bool
      */
-    private function _controller()
+    private function controller()
     {
         $controllerFile = LD_CTRL_PATH . DIRECTORY_SEPARATOR . $this->upper . '.php';
         if (file_exists($controllerFile)) return true;
@@ -278,7 +278,7 @@ EOF;
      *
      * @return bool
      */
-    private function _dao()
+    private function dao()
     {
         $daoFile = LD_DAO_PATH . DIRECTORY_SEPARATOR . $this->upper . 'Dao.php';
         if (file_exists($daoFile)) return true;
@@ -298,13 +298,13 @@ EOF;
     /**
      * tpl文件
      */
-    private function _tpl()
+    private function tpl()
     {
         $tplDir = TPL_ROOT . DIRECTORY_SEPARATOR . $this->lower;
         !is_dir($tplDir) && mkdir($tplDir);
-        $this->_index($tplDir);
-        $this->_change($tplDir);
-        $this->_view($tplDir);
+        $this->index($tplDir);
+        $this->change($tplDir);
+        $this->view($tplDir);
     }
 
     /**
@@ -313,7 +313,7 @@ EOF;
      * @param $dir string
      * @return bool
      */
-    private function _index($dir)
+    private function index($dir)
     {
         $tplIndexFile = $dir . DIRECTORY_SEPARATOR . 'index.php';
         if (file_exists($tplIndexFile)) return true;
@@ -404,7 +404,7 @@ EOF;
      * @param $dir string
      * @return bool
      */
-    private function _change($dir)
+    private function change($dir)
     {
         $tplChangeFile = $dir . DIRECTORY_SEPARATOR . 'change.php';
         if (file_exists($tplChangeFile)) return true;
@@ -482,7 +482,7 @@ EOF;
      * @param $dir string
      * @return bool
      */
-    private function _view($dir)
+    private function view($dir)
     {
         $tplViewFile = $dir . DIRECTORY_SEPARATOR . 'view.php';
         if (file_exists($tplViewFile)) return true;

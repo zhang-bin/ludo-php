@@ -4,7 +4,7 @@ class Cache
     /**
      * @var Redis
      */
-    private static $_redis = array();
+    private static $redis = array();
 
     /**
      * @param int $db
@@ -14,15 +14,15 @@ class Cache
      */
     public static function redis($db = 2, $host = null, $port = null)
     {
-        if (is_null(self::$_redis[$db])) {
+        if (is_null(self::$redis[$db])) {
             $redis = new Redis();
             is_null($host) && $host = Config::get('database.connections.redis.host');
             is_null($port) && $port = Config::get('database.connections.redis.port');
             $redis->connect($host, $port);
             $redis->select($db);
-            self::$_redis[$db] = $redis;
+            self::$redis[$db] = $redis;
         }
-        return self::$_redis[$db];
+        return self::$redis[$db];
     }
 
     /**

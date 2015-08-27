@@ -67,7 +67,7 @@ class Permission extends BaseCtrl
 	public function addRole()
     {
 		if (empty($_POST)) {
-			list($modules, $menus, $subMenus) = $this->_transformPermissions();
+			list($modules, $menus, $subMenus) = $this->transformPermissions();
 			
 			$modulePermissions = array();
 			$conf = Load::conf('Permission');
@@ -134,7 +134,7 @@ class Permission extends BaseCtrl
 			$id = intval($_GET['id']);
 			$roleDao = new RoleDao();
 			$role = $roleDao->fetch($id);
-			list($modules, $menus, $subMenus) = $this->_transformPermissions();
+			list($modules, $menus, $subMenus) = $this->transformPermissions();
 			
 			$rolePermissions = Factory::dao('RolePermission')->findAllUnique(array('roleId = ?', $id), 'permissionId');
 			
@@ -143,7 +143,7 @@ class Permission extends BaseCtrl
 			foreach ($conf as $resource => $operations) {
 				foreach ($operations['operations'] as $operation => $urls) {
 					$permissionId = $modules[$resource][$operation];
-					$checked = $this->_checkPermission($permissionId, $rolePermissions);
+					$checked = $this->checkPermission($permissionId, $rolePermissions);
 					$modulePermissions[$operations['name']][$urls['name']] = array('id' => $permissionId, 'checked' => $checked);
 				}
 			}
@@ -153,13 +153,13 @@ class Permission extends BaseCtrl
 			foreach ($conf as $topMenuId => $menu) {
 				$permissionId = $menus[$topMenuId];
 				if (empty($permissionId)) continue;
-				$checked = $this->_checkPermission($permissionId, $rolePermissions);
+				$checked = $this->checkPermission($permissionId, $rolePermissions);
 				$menuPermissions[$menu['name']] = array('id' => $menus[$topMenuId], 'checked' => $checked);
 				
 				foreach ($menu['children'] as $subMenuId => $v) {
 					$permissionId = $subMenus[$topMenuId][$subMenuId];
 					if (empty($permissionId)) continue;
-					$checked = $this->_checkPermission($permissionId, $rolePermissions);
+					$checked = $this->checkPermission($permissionId, $rolePermissions);
 					$subMenuPermissions[$menu['name']][$v['name']] = array('id' => $subMenus[$topMenuId][$subMenuId], 'checked' => $checked);
 				}
 			}
@@ -233,7 +233,7 @@ class Permission extends BaseCtrl
         $roleId = intval($_GET['id']);
         $role = Factory::dao('role')->fetch($roleId);
         
-       	list($modules, $menus, $subMenus) = $this->_transformPermissions();
+       	list($modules, $menus, $subMenus) = $this->transformPermissions();
         
         $rolePermissions = Factory::dao('rolePermission')->findAllUnique(array('roleId = ?', $roleId), 'permissionId');
         	
@@ -242,7 +242,7 @@ class Permission extends BaseCtrl
         foreach ($conf as $resource => $operations) {
         	foreach ($operations['operations'] as $operation => $urls) {
         		$permissionId = $modules[$resource][$operation];
-        		if (!$this->_checkPermission($permissionId, $rolePermissions)) continue;
+        		if (!$this->checkPermission($permissionId, $rolePermissions)) continue;
         		
         		$modulePermissions[$operations['name']][] = $urls['name'];
         	}
@@ -252,11 +252,11 @@ class Permission extends BaseCtrl
         $conf = Load::conf('Menu');
         foreach ($conf as $topMenuId => $menu) {
         	$permissionId = $menus[$topMenuId];
-        	if (!$this->_checkPermission($permissionId, $rolePermissions)) continue;
+        	if (!$this->checkPermission($permissionId, $rolePermissions)) continue;
         
         	foreach ($menu['children'] as $subMenuId => $v) {
         		$permissionId = $subMenus[$topMenuId][$subMenuId];
-        		if (!$this->_checkPermission($permissionId, $rolePermissions)) continue;
+        		if (!$this->checkPermission($permissionId, $rolePermissions)) continue;
         		$menuPermissions[$menu['name']][] = $v['name'];
         	}
         }
@@ -498,7 +498,7 @@ class Permission extends BaseCtrl
     	}
     }
     
-    private function _transformPermissions()
+    private function transformPermissions()
     {
     	$permissions = Factory::dao('permission')->fetchAll();
     	$modules = $menus = $subMenus = array();
@@ -521,7 +521,7 @@ class Permission extends BaseCtrl
     	return array($modules, $menus, $subMenus);
     }
     
-    private function _checkPermission($permissionId, $permissions)
+    private function checkPermission($permissionId, $permissions)
     {
     	$checked = false;
     	if (in_array($permissionId, $permissions)) $checked = true;
