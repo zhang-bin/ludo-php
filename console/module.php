@@ -1,4 +1,8 @@
 <?php
+
+/**
+ * 这是基于table生成相应的controller,dao,view文件
+ */
 class Module
 {
     private $upper;
@@ -31,8 +35,10 @@ class Module
         }
 
         foreach ($this->fields as &$field) {
+            //分析字段描述，去掉括号和括号里的内容
             $field['Comment'] = preg_replace('/([^(]*)(\(.*\))/isU', '$1', $field['Comment']);
 
+            //分析字段类型
             if (preg_match('/^((?:var)?char)\((\d+)\)/', $field['Type'], $matches)) {
                 $row['Type'] = $matches[1];
             } elseif (preg_match('/^decimal\((\d+),(\d+)\)/', $field['Type'], $matches)) {
@@ -88,6 +94,7 @@ class Module
         if (file_exists($controllerFile)) return true;
         $condition = $this->hasDeleted ? '$condition = \'' . $this->upper . '.deleted = 0\';' : '$condition = \'\';';
 
+        //id不需要赋值,deleted必须设置为0,其他字段根据前台输入的内容来进行赋值
         $ignore = array('id', 'deleted');
         $update = $add = '';
         if ($this->hasDeleted) {

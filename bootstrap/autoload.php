@@ -10,9 +10,3 @@ ClassLoader::addDirectories(LD_HELPER_PATH);
 ClassLoader::register();
 
 require_once __DIR__.'/../vendor/ludo/framework/src/Ludo/Foundation/start.php';
-
-
-
-
-
-
