@@ -41,9 +41,9 @@ class User extends BaseCtrl
 				'name' => 'User Login',
 			));
 			if (isset($_POST['jurl'])) {
-				return redirectOut($_POST['jurl']);
+                redirectOut($_POST['jurl']);
 			}
-    		return redirect();
+    		redirect();
     	}
     }
 
@@ -76,7 +76,7 @@ class User extends BaseCtrl
                     'new' => $id
                 ));
                 $dao->commit();
-                return redirect();
+                redirect();
             } catch (Exception $e) {
                 $dao->rollback();
                 return $this->alert('修改用户密码失败');
