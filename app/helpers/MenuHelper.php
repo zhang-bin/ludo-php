@@ -1,4 +1,8 @@
 <?php
+
+/**
+ * 菜单
+ */
 class Menu
 {
 	public static $menu = null;
@@ -24,6 +28,11 @@ class Menu
         }
 	}
 
+    /**
+     * 生成菜单
+     *
+     * @return string
+     */
     public static function menuRender()
     {
 		self::init();
@@ -60,6 +69,13 @@ class Menu
 		return $html;
 	}
 
+    /**
+     * 生成导航条
+     *
+     * @param $title
+     * @param $toolBox
+     * @return string
+     */
     public static function navRender($title, $toolBox)
     {
 		self::init();
