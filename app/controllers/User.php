@@ -84,6 +84,13 @@ class User extends BaseCtrl
         }
     }
 
+    public function logout()
+    {
+        unset($_SESSION);
+        session_destroy();
+        redirect();
+    }
+
     public function beforeAction($action)
     {
         return true;
