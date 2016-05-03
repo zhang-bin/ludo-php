@@ -26,3 +26,4 @@ define('PAGE_SPAN',    6);
 
 define('API_SALT', 'Ludo-PHP');
 define('PASSWORD_SALT',     'r#@k1#@55%r7*w!t^g8=&f');
+define('RESPONSE_API_SALT',  'cf1251bc88264d9ec4061cef7214d372'); //RESPONSE API签名密钥

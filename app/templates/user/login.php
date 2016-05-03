@@ -66,7 +66,6 @@ body{
       	<input type="password" class="form-control input-block-level" id="password" name="password" placeholder="密码" />
     </div>
     <div class="form-group">
-		<input type="hidden" id="timezoneOffset" name="timezoneOffset" />
 		<input id="submitBtn" type="submit" class="btn btn-lg btn-primary" value="<?=SIGN_IN?>" />
 		<input type="hidden" id="jurl" name="jurl" value="<?=$_GET['jurl']?>" />
   	</div>

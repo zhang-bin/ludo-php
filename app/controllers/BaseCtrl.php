@@ -91,4 +91,15 @@ class BaseCtrl extends \Ludo\Routing\Controller
     protected function alert2go($msg, $url) {
         return array(STATUS => ALERT2GO, MSG => $msg, URL => $url);
     }
+
+
+    /**
+     * response的时候增加签名参数
+     *
+     * @param $data
+     */
+    static function addResponseSign(&$data) {
+        $data['rand'] = uniqid().time();
+        $data['sign'] = md5($data['rand'].RESPONSE_API_SALT);
+    }
 }

@@ -136,3 +136,80 @@ function lastMonth()
     $thisMonth = strtotime(date('F 1'));
     return date('Y-m', strtotime('-1 month', $thisMonth));
 }
+
+/**
+ * 将,分隔的字符串解析为数组
+ *
+ * @param string $str ,分隔的字符串
+ * @param string $comma 分隔符, 默认为,
+ * @return array
+ */
+function explodeSafe($str, $comma=',') {
+	$str = str_replace('，', ',', $str); //去除全角逗号
+	$str = trim(str_replace(' ', '', $str), $comma);
+	return explode($comma, $str);
+}
+
+
+/**
+ * 判断字符串是否json
+ *
+ * @param string $content 文字
+ * @return bool
+ */
+function isJsonString($content) {
+	if (is_numeric($content)) return false;
+	json_decode($content);
+	return json_last_error() == JSON_ERROR_NONE;
+}
+
+function generateCsv($menu, $data) {
+	$dir = LD_UPLOAD_TMP_PATH.'/'.date(DATE_FORMAT).'/';
+	if (!is_dir($dir)) mkdir($dir);
+
+	$filename = $dir.uniqid(time()).'.csv';
+	$sep  = "\t";
+	$eol  = "\n";
+
+	$csv = '';
+	foreach ($menu as $v) {
+		$arr[] = $v;
+	}
+	$csv .= '"'. implode('"'.$sep.'"', $arr).'"'.$eol;
+
+	$fp = fopen($filename, 'w');
+	fwrite($fp, chr(255).chr(254));
+	fwrite($fp, mb_convert_encoding($csv, 'UTF-16LE', 'UTF-8'));
+
+	foreach ($data as $v) {
+		$arr = array();
+		foreach ($menu as $k=>$vv) {
+			$arr[] = $v[$k];
+		}
+		$csv = '"'. implode('"'.$sep.'"', $arr).'"'.$eol;
+		fwrite($fp, mb_convert_encoding($csv, 'UTF-16LE', 'UTF-8'));
+	}
+	fflush($fp);
+	fclose($fp);
+	return $filename;
+}
+
+function thisSaturday() {
+	$dayNumber = intval(date('N'));
+	if ($dayNumber == 7) {//星期天
+		$saturday = strtotime('saturday last week');
+	} else {
+		$saturday = strtotime('saturday this week');
+	}
+	return $saturday;
+}
+
+function thisFriday() {
+	$dayNumber = intval(date('N'));
+	if ($dayNumber == 7) {//星期天
+		$friday = strtotime('friday last week');
+	} else {
+		$friday = strtotime('friday this week');
+	}
+	return $friday;
+}
