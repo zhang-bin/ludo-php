@@ -7,7 +7,5 @@ define('LOGGER_LEVEL_FATAL',		5);
 
 define('LOGGER_LEVEL_DEFAULT', LOGGER_LEVEL_DEBUG);
 
-
-define('API_SOCKET_SEND',   '1002');
-define('API_SOCKET_BROADCAST',   '1003');
-define('API_SOCKET_LUCKY_MONEY',   '1004');//红包
+define('EXPIRE_AT', 'expire_at');
+define('EXPIRE', 'expire');

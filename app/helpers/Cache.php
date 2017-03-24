@@ -2,7 +2,7 @@
 class Cache
 {
     /**
-     * @var Redis
+     * @var \Ludo\Redis\BaseRedis
      */
     private static $redis = array();
 
@@ -10,12 +10,12 @@ class Cache
      * @param int $db
      * @param $host
      * @param $port
-     * @return Redis
+     * @return \Ludo\Redis\BaseRedis
      */
     public static function redis($db = 2, $host = null, $port = null)
     {
         if (is_null(self::$redis[$db])) {
-            $redis = new Redis();
+            $redis = new \Ludo\Redis\BaseRedis();
             is_null($host) && $host = Config::get('database.connections.redis.host');
             is_null($port) && $port = Config::get('database.connections.redis.port');
             $redis->connect($host, $port);
@@ -23,23 +23,5 @@ class Cache
             self::$redis[$db] = $redis;
         }
         return self::$redis[$db];
-    }
-
-    /**
-     *
-     * @param $key
-     * @param $hasKey
-     * @param $value
-     * @param $expire
-     */
-    public static function hSet($key, $hasKey, $value, $expire)
-    {
-        $redis = self::redis();
-        if ($redis->exists($key)) {
-            $redis->hSet($key, $hasKey, $value);
-        } else {
-            $redis->hSet($key, $hasKey, $value);
-            !empty($expire) && $redis->expireAt($key, $expire);
-        }
     }
 }

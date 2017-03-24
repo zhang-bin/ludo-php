@@ -195,21 +195,53 @@ function generateCsv($menu, $data) {
 }
 
 function thisSaturday() {
-	$dayNumber = intval(date('N'));
-	if ($dayNumber == 7) {//星期天
-		$saturday = strtotime('saturday last week');
-	} else {
-		$saturday = strtotime('saturday this week');
-	}
-	return $saturday;
+    $dayNumber = intval(date('N'));
+    if ($dayNumber == 7) {//星期天
+        $saturday = strtotime('last saturday');
+    } else {
+        $saturday = strtotime('saturday this week');
+    }
+    return $saturday;
 }
 
 function thisFriday() {
-	$dayNumber = intval(date('N'));
-	if ($dayNumber == 7) {//星期天
-		$friday = strtotime('friday last week');
-	} else {
-		$friday = strtotime('friday this week');
-	}
-	return $friday;
+    $dayNumber = intval(date('N'));
+    if ($dayNumber == 7) {//星期天
+        $friday = strtotime('last friday');
+    } else {
+        $friday = strtotime('friday this week');
+    }
+    return $friday;
+}
+
+function thisMonday() {
+    $dayNumber = intval(date('N'));
+    if ($dayNumber == 7) {//星期天
+        $monday = strtotime('last monday');
+    } else {
+        $monday = strtotime('monday this week');
+    }
+    return $monday;
+}
+
+function thisSunday() {
+    return strtotime('sunday this week');
+}
+
+/**
+ * 正态分布的随机值
+ *
+ * @param $mean
+ * @param $sigma
+ * @return mixed
+ */
+function normalRandom($mean, $sigma) {
+	$max = 100;
+	do {
+		$u1 = mt_rand(0, $max) / $max;
+		$u2 = mt_rand(0, $max) / $max;
+
+		$z = sqrt(-2 * log($u1)) * cos(2 * pi() * $u2);
+	} while (strval($z) == "INF" or strval($z) == "-INF");
+	return $mean + $z * $sigma;
 }
