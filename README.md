@@ -14,3 +14,6 @@ ___
 4. 支持异步任务队列功能
 5. 表单提交自动使用csrf token,避免csrf攻击
 
+## 安装
+___
+composer create-project --prefer-dist ludo/ludo project-name
