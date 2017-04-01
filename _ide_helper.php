@@ -36,4 +36,8 @@ namespace {
     class Counter extends Ludo\Counter\Counter {
 
     }
+
+    class Encrypter extends Ludo\Encrypter\Encrypter {
+
+    }
 }
