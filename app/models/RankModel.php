@@ -55,11 +55,13 @@ class RankModel {
      * 获取排行榜数据
      *
      * @param $rankKey
+     * @param $start
+     * @param $end
      * @return array
      */
-    public static function getRanks($rankKey) {
+    public static function getRanks($rankKey, $start = 0, $end = 99) {
         $cache = Cache::redis();
-        return $cache->zRevRange($rankKey, 0, 99, true);
+        return $cache->zRevRange($rankKey, $start, $end, true);
     }
 
     /**
