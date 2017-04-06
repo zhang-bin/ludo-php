@@ -10,6 +10,6 @@
   ],
   "require": {
     "php": ">=5.5",
-    "ludo/framework": "dev-master"
+    "ludo/framework": ">=1.3"
   }
 }
