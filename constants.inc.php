@@ -9,3 +9,6 @@ define('LOGGER_LEVEL_DEFAULT', LOGGER_LEVEL_DEBUG);
 
 define('EXPIRE_AT', 'expire_at');
 define('EXPIRE', 'expire');
+
+define('BEST_SCORE_KEY_TIMESTAMP',      999999999999);
+define('BEST_SCORE_KEY_BASE',           1000000000000);
