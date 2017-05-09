@@ -56,9 +56,9 @@ jQuery.extend({
 $(document).ready(function(){
     $(".table").on("click", "a[name=del]", function(){
 		$(".modal-del").modal();
-		$(".modal-del .modal-title").text($(this).attr("title"));
-		if ($(this).attr("body") != '') {
-			$(".modal-del .modal-body p").text($(this).attr("body"));
+		$(".modal-del .modal-title").text($(this).attr("data-title"));
+		if ($(this).attr("data-body") != '') {
+			$(".modal-del .modal-body p").text($(this).attr("data-body"));
 		}
 		$("#confirmDel").attr("href", this.href);
 	 	return false;

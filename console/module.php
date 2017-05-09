@@ -380,7 +380,7 @@ EOF;
                         </a>
                     </li>
                     <li>
-                        <a name="del" title="删除ludo_module_descr" body="<?=CONFIRM_DELETE?>" href="<?=url('ludo_lower/del/'.$ludo_lower['id'])?>">
+                        <a name="del" data-title="删除ludo_module_descr" data-body="<?=CONFIRM_DELETE?>" href="<?=url('ludo_lower/del/'.$ludo_lower['id'])?>">
                             <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
                             <?=DELETE?>
                         </a>
