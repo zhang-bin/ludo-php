@@ -422,7 +422,7 @@ $change = isset($_GET['id']) ? true : false;
 $gTitle = $change ? '修改ludo_module_descr' : '添加ludo_module_descr';
 include tpl('header');
 ?>
-<form method="post" class="form-horizontal" action="<?=$change ? url('ludo_lower/change') : url('ludo_lower/add')?>">
+<form method="post" class="form-horizontal form" action="<?=$change ? url('ludo_lower/change') : url('ludo_lower/add')?>">
 
 EOF;
         $ignore = array('id', 'deleted', 'createDate', 'createTime');
