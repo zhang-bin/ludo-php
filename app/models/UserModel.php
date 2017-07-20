@@ -16,7 +16,7 @@ class UserModel {
         if (is_null($operation)) {//一级菜单
             return $_SESSION[USER]['menus']['top'][$resource];
         } else {
-            return $_SESSION[USER]['menus']['sub'][$resource.'_'.$operation];
+            return $_SESSION[USER]['menus']['sub'][$resource][$operation];
         }
     }
 }
