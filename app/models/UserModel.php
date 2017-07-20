@@ -14,9 +14,9 @@ class UserModel {
         if ($_SESSION[USER]['isAdmin']) return true;
 
         if (is_null($operation)) {//一级菜单
-            return $_SESSION[USER]['menus'][$resource];
+            return $_SESSION[USER]['menus']['top'][$resource];
         } else {
-            return $_SESSION[USER]['menus'][$resource.'_'.$operation];
+            return $_SESSION[USER]['menus']['sub'][$resource.'_'.$operation];
         }
     }
 }
