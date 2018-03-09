@@ -3,7 +3,7 @@ $gTitle = '角色管理';
 $gToolbox .= '<a href="'.url('permission/addRole').'" class="add">添加角色</a>';
 include tpl('header'); 
 ?>
-<table class="table table-hover table-bordered">
+<table class="table table-hover">
     <thead>
         <tr>
             <th>角色名称</th>

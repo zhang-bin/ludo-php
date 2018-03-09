@@ -12,7 +12,7 @@ include tpl('header');
     </select>
     <input type="submit" class="btn btn-small btn-primary" value="搜索" />
 </form>
-<table class="table table-hover table-bordered">
+<table class="table table-hover">
     <thead>
     <tr>
         <th>用户名</th>
