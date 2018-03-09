@@ -23,17 +23,9 @@
     <script src="<?=LD_PUBLIC_PATH.'/img/respond.min.js'?>"></script>
     <![endif]-->
 </head>
-<body style="padding-top: 70px;background-color: #595C64;">
-<header class="navbar navbar-inverse ludo-nav navbar-fixed-top" id="top" role="banner">
-    <div class="row">
-        <div class="pull-right" style="color:#93C0E6;margin: 5px 50px 5px 0;">
-            <?php if(logined()) { ?>
-                欢迎, <?=$_SESSION[USER]['nickname']?> |
-            <?php } ?>
-            <a href="<?=url('user/logout')?>">退出</a>
-        </div>
-    </div>
-    <div class="row ludo-menu" style="padding: 0 10px;">
+<body data-spy="scroll" data-target=".sidebar" style="background-color: #595C64;padding-top: 40px;">
+<header class="navbar navbar-inverse navbar-fixed-top" style="margin-bottom: 0px;">
+    <div class="container-fluid">
         <div class="navbar-header">
             <button class="navbar-toggle collapsed" type="button" data-toggle="collapse" data-target=".bs-navbar-collapse">
                 <span class="sr-only">Toggle navigation</span>
@@ -41,10 +33,16 @@
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </button>
-            <a href="<?=url()?>" class="navbar-brand">Ludo-PHP</a>
+            <a href="<?=url()?>" class="navbar-brand">Summer</a>
         </div>
-        <nav class="collapse navbar-collapse bs-navbar-collapse">
+        <nav class="navbar-collapse collapse bs-navbar-collapse">
             <?=Menu::menuRender()?>
+            <div class="pull-right" style="color:#93C0E6;margin-top:15px;font-size:15px;">
+                <?php if(logined()) { ?>
+                    <?=Lang::get('game.welcome').', '.$_SESSION[USER]['nickname']?> <span>|</span>
+                    <a href="<?=url('user/logout')?>"><?=Lang::get('game.logout')?></a>
+                <?php } ?>
+            </div>
         </nav>
     </div>
 </header>
@@ -58,7 +56,7 @@
 	</div>
 </div>
 <div style="min-height: 600px;background-color: #ffffff;padding-bottom: 70px;">
-<div class="container" >
-	<div class="row-fluid page-header crumbs ludo-crumbs" style="padding:0px;">
-		<?=Menu::navRender($gTitle, $gToolbox)?>
-	</div>
+    <div class="container-fluid">
+        <div class="row-fluid page-header crumbs" style="padding:0px:">
+            <?=Menu::navRender($gTitle, $gToolbox)?>
+        </div>

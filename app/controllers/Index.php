@@ -9,5 +9,11 @@ class Index extends BaseCtrl
     public function index()
     {
 		$this->tpl->setFile('index/index')->display();
+
 	}
+
+	public function beforeAction($action)
+    {
+        return true;
+    }
 }
