@@ -1,0 +1,31 @@
+.pull-right {
+    float: right !important;
+}
+.pull-left {
+    float: left !important;
+}
+.hide {
+    display: none !important;
+}
+.show {
+    display: block !important;
+}
+
+.legend {
+    border: 1px solid #e6e6e6;
+    margin-bottom: 20px;
+}
+
+.legend > .legend-title {
+    display: block;
+    padding: 5px 0 10px 10px;
+}
+
+.legend > .legend-content {
+    padding: 10px 0 10px 20px;
+}
+
+.main-footer {
+    text-align: center;
+    padding-top: 10px;
+}

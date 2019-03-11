@@ -9,133 +9,85 @@ class Load
 	 * 		'file' => eg: 'xxxx.js', 'images/zzz.css'
 	 * ),
 	 */
-	private static $jsModules = [
-		'jquery' => [
-			'files' => [
-				'jquery-1.11.3.min.js' => 'js',
-			],
-			'debug_files' => [
-				'jquery-1.11.3.js' => 'js',
-			],
-		],
-		'placeholder' => [
-			'files' => [
-                'placeholder.js' => 'js',
-			],
-			'debug_files' => [
-                'placeholder.js' => 'js',
-			],
-		],
-		'common' => [
-			'files' => [
-				'common.js' => 'js',
-			],
-			'debug_files' => [
-				'common.js' => 'js',
-			],
-		],
-		'bootstrap' => [
-			'base' => '/img/bootstrap/',
-			'files' => [
-				'js/bootstrap.min.js' => 'js',
-				'css/bootstrap.min.css' => 'css',
-			],
-			'debug_files' => [
-				'js/bootstrap.js' => 'js',
-				'css/bootstrap.css' => 'css',
-			]
-		],
-		'bootstrap-datetimepicker' => [
-			'base' => '/img/bootstrap-datetimepicker/',
-			'files' => [
-				'js/bootstrap-datetimepicker.min.js' => 'js',
-				'css/bootstrap-datetimepicker.min.css' => 'css',
-			],
-			'debug_files' => [
-				'js/bootstrap-datetimepicker.js' => 'js',
-				'css/bootstrap-datetimepicker.css' => 'css',
-			],
-		],
-		'bootstrap-select' => [
-			'base' => '/img/bootstrap-select/',
-			'files' => [
-				'js/bootstrap-select.min.js' => 'js',
-				'css/bootstrap-select.min.css' => 'css'
-			],
-			'debug_files' => [
-				'js/bootstrap-select.js' => 'js',
-				'css/bootstrap-select.css' => 'css'
-			]
-		],
-		'bootstrap-editable' => [
-			'base' => '/img/bootstrap-editable/',
-			'files' => [
-				'js/bootstrap-editable.min.js' => 'js',
-				'css/bootstrap-editable.css' => 'css',
-			],
-			'debug_files' => [
-				'js/bootstrap-editable.js' => 'js',
-				'css/bootstrap-editable.css' => 'css',
-			],
-		],
-        'bootstrap-fileinput' => [
-            'base' => '/img/bootstrap-fileinput/',
+	private static $webModules = [
+	    'layui' => [
+	        'base' => '/public/img/layui',
             'files' => [
-                'js/fileinput.min.js' => 'js',
-                'css/fileinput.min.css' => 'css'
+                'css/layui.css' => 'css',
+                'layui.js' => 'js',
             ],
             'debug_files' => [
-                'js/fileinput.js' => 'js',
-                'css/fileinput.css' => 'css'
+                'css/layui.css' => 'css',
+                'layui.js' => 'js',
             ]
+        ],
+        'layuicms' => [
+            'base' => '/public/img/layuicms',
+            'files' => [
+                'css/public.css' => 'css',
+                'css/index.css' => 'css',
+                'css/common.css' => 'css',
+                'js/cache.js' => 'js',
+            ],
+            'debug_files' => [
+                'css/public.css' => 'css',
+                'css/index.css' => 'css',
+                'css/common.css' => 'css',
+                'js/cache.js' => 'js',
+            ]
+        ],
+        'main' => [
+            'base' => '/public/img/layuicms',
+            'files' => [
+                'js/index.js' => 'js',
+            ],
+            'debug_files' => [
+                'js/index.js' => 'js',
+            ]
+        ],
+        'formSelect' => [
+            'base' => '/public/img/formSelect',
+            'files' => [
+                'formSelects-v4.css' => 'css',
+            ],
+            'debug_files' => [
+                'formSelects-v4.css' => 'css',
+            ],
+
         ]
 	];
 	
-	/**
-	 * 'cssname' => array(
-	 * 		'root_base' => SITE_URL or THEME_URL. [optional, default is THEME_URL]
-	 * 		'file' => eg: '/img/xxxx.css', '/css/zzz.css'
-	 * )
-	 */
-	private static $cssModules = [
-		'style' => [
-			'file' => '/img/common/style.css',
-		],
-	];
-	
-	public static function js($jsName, $return = true, $loadToTemplate = true)
+	public static function web($moduleName, $return = true, $loadToTemplate = true)
     {
-		$module = self::$jsModules[$jsName];
+		$module = self::$webModules[$moduleName];
 		if (!$module) return;
 		
 		$result = '';
 		$css = '<link href="%s" rel="stylesheet" type="text/css" media="all" />'."\n";
 		$js =  '<script type="text/javascript" src="%s"></script>'."\n";
-		$root_base = isset($module['root_base']) ? $module['root_base'] : LD_PUBLIC_PATH;
-		$base = isset($module['base']) ? $module['base'] : '/img/';
 		$files = DEBUG && isset($module['debug_files']) ? $module['debug_files'] : $module['files'];
 
 		foreach ($files as $file => $type) {
-			$resource = sprintf($$type, $root_base.$base.$file);
+		    switch ($type) {
+                case 'css':
+                    $resource = sprintf($css, $module['base'].'/'.$file);
+                    break;
+                case 'js':
+                    $resource = sprintf($js, $module['base'].'/'.$file);
+                    break;
+                default:
+                    $resource = '';
+                    break;
+            }
 			$result .= $resource;
-			if ($loadToTemplate)  View::addResource($resource, $type);
+			if ($loadToTemplate)  {
+			    View::addResource($resource, $type);
+            }
 		}
 		if (!$return) 
 			echo $result;
 		else
 			return $result;
-	}
-
-	public static function css($cssName, $return = true, $loadToTemplate = true)
-    {
-		$module = self::$cssModules[$cssName];
-		if (!$module) return;
-		$root_base = isset($module['root_base']) ? $module['root_base'] : LD_PUBLIC_PATH;
-		$result = '<link href="'. $root_base.$module['file'] .'" rel="stylesheet" type="text/css" media="all" />'."\n";
-		if ($loadToTemplate)  View::addResource($result);
-
-		if (!$return) 	echo $result;
-		else	return $result;
 	}
 
 	public static function helper($name)

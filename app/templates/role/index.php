@@ -1,54 +1,45 @@
 <?php
-$gTitle = '角色管理';
-$gToolbox .= '<a href="'.url('permission/addRole').'" class="add">添加角色</a>';
-include tpl('header'); 
+include tpl('header');
 ?>
-<table class="table table-hover">
-    <thead>
-        <tr>
-            <th>角色名称</th>
-            <th>角色描述</th>
-            <th>查看权限</th>
-            <th>查看用户</th>
-            <th>操作</th>
-        </tr>
-    </thead>
-    <tbody>
-    <?php if (!empty($roles)) {foreach($roles as $role) {?>
-    <tr>
-        <td><?=$role['role']?></td>
-        <td><?=$role['descr']?></td>
-        <td><a href="<?=url('permission/permissions/'.$role['id'])?>">查看权限</a></td>
-        <td><a href="<?=url('permission/user/roleId/'.$role['id'])?>">查看用户</a></td>
-        <td>
-            <div class="btn-group">
-                <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
-                    <?=ACTION?>
-                    <span class="caret"></span>
-                </button>
-                <ul class="dropdown-menu" role="menu">
-                    <li>
-                        <a href="<?=url('permission/changeRole/'.$role['id'])?>">
-                            <span class="glyphicon glyphicon-edit" aria-hidden="true"></span>
-                            <?=MODIFY?>
-                        </a>
-                    </li>
-                    <li>
-                    <?php if (!$role['reserved']) {?>
-                        <a name="del" title="删除角色" body="<?=CONFIRM_DELETE?>" href="<?=url('permission/delRole/'.$role['id'])?>">
-                            <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
-                            <?=DELETE?>
-                        </a>
-                    <?php }?>
-                    </li>
-                </ul>
+<form class="layui-form" id="roleForm" data-table-tag="roleTable" data-add-tag="addRole" data-edit-title-name="修改角色"
+      data-add-url="<?=url('permission/addRole')?>" data-edit-url="<?=url('permission/changeRole')?>">
+    <blockquote class="layui-elem-quote quoteBox">
+        <form class="layui-form">
+            <div class="layui-inline layui-col-space20">
+                <div class="layui-row">&nbsp;</div>
             </div>
-        </td>
-    </tr>
-    <?php }}?>
-    <tr>
-        <?php if(!empty($pager)){?><td style="text-align: right;" colspan="9"><?=!empty($pager) ? $pager: '&nbsp;'?></td><?php }?>
-    </tr>
-    </tbody>
-</table>
+            <div class="layui-inline layui-col-space20 pull-right">
+                <a class="layui-btn layui-btn-normal" id="addRole">添加角色</a>
+            </div>
+        </form>
+    </blockquote>
+
+    <table id="roleTable" data-url="<?=url('permission/roleList')?>" data-delete-url="<?=url('permission/delRole')?>" lay-filter="roleTable"></table>
+
+    <!--操作-->
+    <script type="text/html" id="operation">
+        <a class="layui-btn layui-btn-xs" lay-event="edit" data-title-name="修改角色">编辑</a>
+        <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
+    </script>
+
+    <script type="text/html" id="roleTpl">
+        <a href="<?=url('permission/viewRole/')?>{{d.id}}" class="layui-table-link row-view" data-title="查看角色">{{d.role}}</a>
+    </script>
+</form>
+<?php View::startJs();?>
+<script type="text/javascript">
+    layui.config({
+        base : "/public/img/layuicms/js/"
+    });
+    layui.use(['common'], function(){
+        var column = [
+            {field: 'role', title: '名称', templet: '#roleTpl'},
+            {field: 'descr', title: '描述'},
+            {field: 'createTime', title: '创建时间'},
+            {title: '操作', toolbar: '#operation'}
+        ];
+        layui.common.tableRender('roleForm', column);
+    });
+</script>
+<?php View::endJs();?>
 <?php include tpl('footer');?>

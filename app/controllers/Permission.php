@@ -1,100 +1,66 @@
 <?php
-class Permission extends BaseCtrl
-{
-	const RESOURCE_TYPE_MODULE = 1;
-	const RESOURCE_TYPE_MENU = 2;
-
+class Permission extends BaseCtrl {
 	const DEFAULT_PASSWORD = '123456';
 
 	const USER_ENABLED = 1;
 	const USER_DISABLED = 0;
 
-    public function __construct()
-    {
+    public function __construct() {
         parent::__construct('Permission');
     }
     
-    public function init()
-    {
+    public function init() {
         $dao = new PermissionDao();
-        $dao->truncate();
+        $permissions = $dao->fetchAll();
         $conf = Load::conf('Permission');
+
+        //检查是否有删除的权限定义
+        $formatPermissions = array();
+        foreach ($permissions as $permission) {
+            if (isset($conf[$permission['resource']]['operations'][$permission['operation']])) {
+                $formatPermissions[$permission['resource']][$permission['operation']] = 1;
+                continue;
+            }
+
+            $dao->delete($permission['id']);
+        }
+
+        //检查是否有未添加的权限定义
         foreach ($conf as $resource => $operations) {
             foreach ($operations['operations'] as $operation => $urls) {
-                $dao->insert(array(
-                    'resource' => $resource,
-                    'operation' => $operation,
-                    'type' => self::RESOURCE_TYPE_MODULE
-                ));
-            }
-        }
-
-        $conf = Load::conf('Menu');
-        foreach ($conf as $topMenu => $subMenus) {
-            if (in_array($topMenu, array('index', 'permission'))) continue;
-            $dao->insert(array(
-                'resource' => $topMenu,
-                'operation' => null,
-                'type' => self::RESOURCE_TYPE_MENU
-            ));
-            foreach ($subMenus['children'] as $subMenu => $v) {
-                $dao->insert(array(
-                    'resource' => $topMenu,
-                    'operation' => $subMenu,
-                    'type' => self::RESOURCE_TYPE_MENU
-                ));
+                if (isset($formatPermissions[$resource][$operation])) {
+                    continue;
+                }
+                $dao->insert(array('resource' => $resource, 'operation' => $operation));
             }
         }
     }
     
-    public function index()
-    {
-    	$dao = new RoleDao();
-		$pager = pager(array(
-	    	'base' => 'permission/index',
-	    	'cur' => empty($_GET['id']) ? 1 : intval($_GET['id']),
-	    	'cnt' => $dao->count('deleted = 0')
-		));
-		$roles = $dao->findAll('deleted = 0', $pager['rows'], $pager['start']);
-		
-    	$this->tpl->setFile('role/index')
-    			->assign('roles', $roles)
-    			->assign('pager', $pager['html'])
-				->display();
+    public function index() {
+        $this->init();
+    	$this->tpl->setFile('role/index')->display();
+    }
 
+    public function roleList() {
+        $rows = empty($_REQUEST['limit']) ? 0 : intval($_REQUEST['limit']);
+        $start = empty($_REQUEST['page']) ? 0 : ($_REQUEST['page'] - 1) * $_REQUEST['limit'];
+
+        $dao = new RoleDao();
+        $data = $dao->findAll('deleted = 0', $rows, $start);
+        $count = $dao->count('deleted = 0');
+        return $this->response($data, $count);
     }
     
-	public function addRole()
-    {
+	public function addRole() {
 		if (empty($_POST)) {
-			list($modules, $menus, $subMenus) = $this->transformPermissions();
-			
-			$modulePermissions = array();
-			$conf = Load::conf('Permission');
-			foreach ($conf as $resource => $operations) {
-				foreach ($operations['operations'] as $operation => $urls) {
-					$modulePermissions[$operations['name']][$urls['name']] = array('id' => $modules[$resource][$operation]);
-				}
-			}
-			
-			$menuPermissions = $subMenuPermissions = array();
-			$conf = Load::conf('Menu');
-			foreach ($conf as $topMenuId => $menu) {
-				if (empty($menus[$topMenuId])) continue;
-				$menuPermissions[$menu['name']] = array('id' => $menus[$topMenuId]); 
-				foreach ($menu['children'] as $subMenuId => $v) {
-					if (empty($subMenus[$topMenuId][$subMenuId])) continue;
-					$subMenuPermissions[$menu['name']][$v['name']] = array('id' => $subMenus[$topMenuId][$subMenuId]);
-				}
-			}
-			
+			$permissionConf = Load::conf('Permission');
+            $permissions = $this->transformPermissions();
+
 	        $this->tpl->setFile('role/change')
-	        		->assign('modulePermissions', $modulePermissions)
-	        		->assign('menuPermissions', $menuPermissions)
-	        		->assign('subMenuPermissions', $subMenuPermissions)
+	        		->assign('permissions', $permissions)
+	        		->assign('permissionConf', $permissionConf)
 	        		->display();
 		} else {
-            if ($this->illegalRequest()) die;
 			$dao = new RoleDao();
 			$rolePermissionDao = new RolePermissionDao();
 			try {
@@ -104,6 +70,7 @@ class Permission extends BaseCtrl
 				$add['createTime'] = date(TIME_FORMAT);
 				$roleId = $dao->insert($add);
 
+                $permissions = array();
                 if (!empty($_POST['permission'])) {
                     foreach ($_POST['permission'] as $permissionId => $v) {
                         $permissions[] = array(
@@ -128,61 +95,43 @@ class Permission extends BaseCtrl
 		}
 	}
 	
-	public function changeRole()
-    {
+	public function changeRole() {
 		if(empty($_POST)) {
 			$id = intval($_GET['id']);
 			$roleDao = new RoleDao();
 			$role = $roleDao->fetch($id);
-			list($modules, $menus, $subMenus) = $this->transformPermissions();
-			
+
+            $permissionConf = Load::conf('Permission');
+            $permissions = $this->transformPermissions();
 			$rolePermissions = Factory::dao('RolePermission')->findAllUnique(array('roleId = ?', $id), 'permissionId');
-			
-			$modulePermissions = array();
-			$conf = Load::conf('Permission');
-			foreach ($conf as $resource => $operations) {
-				foreach ($operations['operations'] as $operation => $urls) {
-					$permissionId = $modules[$resource][$operation];
-					$checked = $this->checkPermission($permissionId, $rolePermissions);
-					$modulePermissions[$operations['name']][$urls['name']] = array('id' => $permissionId, 'checked' => $checked);
-				}
-			}
-			
-			$menuPermissions = $subMenuPermissions = array();
-			$conf = Load::conf('Menu');
-			foreach ($conf as $topMenuId => $menu) {
-				$permissionId = $menus[$topMenuId];
-				if (empty($permissionId)) continue;
-				$checked = $this->checkPermission($permissionId, $rolePermissions);
-				$menuPermissions[$menu['name']] = array('id' => $menus[$topMenuId], 'checked' => $checked);
-				
-				foreach ($menu['children'] as $subMenuId => $v) {
-					$permissionId = $subMenus[$topMenuId][$subMenuId];
-					if (empty($permissionId)) continue;
-					$checked = $this->checkPermission($permissionId, $rolePermissions);
-					$subMenuPermissions[$menu['name']][$v['name']] = array('id' => $subMenus[$topMenuId][$subMenuId], 'checked' => $checked);
-				}
-			}
-			
+			foreach ($permissions as $resource => $operations) {
+			    foreach ($operations as $operationId) {
+                    if (in_array($operationId, $rolePermissions)) {
+                        $permissionConf[$resource]['checked'] = 1;
+                    }
+                }
+            }
+
 			$this->tpl->setFile('role/change')
-					->assign('modulePermissions', $modulePermissions)
-					->assign('menuPermissions', $menuPermissions)
-					->assign('subMenuPermissions', $subMenuPermissions)
+                    ->assign('permissions', $permissions)
+                    ->assign('permissionConf', $permissionConf)
+                    ->assign('rolePermissions', $rolePermissions)
 					->assign('role', $role)
 					->display();
 		} else {
-            if ($this->illegalRequest()) die;
 			$dao = new RoleDao();
 			$rolePermissionDao = new RolePermissionDao();
 			try {
 				$dao->beginTransaction();
-				$id = intval($_POST['id']);
+				$id = intval($_GET['id']);
 				$old = $dao->fetch($id);
 				
 				$add['role'] = trim($_POST['role']);
 				$add['descr'] = trim($_POST['descr']);
 				$dao->update($id, $add);
 
+                $permissions = array();
+                $oldPermissions = $rolePermissionDao->findAll(array('roleId = ?', $id));
                 if (!empty($_POST['permission'])) {
                     foreach ($_POST['permission'] as $permissionId => $v) {
                         $permissions[] = array(
@@ -190,7 +139,6 @@ class Permission extends BaseCtrl
                             'permissionId' => $permissionId
                         );
                     }
-                    $oldPermissions = $rolePermissionDao->findAll(array('roleId = ?', $id));
                     $rolePermissionDao->deleteWhere('roleId = ?', array($id));
                     $rolePermissionDao->batchInsert($permissions);
                 }
@@ -209,9 +157,8 @@ class Permission extends BaseCtrl
 		}
 	}
 		
-	public function delRole()
-    {
-		$id = intval($_GET['id']);
+	public function delRole() {
+		$id = intval($_POST['id']);
 		$dao = new RoleDao();
 		try {
 			$dao->beginTransaction();
@@ -228,87 +175,44 @@ class Permission extends BaseCtrl
 		}
 	}
 	
-    public function permissions()
-    {
+    public function viewRole() {
         $roleId = intval($_GET['id']);
         $role = Factory::dao('role')->fetch($roleId);
-        
-       	list($modules, $menus, $subMenus) = $this->transformPermissions();
-        
-        $rolePermissions = Factory::dao('rolePermission')->findAllUnique(array('roleId = ?', $roleId), 'permissionId');
-        	
-        $modulePermissions = array();
-        $conf = Load::conf('Permission');
-        foreach ($conf as $resource => $operations) {
-        	foreach ($operations['operations'] as $operation => $urls) {
-        		$permissionId = $modules[$resource][$operation];
-        		if (!$this->checkPermission($permissionId, $rolePermissions)) continue;
-        		
-        		$modulePermissions[$operations['name']][] = $urls['name'];
-        	}
-        }
-        
-        $menuPermissions = array();
-        $conf = Load::conf('Menu');
-        foreach ($conf as $topMenuId => $menu) {
-        	$permissionId = $menus[$topMenuId];
-        	if (!$this->checkPermission($permissionId, $rolePermissions)) continue;
-        
-        	foreach ($menu['children'] as $subMenuId => $v) {
-        		$permissionId = $subMenus[$topMenuId][$subMenuId];
-        		if (!$this->checkPermission($permissionId, $rolePermissions)) continue;
-        		$menuPermissions[$menu['name']][] = $v['name'];
-        	}
+
+        $permissionConf = Load::conf('Permission');
+        $permissions = $this->transformPermissions();
+        $rolePermissions = Factory::dao('RolePermission')->findAllUnique(array('roleId = ?', $roleId), 'permissionId');
+        foreach ($permissions as $resource => $operations) {
+            foreach ($operations as $operationId) {
+                if (in_array($operationId, $rolePermissions)) {
+                    $permissionConf[$resource]['checked'] = 1;
+                }
+            }
         }
 
         $this->tpl->setFile('role/view')
-        		->assign('modulePermissions', $modulePermissions)
-				->assign('menuPermissions', $menuPermissions)
-        		->assign('role', $role)
+                ->assign('permissions', $permissions)
+                ->assign('permissionConf', $permissionConf)
+                ->assign('rolePermissions', $rolePermissions)
+                ->assign('role', $role)
         		->display();
     }
-    
-	/**
-	 * 查看用户信息
-	 * added by sarah
-	 */
-    public function user()
-    {
-    	$roles = Factory::dao('role')->findAll('deleted = 0');
-    	
-    	$condition = 'deleted = 0';
-    	$params = array();
 
-    	if (empty($_GET['roleId'])) {
-    		$dao = new UserDao();
-    		$cnt = $dao->count($condition, $params);
-    	} else {
-    		$condition .= ' and roleId = ?';
-    		$params[] = intval($_GET['roleId']);
-    		$dao = new UserRoleDao();
-    		$cnt = $dao->hasA('User')->count($condition, $params);
-    	}
-
-    	$pager = pager(array(
-    			'base' => 'permission/userTbl'.$this->resetGet(),
-    			'cur'  => empty($_GET['pager']) ? 1 : intval($_GET['pager']),
-    			'cnt'  => $cnt
-    	));
-    	if (empty($_GET['roleId'])) {
-    		$users = $dao->findAll(array($condition, $params), $pager['rows'], $pager['start'], 'createTime desc');
-    	} else {
-	    	$users = $dao->hasA('User', 'User.*')->findAll(array($condition, $params), $pager['rows'], $pager['start'], 'createTime desc');
-    	}
-        $this->tpl->setFile('user/index')
-            ->assign('roles', $roles)
-            ->assign('users', $users)
-            ->assign('pager', $pager['html'])
-            ->assign('roleId', intval($_GET['roleId']))
-            ->display();
+    public function userIndex() {
+        $this->tpl->setFile('user/index')->display();
     }
 
-    public function addUser()
-    {
+    public function userList() {
+        $rows = empty($_REQUEST['limit']) ? 0 : intval($_REQUEST['limit']);
+        $start = empty($_REQUEST['page']) ? 0 : ($_REQUEST['page'] - 1) * $_REQUEST['limit'];
+
+        $dao = new UserDao();
+        $data = $dao->findAll('deleted = 0', $rows, $start);
+        $count = $dao->count('deleted = 0');
+        return $this->response($data, $count);
+    }
+
+    public function addUser() {
     	if (empty($_POST)) {
     		$roles = Factory::dao('role')->findAll('deleted = 0');
     		$this->tpl->setFile('user/change')
@@ -316,12 +220,11 @@ class Permission extends BaseCtrl
     				->assign('userRoles', array())
     				->display();
     	} else {
-            if ($this->illegalRequest()) die;
     		$dao = new UserDao();
     		$userRoleDao = new UserRoleDao();
     		$add['username'] = trim($_POST['username']);
     		$add['nickname'] = trim($_POST['nickname']);
-            $add['password'] = password_hash(self::DEFAULT_PASSWORD, PASSWORD_DEFAULT, array('salt' => PASSWORD_SALT));
+            $add['password'] = password_hash(self::DEFAULT_PASSWORD, PASSWORD_DEFAULT);
     		try {
     			$dao->beginTransaction();
     			$add['createTime'] = date(TIME_FORMAT);
@@ -329,7 +232,7 @@ class Permission extends BaseCtrl
     			$userId = $dao->insert($add);
 				$userRole = array();
     			if (!empty($_POST['role'])) {
-	    			foreach ($_POST['role'] as $roleId) {
+	    			foreach (explodeSafe($_POST['role']) as $roleId) {
 	    				$userRole[] = array('userId' => $userId, 'roleId' => $roleId);
 	    			}
     				$userRoleDao->batchInsert($userRole);
@@ -341,7 +244,7 @@ class Permission extends BaseCtrl
     				'new' => json_encode(array('user' => $add, 'role' => $userRole)),
     			));
     			$dao->commit();
-				return $this->success(url('permission/user'));
+				return $this->success(url('permission/userIndex'));
     		} catch (QueryException $e) {
     			$dao->rollback();
 				return $this->alert('添加用户失败');
@@ -349,8 +252,7 @@ class Permission extends BaseCtrl
     	}
     }
     
-    public function changeUser()
-    {
+    public function changeUser() {
     	if (empty($_POST)) {
     		$id = intval($_GET['id']);
     		$dao = new UserDao();
@@ -358,12 +260,11 @@ class Permission extends BaseCtrl
     		$userRoles = Factory::dao('userRole')->findAllUnique(array('userId = ?', $id), 'roleId');
     		$roles = Factory::dao('role')->findAll('deleted = 0');
     		$this->tpl->setFile('user/change')
-    		->assign('user', $user)
-    		->assign('userRoles', $userRoles)
-    		->assign('roles', $roles)
-    		->display();
+                    ->assign('user', $user)
+                    ->assign('userRoles', $userRoles)
+                    ->assign('roles', $roles)
+                    ->display();
     	} else {
-            if ($this->illegalRequest()) die;
     		$dao = new UserDao();
     		$userRoleDao = new UserRoleDao();
             $add['nickname'] = trim($_POST['nickname']);
@@ -378,7 +279,7 @@ class Permission extends BaseCtrl
     			$userRoleDao->deleteWhere('userId = ?', array($id));
 				$userRole = array();
     			if (!empty($_POST['role'])) {
-	    			foreach ($_POST['role'] as $roleId) {
+	    			foreach (explodeSafe($_POST['role']) as $roleId) {
 	    				$userRole[] = array('userId' => $id, 'roleId' => $roleId);
 	    			}
 	    			$userRoleDao->batchInsert($userRole);
@@ -390,7 +291,7 @@ class Permission extends BaseCtrl
 	    			'old' => json_encode(array('old' => $old, 'role' => $oldRole))
     			));
     			$dao->commit();
-				return $this->success(url('permission/user'));
+				return $this->success(url('permission/userIndex'));
     		} catch (QueryException $e) {
     			$dao->rollback();
 				return $this->alert('修改用户失败');
@@ -398,20 +299,20 @@ class Permission extends BaseCtrl
     	}
     }
     
-    public function changePassword()
-    {
+    public function changePassword() {
     	if (empty($_POST)) {
     		$id = intval($_GET['id']);
     		$dao = new UserDao();
     		$user = $dao->fetch($id);
     		$this->tpl->setFile('user/changePassword')
-    		->assign('user', $user)
-    		->display();
+    		        ->assign('user', $user)
+                    ->assign('url', url('permission/changePassword'))
+    		        ->display();
     	} else {
     		$dao = new UserDao();
     		$id = intval($_POST['id']);
     		$new = trim($_POST['newPassword']);
-			$password2 = trim($_POST['password2']);
+			$password2 = trim($_POST['confirmPassword']);
 			if ($new != $password2) return array(STATUS => ALERT, MSG => '密码不一致');;
 			
 			try {
@@ -422,7 +323,7 @@ class Permission extends BaseCtrl
 					'new' => $id
 				));
 				$dao->commit();
-				return $this->success(url('permission/user'));
+				return $this->success(url('permission/userIndex'));
 			} catch (QueryException $e) {
 				$dao->rollback();
 				return $this->alert('修改密码失败');
@@ -430,9 +331,8 @@ class Permission extends BaseCtrl
     	}
     }
     
-    public function delUser()
-    {
-    	$id = intval($_GET['id']);
+    public function delUser() {
+    	$id = intval($_POST['id']);
     	$dao = new UserDao();
     	try {
     		$dao->beginTransaction();
@@ -442,15 +342,14 @@ class Permission extends BaseCtrl
     			'old' => $id
     		));
     		$dao->commit();
-			return $this->success(url('permission/user'));
+			return $this->success(url('permission/userIndex'));
     	} catch (QueryException $e) {
     		$dao->rollback();
 			return $this->alert('删除用户失败');
     	}
     }
     
-    public function viewUser()
-    {
+    public function viewUser() {
     	$id = intval($_GET['id']);
     	$user = Factory::dao('user')->fetch($id);
     	$userRoles = Factory::dao('userRole')->hasA('Role', 'Role.role')->findAll(array('userId = ?', $id));
@@ -460,9 +359,8 @@ class Permission extends BaseCtrl
     			->display();
     }
     
-    public function disabledUser()
-    {
-    	$id = intval($_GET['id']);
+    public function disabledUser() {
+    	$id = intval($_POST['id']);
     	$dao = new UserDao();
     	try {
     		$dao->beginTransaction();
@@ -472,16 +370,15 @@ class Permission extends BaseCtrl
 	    		'old' => $id
     		));
     		$dao->commit();
-			return $this->success(url('permission/user'));
+			return $this->success(url('permission/userIndex'));
     	} catch (QueryException $e) {
     		$dao->rollback();
 			return $this->alert('操作失败');
     	}
     }
     
-    public function enableUser()
-    {
-    	$id = intval($_GET['id']);
+    public function enableUser() {
+    	$id = intval($_POST['id']);
     	$dao = new UserDao();
     	try {
     		$dao->beginTransaction();
@@ -491,41 +388,20 @@ class Permission extends BaseCtrl
 	    		'old' => $id
     		));
     		$dao->commit();
-			return $this->success(url('permission/user'));
+			return $this->success(url('permission/userIndex'));
     	} catch (QueryException $e) {
     		$dao->rollback();
 			return $this->alert('操作失败');
     	}
     }
     
-    private function transformPermissions()
-    {
+    private function transformPermissions() {
     	$permissions = Factory::dao('permission')->fetchAll();
-    	$modules = $menus = $subMenus = array();
+    	$modules = array();
     	foreach ($permissions as $permission) {
-    		switch ($permission['type']) {
-    			case self::RESOURCE_TYPE_MENU:
-    				if (is_null($permission['operation'])) {//一级菜单
-    					$menus[$permission['resource']] = $permission['id'];
-    				} else {
-    					$subMenus[$permission['resource']][$permission['operation']] = $permission['id'];
-    				}
-    				break;
-    			case self::RESOURCE_TYPE_MODULE:
-    				$modules[$permission['resource']][$permission['operation']] = $permission['id'];
-    				break;
-    			default:
-    				break;
-    		}
+            $modules[$permission['resource']][$permission['operation']] = $permission['id'];
     	}
-    	return array($modules, $menus, $subMenus);
-    }
-    
-    private function checkPermission($permissionId, $permissions)
-    {
-    	$checked = false;
-    	if (in_array($permissionId, $permissions)) $checked = true;
-    	return $checked;
+    	return $modules;
     }
 
     public function beforeAction($action)

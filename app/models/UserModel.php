@@ -1,22 +1,14 @@
 <?php
 class UserModel {
-    public static function can($action, $controller = true) {
+    public static function canOperation($resource, $operation) {
         if ($_SESSION[USER]['isAdmin']) return true;
-        $controller = (true === $controller) ? CURRENT_CONTROLLER : $controller;
-        $controller = lcfirst($controller);
-        if (isset($_SESSION[USER]['permissions'][$controller])) return true;//allow all action in current controller
 
-        $operation = $controller.'/'.$action;
-        return $_SESSION[USER]['permissions'][$operation];
+        return $_SESSION[USER]['permissions']['operation'][$resource][$operation];
     }
 
-    public static function canMenu($resource, $operation = null) {
+    public static function canMenu($url) {
         if ($_SESSION[USER]['isAdmin']) return true;
 
-        if (is_null($operation)) {//一级菜单
-            return $_SESSION[USER]['menus']['top'][$resource];
-        } else {
-            return $_SESSION[USER]['menus']['sub'][$resource][$operation];
-        }
+        return in_array($url, $_SESSION[USER]['permissions']['url']);
     }
 }

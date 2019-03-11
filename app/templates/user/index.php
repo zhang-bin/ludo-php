@@ -1,60 +1,66 @@
 <?php
-$gTitle = '用户管理';
-$gToolbox .= '<a href="'.url('permission/addUser').'" class="add">添加用户</a>';
 include tpl('header');
 ?>
-<form class="form form-inline" method="get" action="<?=url('permission/user')?>">
-    <select name="roleId" class="selectpicker" data-live-search="true">
-        <option value="0">所有角色</option>
-        <?php foreach ($roles as $role) {?>
-            <option value="<?=$role['id']?>" <?=($role['id'] == $_GET['roleId']) ? 'selected' : ''?>><?=$role['role']?></option>
-        <?php }?>
-    </select>
-    <input type="submit" class="btn btn-small btn-primary" value="搜索" />
+<form class="layui-form" id="userForm" data-table-tag="userTable" data-add-tag="addUser"
+      data-add-url="<?=url('permission/addUser')?>">
+    <blockquote class="layui-elem-quote quoteBox">
+        <form class="layui-form">
+            <div class="layui-inline layui-col-space20">
+                <div class="layui-row">&nbsp;</div>
+            </div>
+            <div class="layui-inline layui-col-space20 pull-right">
+                <a class="layui-btn layui-btn-normal" id="addUser">添加用户</a>
+            </div>
+        </form>
+    </blockquote>
+
+    <table id="userTable" data-url="<?=url('permission/userList')?>" lay-filter="userTable"></table>
+
+    <!--操作-->
+    <script type="text/html" id="operation">
+        <a class="layui-btn layui-btn-xs" lay-event="popup" data-title-name="修改用户" data-url="<?=url('permission/changeUser/')?>{{d.id}}">编辑</a>
+        <a class="layui-btn layui-btn-warm layui-btn-xs" lay-event="popup" data-title-name="修改密码" data-url="<?=url('permission/changePassword/')?>{{d.id}}">修改密码</a>
+        <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="tips" data-title-name="确定删除吗?" data-url="<?=url('permission/delUser/')?>{{d.id}}">删除</a>
+    </script>
+
+    <script type="text/html" id="userTpl">
+        <a href="<?=url('permission/viewUser/')?>{{d.id}}" class="layui-table-link row-view" data-title="查看用户">{{d.username}}</a>
+    </script>
+
+    <script type="text/html" id="enabledTpl">
+        <input type="checkbox" name="enabled" lay-filter="enabled" lay-skin="switch" lay-text="启用|禁用" value="{{d.id}}" {{ d.enabled == 1 ? 'checked' : ''}}  />
+    </script>
 </form>
-<table class="table table-hover">
-    <thead>
-    <tr>
-        <th>用户名</th>
-        <th>昵称</th>
-        <th>创建时间</th>
-        <th>是否可用</th>
-        <th>操作</th>
-    </tr>
-    </thead>
-    <tbody>
-    <?php if (!empty($users)) {foreach($users as $user) {?>
-        <tr>
-            <td><?=$user['username']?></td>
-            <td><?=$user['nickname']?></td>
-            <td><?=$user['createTime']?></td>
-            <td><?=$user['enabled'] ? '是' : '否'?></td>
-            <td>
-                <div class="btn-group">
-                    <button type="button" class="btn btn-default btn-small dropdown-toggle" data-toggle="dropdown">
-                        <?=ACTION?>
-                        <span class="caret"></span></button>
-                    <ul class="dropdown-menu">
-                        <li>
-                            <a class="edit" href="<?=url('permission/changeUser/'.$user['id'])?>">
-                                <span class="glyphicon glyphicon-edit" aria-hidden="true"></span>
-                                <?=MODIFY?>
-                            </a>
-                        </li>
-                        <li>
-                            <a name="del" title="删除用户" body="<?=CONFIRM_DELETE?>" href="<?=url('permission/delUser/'.$user['id'])?>">
-                                <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
-                                <?=DELETE?>
-                            </a>
-                        </li>
-                    </ul>
-                </div>
-            </td>
-        </tr>
-    <?php }}?>
-    <tr>
-        <?php if(!empty($pager)){?><td style="text-align: right;" colspan="9"><?=!empty($pager) ? $pager: '&nbsp;'?></td><?php }?>
-    </tr>
-    </tbody>
-</table>
+<?php View::startJs();?>
+<script type="text/javascript">
+layui.config({
+    base : "/public/img/layuicms/js/"
+});
+
+layui.use(['common', 'table', 'form', 'jquery'], function(){
+    var $ = layui.jquery;
+    var column = [
+        {field: 'username', title: '用户名', templet: '#userTpl'},
+        {field: 'nickname', title: '昵称'},
+        {field: 'createTime', title: '创建时间'},
+        {field: 'enabled', title: '当前状态', templet: '#enabledTpl'},
+        {title: '操作', toolbar: '#operation'}
+    ];
+    layui.common.tableRender('userForm', column);
+
+    layui.form.on('switch(enabled)', function(obj) {
+        if (obj.elem.checked) {
+            var url = '<?=url('permission/enableUser')?>';
+        } else {
+            var url = '<?=url('permission/disabledUser')?>';
+        }
+        $.post(url, {'id': obj.elem.value}, function(result) {
+            layui.common.ajaxHandler(result);
+            return false;
+        }, 'json');
+    });
+
+});
+</script>
+<?php View::endJs();?>
 <?php include tpl('footer');?>

@@ -33,14 +33,13 @@ class User extends BaseCtrl
     		$_SESSION[USER]['nickname'] = $user['nickname'];
             $_SESSION[USER]['first'] = $user['first'];
             $_SESSION[USER]['isAdmin'] = $user['isAdmin'] ? true : false;
-            $_SESSION[USER]['menu'] = RoleModel::parseMenuPermissionsForUser($user['id']);
-            $_SESSION[USER]['permissions'] = RoleModel::parseModulePermissionsForUser($user['id']);
+            $_SESSION[USER]['permissions'] = RoleModel::parsePermissions($user['id']);
             csrf_token();//生成token
 			unset($_POST['password']);
 			Log::log(array(
 				'name' => 'User Login',
 			));
-			if (isset($_POST['jurl'])) {
+			if (!empty($_POST['jurl']) ) {
                 redirectOut($_POST['jurl']);
 			}
     		redirect();
@@ -54,6 +53,7 @@ class User extends BaseCtrl
     {
         if (empty($_POST)) {
             $this->tpl->setFile('user/changePassword')
+                ->assign('url', url('user/changePassword'))
                 ->assign('user', (new UserDao())->fetch($_SESSION[USER]['id']))
                 ->display();
         } else {
@@ -65,7 +65,7 @@ class User extends BaseCtrl
             if (empty($confirmPassword)) return array(STATUS => ALERT, MSG => '确认密码为空');
             if ($newPassword != $confirmPassword) return array(STATUS => ALERT, MSG => '两次密码不一致');
 
-            $add['password'] = password_hash($newPassword, PASSWORD_DEFAULT, array('salt' => PASSWORD_SALT));
+            $add['password'] = password_hash($newPassword, PASSWORD_DEFAULT);
             $_SESSION[USER]['first'] = $add['first'] = 0;
 
             try {
@@ -76,7 +76,7 @@ class User extends BaseCtrl
                     'new' => $id
                 ));
                 $dao->commit();
-                redirect();
+                redirect('index/home');
             } catch (Exception $e) {
                 $dao->rollback();
                 return $this->alert('修改用户密码失败');
