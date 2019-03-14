@@ -20,7 +20,13 @@ layui.use(['bodyTab','form','element','layer','jquery'],function(){
     $.getJSON(tab.tabConfig.url, function(data) {
         menuData = data;
     });
+
+    var firstMenu = null;
     $.each(menuData, function(index, element) {
+        if (firstMenu === null) {
+            firstMenu = index
+        }
+
         var li = `<li class="layui-nav-item layui-this" data-menu="${index}"><a href="javascript:;"><i class="layui-icon" data-icon="${element.icon}">${element.icon}</i><cite>${element.name}</cite></a></li>`;
         $(".topLevelMenus").append(li);
         var dd = `<dd class="layui-this" data-menu="${index}"><a href="javascript:;"><i class="layui-icon" data-icon="${element.icon}">${element.icon}</i><cite>${element.name}</cite></a></dd>`;
@@ -62,7 +68,7 @@ layui.use(['bodyTab','form','element','layer','jquery'],function(){
 	})
 
 	//通过顶部菜单获取左侧二三级菜单   注：此处只做演示之用，实际开发中通过接口传参的方式获取导航数据
-	getData("systemConfig");
+	getData(firstMenu);
 
 	//手机设备的简单适配
     $('.site-tree-mobile').on('click', function(){
