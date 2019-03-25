@@ -1,8 +1,7 @@
 <?php
 include tpl('header');
 ?>
-<form class="layui-form" id="roleForm" data-table-tag="roleTable" data-add-tag="addRole" data-edit-title-name="修改角色"
-      data-add-url="<?=url('permission/addRole')?>" data-edit-url="<?=url('permission/changeRole')?>">
+<form class="layui-form" id="roleForm" data-table-tag="roleTable" data-add-tag="addRole" data-add-url="<?=url('permission/addRole')?>">
     <blockquote class="layui-elem-quote quoteBox">
         <form class="layui-form">
             <div class="layui-inline layui-col-space20">
@@ -18,8 +17,8 @@ include tpl('header');
 
     <!--操作-->
     <script type="text/html" id="operation">
-        <a class="layui-btn layui-btn-xs" lay-event="edit" data-title-name="修改角色">编辑</a>
-        <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
+        <a class="layui-btn layui-btn-xs" lay-event="popup" data-title-name="修改角色" data-url="<?=url('permission/changeRole/')?>{{d.id}}">编辑</a>
+        <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="tips" data-title-name="确定删除吗?" data-url="<?=url('permission/delRole/')?>{{d.id}}">删除</a>
     </script>
 
     <script type="text/html" id="roleTpl">

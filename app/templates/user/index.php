@@ -1,8 +1,7 @@
 <?php
 include tpl('header');
 ?>
-<form class="layui-form" id="userForm" data-table-tag="userTable" data-add-tag="addUser"
-      data-add-url="<?=url('permission/addUser')?>">
+<form class="layui-form" id="userForm" data-table-tag="userTable" data-add-tag="addUser" data-add-url="<?=url('permission/addUser')?>">
     <blockquote class="layui-elem-quote quoteBox">
         <form class="layui-form">
             <div class="layui-inline layui-col-space20">
