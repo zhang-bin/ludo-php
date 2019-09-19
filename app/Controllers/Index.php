@@ -1,4 +1,7 @@
 <?php
+
+namespace App\Controllers;
+
 class Index extends BaseCtrl
 {
     public function __construct()
@@ -8,6 +11,7 @@ class Index extends BaseCtrl
 
     public function index()
     {
+
 		$this->tpl->setFile('main')->display();
 	}
 

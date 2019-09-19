@@ -17,4 +17,5 @@ date_default_timezone_set(DEFAULT_TIME_ZONE);
 require __DIR__.'/paths.php';
 require __DIR__.'/autoload.php';
 require LD_HELPER_PATH.'/userUtils.php';
+
 return new Ludo\Foundation\Application;

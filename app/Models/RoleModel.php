@@ -1,4 +1,7 @@
 <?php
+
+namespace App\Models;
+
 /**
  * 用户角色类
  * @author libok

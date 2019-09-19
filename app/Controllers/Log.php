@@ -1,4 +1,9 @@
 <?php
+
+namespace App\Controllers;
+
+use Ludo\Support\Facades\Context;
+
 class Log extends BaseCtrl
 {
 	public function __construct()
@@ -21,9 +26,9 @@ class Log extends BaseCtrl
 				'uname' => $_SESSION[USER]['uname'],
 				'createTime' => date(TIME_FORMAT),
 				'ip' => realIp(),
-				'ctrl' => CURRENT_CONTROLLER,
-				'act' => CURRENT_ACTION,
-				'url' => currUrl(),
+				'ctrl' => Context::get('current-controller'),
+				'act' => Context::get('current-action'),
+				'url' => currentUrl(),
 				'httpReferer' => $_SERVER['HTTP_REFERER'],
 				'userAgent' => $_SERVER['HTTP_USER_AGENT'],
 				'post'  	=> json_encode($_POST),
@@ -50,7 +55,7 @@ class Log extends BaseCtrl
 	public static function write()
     {
 		if (!empty(self::$logData)) {
-			Factory::dao('log')->add(self::$logData);
+			(new LogDao())->add(self::$logData);
 			self::$logData = array();
 		}
 	}

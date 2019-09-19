@@ -1,5 +1,10 @@
 <?php
-class BaseDao extends \Ludo\Database\Dao
+
+namespace App\Daos;
+
+use \Ludo\Database\Dao;
+
+class BaseDao extends Dao
 {
     public function __construct($name, $connectionName = null)
     {

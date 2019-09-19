@@ -1,4 +1,8 @@
 <?php
+
+namespace App\Daos;
+
+
 class RolePermissionDao extends BaseDao
 {
     function __construct()

@@ -1,4 +1,7 @@
 <?php
+
+namespace App\Models;
+
 class UserModel {
     public static function canOperation($resource, $operation) {
         if ($_SESSION[USER]['isAdmin']) return true;

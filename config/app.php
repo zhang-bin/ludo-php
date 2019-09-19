@@ -1,6 +1,12 @@
 <?php
 return [
-    'key' => '1111111111111111',
+    'name' => 'ludo',
 
-    'cipher' => 'AES-128-CBC',
+    'key' => '4bb83b2f1566ac9f845c195440bee9f4',
+
+    'cipher' => 'AES-256-CBC',
+
+    'debug' => true,
+
+    'controller' => 'App\\Controllers\\',
 ];
