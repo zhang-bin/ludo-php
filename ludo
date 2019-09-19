@@ -1,0 +1,17 @@
+#!/usr/bin/env php
+<?php
+
+require 'config.inc.php';
+
+require __DIR__.'/bootstrap/start.php';
+
+use Symfony\Component\Console\Application;
+use Ludo\Support\Facades\Config;
+
+$app = new Application();
+foreach (Config::get('commands') as $command) {
+    $app->add(new $command());
+}
+
+$app->run();
+
