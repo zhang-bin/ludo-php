@@ -1,6 +1,6 @@
 <?php
 define('SITE_ROOT', __DIR__);
-define('SITE_URL',			'http://'.$_SERVER['SERVER_NAME'].'/ludo-php');
+define('SITE_URL',			'http://'.$_SERVER['SERVER_NAME']);
 define('PROGRAM_CHARSET',       'UTF-8');
 define('SUCCESS',               'success');
 define('ALERT',                 'alert');
@@ -17,7 +17,6 @@ define('php', '.php');
 define('DEFAULT_LANGUAGE', 	'zh-cn');
 define('TIME_FORMAT', 		'Y-m-d H:i:s');
 define('DATE_FORMAT', 		'Y-m-d');
-define('USING_MOD_REWRITE', false);
 
 define('USER', 'user');
 
