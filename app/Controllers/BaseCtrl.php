@@ -13,10 +13,13 @@ class BaseCtrl extends Controller
      */
     protected $log;
 
+    protected $currentPage;
+
     public function __construct(string $name)
     {
         parent::__construct($name);
         $this->log = ServiceProvider::getMainInstance()->getLogHandler();
+        $this->currentPage = empty($_GET['pager']) ? 1 : intval($_GET['pager']);
     }
 
     /**
@@ -27,7 +30,7 @@ class BaseCtrl extends Controller
      */
     public function beforeAction($action)
     {
-//        $this->login();
+        $this->checkLogin();
     }
 
     public function afterAction($action, $result)
@@ -52,7 +55,7 @@ class BaseCtrl extends Controller
      *
      * @return void
      */
-    protected function login(): void
+    protected function checkLogin(): void
     {
         if (!$this->logined()) {
             $this->gotoLogin();
@@ -152,7 +155,7 @@ class BaseCtrl extends Controller
             $isOuterUrl = true;
         }
         $url = $isOuterUrl ? '?callback=' . urlencode($callbackUrl) : '?callback=' . urlencode(url($callbackUrl));
-        redirect('user/' . $url);
+        redirect('user/login' . $url);
     }
 
     /**

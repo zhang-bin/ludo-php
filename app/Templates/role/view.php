@@ -1,41 +1,35 @@
-<?php 
-$gTitle = '查看角色';
+<?php
+use Ludo\Support\Facades\Lang;
+
+$gTitle = Lang::get('user.role_view');
 include tpl('header');
 ?>
-<form class="layui-form">
-    <div class="layui-form-item layui-row">
-        <label class="layui-form-label">角色名称</label>
-        <div class="layui-input-inline">
-            <input type="text" name="role" id="role" class="layui-input" value="<?=$role['role']?>" readonly />
+    <div class="form-horizontal">
+        <div class="form-group">
+            <label for="role" class="col-sm-2 control-label"><?=Lang::get('user.role_name')?></label>
+            <div class="col-sm-4"><p class="form-control-static"><?=$role['role']?></p></div>
+        </div>
+        <div class="form-group">
+            <label for="role" class="col-sm-2 control-label"><?=Lang::get('user.role_descr')?></label>
+            <div class="col-sm-4"><p class="form-control-static"><?=$role['descr']?></p></div>
+        </div>
+        <div class="form-group">
+            <label for="permission" class="col-sm-2 control-label"><?=Lang::get('user.permission')?></label>
+            <div class="col-sm-8">
+                <table class="table table-bordered">
+                    <?php foreach ($permissions as $policy => $permission) {?>
+                        <tr>
+                            <td><input disabled type="checkbox" name="permission[]" value="<?=$policy?>" <?=(!empty($role['permissionPolicy']) && in_array($policy, $role['permissionPolicy'])) ? 'checked' : ''?> /></td>
+                            <td><?=$permission['name']?></td>
+                        </tr>
+                    <?php }?>
+                </table>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-sm-offset-2 col-sm-10">
+                <a href="javascript:history.go(-1);" class="btn btn-default"><?=Lang::get('base.cancel')?></a>
+            </div>
         </div>
     </div>
-    <div class="layui-form-item layui-row">
-        <label class="layui-form-label">角色描述</label>
-        <div class="layui-col-xs4">
-            <input type="text" name="descr" class="layui-input" id="descr" value="<?=$role['descr']?>" readonly />
-        </div>
-    </div>
-    <div class="layui-form-item layui-row">
-        <label class="layui-form-label">权限</label>
-        <div class="layui-col-xs6">
-            <?php foreach ($permissions as $resource => $operations) { ?>
-                <div class="legend">
-                <span class="legend-title layui-bg-gray">
-                    <input type="checkbox" data-resource="<?=$resource?>" lay-filter="checkAll" title="<?=$permissionConf[$resource]['name']?>" <?=$permissionConf[$resource]['checked'] ? 'checked' : ''?> readonly />
-                </span>
-                    <div class="legend-content">
-                        <?php foreach ($operations as $operation => $operationId) {?>
-                            <input type="checkbox" data-resource-ref="<?=$resource?>" name="permission[<?=$operationId?>]" title="<?=$permissionConf[$resource]['operations'][$operation]['name']?>" <?=(!empty($rolePermissions) && in_array($operationId, $rolePermissions)) ? 'checked' : ''?> readonly />
-                        <?php }?>
-                    </div>
-                </div>
-            <?php }?>
-        </div>
-    </div>
-    <div class="layui-form-item layui-row">
-        <div class="layui-input-block">
-            <button class="layui-btn layui-btn-primary close-layer">取消</button>
-        </div>
-    </div>
-</form>
 <?php include tpl('footer');?>

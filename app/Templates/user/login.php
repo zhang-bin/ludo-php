@@ -1,76 +1,70 @@
+<?php
+
+use App\Helpers\Load;
+use Ludo\Support\Facades\Lang;
+use Ludo\View\View;
+
+?>
 <!DOCTYPE html>
-<html lang="en" class="loginHtml">
+<html lang="en">
 <head>
     <meta charset="<?=PROGRAM_CHARSET?>">
-    <title><?=SITE_TITLE?></title>
-    <meta name="author" content="Fantang" />
-    <meta name="Copyright" content="Fantang" />
+    <title><?=Lang::get('base.site_title')?></title>
+    <meta name="author" content="Ludo" />
+    <meta name="Copyright" content="Ludo" />
     <meta name="description" content="" />
     <meta http-equiv="X-UA-Compatible" content="IE=badge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<?php
-        Load::web('layui');
-        Load::web('layuicms');
-        View::loadCss();
-	?>
+    <?php
+    Load::web('jquery');
+    Load::web('bootstrap');
+    Load::web('adminlte');
+    Load::web('common');
+    View::loadCss();
+    ?>
 </head>
-<body class="loginBody">
-    <form class="layui-form">
-        <div style="background-color: #fff; padding: 20px;">
-            <h4 style="text-align: center; font-size: 18px;">番糖管理平台</h4>
-            <hr class="layui-bg-green">
-            <br />
-            <div class="layui-form-item input-item">
-                <label for="username">用户名</label>
-                <input type="text" placeholder="请输入用户名" autocomplete="off" name="username" id="username" class="layui-input" lay-verify="required">
+<body class="hold-transition login-page">
+<div class="login-box">
+    <div class="login-logo"><b><?=Lang::get('base.site_title')?></b></div>
+    <div class="login-box-body">
+        <form action="<?=url('user/login')?>" method="post" id="login">
+            <div class="form-group has-feedback">
+                <input type="text" class="form-control" name="username" placeholder="<?=Lang::get('base.username')?>" />
+                <span class="fa fa-user form-control-feedback"></span>
             </div>
-            <div class="layui-form-item input-item">
-                <label for="password">密码</label>
-                <input type="password" placeholder="请输入密码" autocomplete="off" name="password" id="password" class="layui-input" lay-verify="required">
+            <div class="form-group has-feedback">
+                <input type="password" class="form-control" name="password" placeholder="<?=Lang::get('base.password')?>" />
+                <span class="fa fa-lock form-control-feedback"></span>
             </div>
-            <div class="layui-form-item">
-                <button class="layui-btn layui-block" lay-filter="login" lay-submit>登录</button>
-                <input type="hidden" id="jurl" name="jurl" value="<?=$_GET['jurl']?>" />
+            <div class="row">
+                <div class="col-xs-12">
+                    <button type="submit" class="btn-lg btn-primary btn-block btn-flat"><?=Lang::get('base.sign_in')?></button>
+                    <input type="hidden" name="callback" value="<?=$_GET['callback']?>" />
+                </div>
             </div>
-        </div>
-    </form>
-<?php View::loadJs();?>
+        </form>
+    </div>
+</div>
+<div class="alert alert-danger alert-box" id="alert-box" style="display: none;" role="alert">
+    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+    </button>
+    <p></p>
+</div>
+<?php View::startJs();?>
 <script type="text/javascript">
-layui.config({
-    base : "/public/img/layuicms/js/"
-});
-layui.use(['form','layer','jquery', 'common'],function(){
-    var form = layui.form;
-    $ = layui.jquery;
-
-    //登录按钮
-    form.on("submit(login)",function(data){
-        var submit = $(this);
-        submit.text("登录中...").attr("disabled","disabled").addClass("layui-disabled");
-        $.post("<?=url('user/login')?>", data.field, function(result){
-            submit.text("登录").removeAttr("disabled").removeClass("layui-disabled");
-            return layui.common.ajaxHandler(result);
-        }, 'json');
+$(document).ready(function(){
+    $("#login").submit(function() {
+        $.formSubmit('login');
         return false;
     });
-
-    //表单输入效果
-    $(".layui-form .input-item").click(function(e){
-        e.stopPropagation();
-        $(this).addClass("layui-input-focus").find(".layui-input").focus();
-    });
-
-    $(".layui-form .layui-form-item .layui-input").focus(function(){
-        $(this).parent().addClass("layui-input-focus");
-    }).blur(function(){
-        $(this).parent().removeClass("layui-input-focus");
-        if($(this).val() != ''){
-            $(this).parent().addClass("layui-input-active");
-        }else{
-            $(this).parent().removeClass("layui-input-active");
-        }
-    });
-})
+});
 </script>
+<?php View::endJs();?>
+
+<?php
+View::loadCss();
+View::loadJs();
+?>
 </body>
 </html>

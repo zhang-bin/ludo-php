@@ -2,33 +2,53 @@
 
 namespace App\Models;
 
-/**
- * 用户角色类
- * @author libok
- *
- */
-class RoleModel {
-	public static function parsePermissions($uid){
-		$roles = Factory::dao('UserRole')->hasA('Role')->findAllUnique(array('userId = ? and Role.deleted = 0', $uid), 'roleId');
-		if (empty($roles)) {
-		    return array();
+use App\Daos\UserRoleDao;
+use App\Daos\RolePermissionDao;
+use App\Helpers\Load;
+
+class RoleModel
+{
+    public static function parsePermissions($uid)
+    {
+        $roleIds = (new UserRoleDao())->hasA('Role')->findAllUnique(array('userId = ? and Role.deleted = 0', $uid), 'roleId');
+        if (empty($roleIds)) {
+            return [];
         }
 
-		$permissionConf = Load::conf('Permission');
-		$permissions = array();
-		foreach ($roles as $roleId) {
-			$permList = Factory::dao('RolePermission')->hasA('Permission', 'Permission.resource, Permission.operation')->findAll(array('roleId = ?', array($roleId)));
-			if (empty($permList)) {
-			    continue;
-            }
+        $permissionConf = Load::conf('Permission');
+        $permissions = $menus = array();
+        $rolePermissions = (new RolePermissionDao())->findAll('roleId in ('.implode(',', $roleIds).')');
+        foreach ($rolePermissions as $rolePermission) {
+            $permissions[$rolePermission['permissionPolicy']] = true;
 
-			foreach ($permList as $item) {
-			    $permissions['operation'][$item['resource']][$item['operation']] = 1;
-			    foreach ($permissionConf[$item['resource']]['operations'][$item['operation']]['url'] as $url) {
-                    $permissions['url'][$url] = $url;
+            foreach ($permissionConf[$rolePermission['permissionPolicy']]['url'] as $urls) {
+                foreach ($urls as $controller => $actions) {
+                    if ($actions == '*') {
+                        $menus[$controller] = true;
+                    } else {
+                        $actions = (array) $actions;
+                        foreach ($actions as $action) {
+                            $menus[$controller.'/'.$action] = true;
+                        }
+                    }
                 }
             }
-		}
-		return $permissions;
-	}
+        }
+
+        return [$permissions, $menus];
+    }
+
+    public static function canMenu($url)
+    {
+        if ($_SESSION[USER]['isAdmin']) return true;
+
+        return isset($_SESSION[USER]['menu'][$url]);
+    }
+
+    public static function can($resource, $operation)
+    {
+        if ($_SESSION[USER]['isAdmin']) return true;
+
+        return isset($_SESSION[USER]['permission'][$resource][$operation]);
+    }
 }

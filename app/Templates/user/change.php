@@ -1,64 +1,39 @@
 <?php
+use Ludo\Support\Facades\Lang;
+
 $change = isset($_GET['id']) ? true : false;
+$gTitle = $change ? Lang::get('user.user_change') : Lang::get('user.user_add');
 include tpl('header');
-Load::web('formSelect');
 ?>
-<form class="layui-form" action="<?=$change ? url('permission/changeUser/'.$user['id']) : url('permission/addUser')?>">
-    <div class="layui-form-item">
-        <label class="layui-form-label">用户名</label>
-        <div class="layui-input-inline">
-            <input type="text" name="username" id="username" class="layui-input" value="<?=$user['username']?>" required="required" <?=$change ? 'readonly' : ''?> />
-        </div>
-        <?php if (!$change) {?>
-        <div class="layui-form-mid layui-word-aux">初始密码: <?=Permission::DEFAULT_PASSWORD?></div>
-        <?php }?>
-    </div>
-    <div class="layui-form-item">
-        <label class="layui-form-label">昵称</label>
-        <div class="layui-input-inline">
-            <input type="text" class="layui-input" id="nickname" name="nickname" value="<?=$user['nickname']?>" />
+<form class="form form-horizontal" action="<?=$change ? url('permission/changeUser') : url('permission/addUser')?>">
+    <div class="form-group">
+        <label for="username" class="col-sm-2 control-label"><?=Lang::get('user.username')?></label>
+        <div class="col-sm-4">
+            <input type="text" name="username" id="username" class="form-control" value="<?=$user['username']?>" required="required" <?=$change ? 'disabled' : ''?> />
         </div>
     </div>
-    <div class="layui-form-item">
-        <label class="layui-form-label">角色</label>
-        <div class="layui-col-xs3">
-            <select class="layui-input" name="role" xm-select="role">
+    <div class="form-group">
+        <label for="descr" class="col-sm-2 control-label"><?=Lang::get('user.nickname')?></label>
+        <div class="col-sm-4">
+            <input type="text" name="nickname" class="form-control" id="nickname" value="<?=$user['nickname']?>" />
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="role" class="col-sm-2 control-label"><?=Lang::get('user.role')?></label>
+        <div class="col-sm-8">
+            <select name="role[]" id="role" class="select2 form-control" multiple="multiple" data-size="10">
                 <?php foreach ($roles as $role) {?>
-                    <option value="<?=$role['id']?>" <?=(!empty($userRoles) && in_array($role['id'], $userRoles)) ? 'selected' : ''?>><?=$role['role']?></option>
+                    <option value="<?=$role['id']?>" <?=(!empty($user['roles']) && in_array($role['id'], $user['roles'])) ? 'selected' : ''?>><?=$role['role']?></option>
                 <?php }?>
             </select>
         </div>
     </div>
-    <div class="layui-form-item">
-        <div class="layui-input-block">
+    <div class="form-group">
+        <div class="col-sm-offset-2 col-sm-10">
             <input type="hidden" id="id" name="id" value="<?=$user['id']?>" />
-            <button class="layui-btn" lay-submit="" lay-filter="submit">确定</button>
-            <button class="layui-btn layui-btn-primary close-layer">取消</button>
+            <button type="submit" class="btn btn-success"><?=Lang::get('base.submit')?></button>
+            <a href="javascript:history.go(-1);" class="btn btn-default"><?=Lang::get('base.cancel')?></a>
         </div>
     </div>
 </form>
-<?php View::startJs();?>
-<script type="text/javascript">
-layui.config({
-    base : "/public/img/"
-}).extend({
-    common: 'layuicms/js/common',
-    formSelects: 'formSelect/formSelects-v4'
-});
-layui.use(['form', 'element', 'jquery', 'common', 'formSelects'], function() {
-    var form = layui.form;
-    $ = layui.jquery;
-
-    form.on('submit(submit)', function(data) {
-        var submit = $(this);
-        submit.text("提交中...").attr("disabled","disabled").addClass("layui-disabled");
-        $.post(data.form.action, data.field, function(result){
-            submit.text("确定").removeAttr("disabled").removeClass("layui-disabled");
-            return layui.common.ajaxHandler(result);
-        }, 'json');
-        return false;
-    });
-});
-</script>
-<?php View::endJs();?>
 <?php include tpl('footer');?>

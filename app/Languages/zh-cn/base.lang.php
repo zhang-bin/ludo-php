@@ -1,44 +1,46 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: zhangbin
- * Date: 15/2/19
- * Time: 上午12:36
- */
-define('SITE_TITLE', 'Summer');
-define('SUBMIT', '提交');
-define('CANCEL', '取消');
-define('SAVE', '保存');
-define('ACTION', '操作');
-define('ADD', '添加');
-define('ADD_FAILED', '添加失败!');
-define('ADD_SUCCESS', '添加成功!');
-define('MODIFY', '修改');
-define('MODIFY_FAILED', '修改失败!');
-define('DELETE', '删除');
-define('DELETE_FAILED', '删除失败!');
-define('ENABLE', '启用');
-define('DISABLE', '禁用');
-define('SEARCH', '搜索');
-define('CONFIRM', '确认');
-define('SIGN_IN', '登录');
-define('CONFIRM_DELETE', '确认删除？');
-define('CONFIRM_SAVE', '你确定要保存吗？');
-define('OPERATION_FAILED', '操作失败');
-define('VIEW',   '查看');
-define('MAINTAIN',   '维护');
-define('PLEASE_CHOOSE',   '请选择...');
-define('PLEASE_INPUT_NUMBER', '请输入数量');
-define('CREATE_TIME', '创建时间');
-define('CLOSE', '关闭');
-define('BEGIN_TIME', '开始时间');
-define('END_TIME', '结束时间');
-define('DEADLINE_TIME', '截止时间');
-define('YES', '是');
-define('NO', '否');
-define('PUBLISH', '发布');
-define('CONFIRM_PUBLISH', '你确定要发布吗？');
-define('PREVIEW', '预览');
-define('DUPLICATE', '复制');
-define('DOWNLOAD', '下载');
-define('UPLOAD', '上传');
+return [
+    'site_title' => 'Ludo',
+    'submit' => '提交',
+    'cancel' => '取消',
+    'save' => '保存',
+    'action' => '操作',
+    'add' => '添加',
+    'add_failed' => '添加失败!',
+    'add_successful' => '添加成功!',
+    'modify' => '修改',
+    'modify_failed' => '修改失败!',
+    'modify_successful' => '修改成功!',
+    'delete' => '删除',
+    'delete_failed' => '删除失败!',
+    'delete_successful' => '删除成功!',
+    'enable' => '启用',
+    'disable' => '禁用',
+    'search' => '搜索',
+    'confirm' => '确认',
+    'sign_in' => '登录',
+    'confirm_delete' => '确认删除?',
+    'confirm_save' => '你确定要保存吗?',
+    'operation_failed' => '操作失败!',
+    'view' => '查看',
+    'maintain' => '维护',
+    'please_choose' => '请选择...',
+    'create_time' => '创建时间',
+    'close' => '关闭',
+    'begin_time' => '开始时间',
+    'end_time' => '结束时间',
+    'deadline_time' => '截止时间',
+    'yes' => '是',
+    'no' => '否',
+    'publish' => '发布',
+    'confirm_publish' => '你确定要发布吗?',
+    'preview' => '预览',
+    'duplicate' => '复制',
+    'download' => '下载',
+    'upload' => '上传',
+    'change_password' => '修改密码',
+    'sign_out' => '登出',
+    'username' => '用户名',
+    'password' => '密码',
+    'username_or_password_wrong' => '用户名或密码错误',
+];

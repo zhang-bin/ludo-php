@@ -1,3 +1,13 @@
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+<?php
+
+use Ludo\Support\Facades\Lang;
+use Ludo\View\View;
+?>
 <footer class="main-footer">
     <?php if (DEBUG) { ?>
         <span>Process time: <?=sprintf('%.3f', (microtime(true) - SYS_START_TIME)*1000)?> ms.</span>
@@ -17,7 +27,63 @@
         ?>
     <?php } ?>
 </footer>
-<?php View::loadCss();?>
-<?php View::loadJs();?>
+<div class="modal-del modal fade" role="dialog" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title"></h4>
+            </div>
+            <div class="modal-body">
+                <p class="text-center"></p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal"><?=Lang::get('base.cancel')?></button>
+                <button type="button" class="btn btn-primary" id="confirmProcess"><?=Lang::get('base.confirm')?></button>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="alert alert-danger alert-box" id="alert-box" style="display: none;" role="alert">
+    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+    </button>
+    <p></p>
+</div>
+<?php View::startJs();?>
+<script type="text/javascript">
+$(document).ready(function(){
+    $(".table").on("click", "a[name=op]", function(){
+        $(".modal-del").modal();
+        $(".modal-del .modal-title").text($(this).attr("data-title"));
+        if ($(this).attr("data-body") != '') {
+            $(".modal-del .modal-body p").text($(this).attr("data-body"));
+        }
+        $("#confirmProcess").attr("href", this.href);
+        return false;
+    });
+    $("#confirmProcess").click(function(){
+        $.posting($(this).attr("href"), {}, function(result) {
+            if(ajaxHandler(result)) return;
+            return false;
+        }, "json");
+        return false;
+    });
+
+    $("form.form").submit(function(){
+        $.posting($(this).attr("action"), $(this).serialize(), function(result) {
+            ajaxHandler(result);
+        }, "json");
+        return false;
+    });
+    $('.select2').select2();
+});
+</script>
+<?php View::endJs();?>
+
+<?php
+View::loadCss();
+View::loadJs();
+?>
 </body>
 </html>

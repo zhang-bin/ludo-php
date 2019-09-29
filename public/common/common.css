@@ -1,0 +1,28 @@
+.navbar-custom-menu > .navbar-nav > .dropdown > .dropdown-menu > li > a {
+    padding: 10px 20px;
+}
+
+.navbar-custom-menu > .navbar-nav > .dropdown > .dropdown-menu {
+    width: auto;
+}
+
+.login-box-body .form-control {
+    height: 45px;
+}
+.login-box-body .form-control-feedback {
+    height: 45px;
+    line-height: 45px;
+}
+
+.alert-box {
+    top: 50px;
+    left: 35%;
+    right: 35%;
+    position: fixed;
+    min-width: 380px;
+    margin: 0 auto;
+}
+
+.alert-box > p {
+    word-break: break-all;
+}

@@ -12,11 +12,6 @@ class Index extends BaseCtrl
     public function index()
     {
 
-		$this->tpl->setFile('main')->display();
+		$this->tpl->setFile('index/index')->display();
 	}
-
-
-	public function home() {
-        $this->tpl->setFile('index/home')->display();
-    }
 }

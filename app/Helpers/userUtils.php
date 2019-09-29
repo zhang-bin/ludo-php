@@ -28,6 +28,17 @@ function tpl(string $tplPath): string
 }
 
 /**
+ * get image link
+ *
+ * @param string $filename
+ * @return string
+ */
+function imageUrl(string $filename): string
+{
+    return LD_PUBLIC_URL.DIRECTORY_SEPARATOR.'img'.DIRECTORY_SEPARATOR.$filename;
+}
+
+/**
  * Redirect to an inner site url.
  * Note: you need to using this function with <b>return</b>
  * eg. return redirect('user/login');
@@ -138,7 +149,8 @@ function downloadExcel(string $filename, string $downloadName)
  * @param string $content 文字
  * @return bool
  */
-function isJsonString($content) {
+function isJsonString($content)
+{
 	if (is_numeric($content)) {
 	    return false;
     }
@@ -147,7 +159,8 @@ function isJsonString($content) {
 	return json_last_error() == JSON_ERROR_NONE;
 }
 
-function generateCsv($menu, $data) {
+function generateCsv($menu, $data)
+{
 	$dir = LD_UPLOAD_TMP_PATH.'/'.date(DATE_FORMAT).'/';
 	if (!is_dir($dir)) {
 	    mkdir($dir);

@@ -1,0 +1,32 @@
+<?php
+return [
+    'role_manage' => '角色管理',
+    'role_name' => '角色名称',
+    'role_descr' => '角色描述',
+    'role_view' => '查看角色',
+    'role_add' => '添加角色',
+    'role_add_failed' => '添加角色失败',
+    'role_change' => '修改角色',
+    'role_change_failed' => '修改角色失败',
+    'role_delete_failed' => '删除角色失败',
+    'permission' => '权限',
+
+    'user_manage' => '用户管理',
+    'nickname' => '昵称',
+    'username' => '用户名',
+    'user_view' => '查看用户',
+    'user_add' => '添加用户',
+    'user_add_failed' => '添加用户失败',
+    'user_change' => '修改用户',
+    'user_change_failed' => '修改用户失败',
+    'user_delete_failed' => '删除用户失败',
+    'role' => '角色',
+
+    'change_password' => '修改密码',
+    'password' => '密码',
+    'confirm_password' => '再次输入密码',
+    'password_empty' => '密码为空',
+    'password_not_equal' => '两次密码不一致',
+    'change_password_failed' => '修改用户密码失败',
+    'change_password_successful' => '修改密码成功',
+];

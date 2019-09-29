@@ -1,32 +1,34 @@
 <?php
-$gTitle = '查看用户';
+use Ludo\Support\Facades\Lang;
+
+$gTitle = Lang::get('user.user_view');
 include tpl('header');
 ?>
-<form class="layui-form">
-    <div class="layui-form-item">
-        <label class="layui-form-label">用户名</label>
-        <div class="layui-input-inline">
-            <input type="text" name="username" id="username" class="layui-input" value="<?=$user['username']?>" required="required" readonly />
+<div class="form-horizontal">
+    <div class="form-group">
+        <label for="role" class="col-sm-2 control-label"><?=Lang::get('user.username')?></label>
+        <div class="col-sm-4"><p class="form-control-static"><?=$user['username']?></p></div>
+    </div>
+    <div class="form-group">
+        <label for="role" class="col-sm-2 control-label"><?=Lang::get('user.nickname')?></label>
+        <div class="col-sm-4"><p class="form-control-static"><?=$user['nickname']?></p></div>
+    </div>
+    <div class="form-group">
+        <label for="permission" class="col-sm-2 control-label"><?=Lang::get('user.role')?></label>
+        <div class="col-sm-8">
+            <table class="table table-bordered">
+                <?php foreach ($userRoles as $role) {?>
+                    <tr>
+                        <td><?=$role['role']?></td>
+                    </tr>
+                <?php }?>
+            </table>
         </div>
     </div>
-    <div class="layui-form-item">
-        <label class="layui-form-label">昵称</label>
-        <div class="layui-input-inline">
-            <input type="text" class="layui-input" id="nickname" name="nickname" value="<?=$user['nickname']?>" readonly />
+    <div class="form-group">
+        <div class="col-sm-offset-2 col-sm-10">
+            <a href="javascript:history.go(-1);" class="btn btn-default"><?=Lang::get('base.cancel')?></a>
         </div>
     </div>
-    <div class="layui-form-item">
-        <label class="layui-form-label">角色</label>
-        <div class="layui-input-block">
-            <?php foreach ($userRoles as $userRole) {?>
-                <input type="checkbox" title="<?=$userRole['role']?>" checked disabled class="layui-bg-green" />
-            <?php }?>
-        </div>
-    </div>
-    <div class="layui-form-item layui-row">
-        <div class="layui-input-block">
-            <button class="layui-btn layui-btn-primary close-layer">取消</button>
-        </div>
-    </div>
-</form>
+</div>
 <?php include tpl('footer');?>
