@@ -8,7 +8,7 @@ use App\Models\UserModel;
 
 class Menu
 {
-	public static $menu = null;
+    public static $menu = null;
     public static $currMenuId = null;
 
     /**
@@ -22,8 +22,8 @@ class Menu
         $currentAction = Context::get('current-action');
         empty($currentAction) && $currentAction = 'index';
 
-		$menu = Load::conf('Menu');
-		$tree = <<<EOF
+        $menu = Load::conf('Menu');
+        $tree = <<<EOF
 <li class="treeview %s">
     <a href="#">
         <i class="fa %s"></i>
@@ -37,9 +37,9 @@ class Menu
     </ul>
 </li>
 EOF;
-		$html = '<aside class="main-sidebar"><section class="sidebar" style="height: auto;"><ul class="sidebar-menu tree" data-widget="tree">';
-		foreach ($menu as $mainMenuId => $mainMenu) {
-		    $leaf = '';
+        $html = '<aside class="main-sidebar"><section class="sidebar" style="height: auto;"><ul class="sidebar-menu tree" data-widget="tree">';
+        foreach ($menu as $mainMenuId => $mainMenu) {
+            $leaf = '';
             $treeClass = '';
             foreach ($mainMenu['children'] as $subMenu) {
                 if (!RoleModel::canMenu($subMenu['href'])) {
@@ -47,7 +47,7 @@ EOF;
                 }
 
                 $active = '';
-                if (in_array($currentController.'/'.$currentAction, $subMenu['active'])) {
+                if (in_array($currentController . '/' . $currentAction, $subMenu['active'])) {
                     $active = 'active';
                     $treeClass = 'active menu-open';
                 }
@@ -59,10 +59,10 @@ EOF;
                 $html .= sprintf($tree, $treeClass, $mainMenu['icon'], $mainMenu['name'], $leaf);
             }
         }
-		$html .= '</ul></section></aside>';
+        $html .= '</ul></section></aside>';
 
-		return $html;
-	}
+        return $html;
+    }
 
     /**
      * 生成导航条
@@ -71,7 +71,7 @@ EOF;
      */
     public static function breadcrumb()
     {
-		$html = '<ol class="breadcrumb">';
+        $html = '<ol class="breadcrumb">';
 
         $menu = Load::conf('Menu');
 
@@ -81,15 +81,15 @@ EOF;
 
         foreach ($menu as $mainMenuId => $mainMenu) {
             foreach ($mainMenu['children'] as $subMenu) {
-                if (in_array($currentController.'/'.$currentAction, $subMenu['active'])) {
-                    $html .= sprintf('<li><a href="%s"><i class="fa %s"></i> %s</a></li>', url($mainMenuId.'/index'), $mainMenu['icon'], $mainMenu['name']);
+                if (in_array($currentController . '/' . $currentAction, $subMenu['active'])) {
+                    $html .= sprintf('<li><a href="%s"><i class="fa %s"></i> %s</a></li>', url($mainMenuId . '/index'), $mainMenu['icon'], $mainMenu['name']);
                     $html .= sprintf('<li class="active">%s</li>', $subMenu['name']);
                     break 2;
                 }
             }
         }
 
-		$html .= '</ol>';
-		return $html;
-	}
+        $html .= '</ol>';
+        return $html;
+    }
 }

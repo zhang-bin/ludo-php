@@ -11,7 +11,8 @@ class Date
         return date('Y-m', strtotime('-1 month', $thisMonth));
     }
 
-    public function thisSaturday() {
+    public function thisSaturday()
+    {
         $dayNumber = intval(date('N'));
         if ($dayNumber == 7) {//星期天
             $saturday = strtotime('last saturday');
@@ -21,7 +22,8 @@ class Date
         return $saturday;
     }
 
-    public function thisFriday() {
+    public function thisFriday()
+    {
         $dayNumber = intval(date('N'));
         if ($dayNumber == 7) {//星期天
             $friday = strtotime('last friday');
@@ -31,7 +33,8 @@ class Date
         return $friday;
     }
 
-    public function thisMonday() {
+    public function thisMonday()
+    {
         $dayNumber = intval(date('N'));
         if ($dayNumber == 7) {//星期天
             $monday = strtotime('last monday');
@@ -41,7 +44,8 @@ class Date
         return $monday;
     }
 
-    public function thisSunday() {
+    public function thisSunday()
+    {
         return strtotime('sunday this week');
     }
 }

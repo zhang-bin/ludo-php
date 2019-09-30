@@ -8,7 +8,8 @@ use Ludo\Support\Facades\Lang;
 use Ludo\Support\Filter;
 use App\Models\RoleModel;
 
-class User extends BaseCtrl {
+class User extends BaseCtrl
+{
     public function __construct()
     {
         parent::__construct('User');
@@ -17,7 +18,7 @@ class User extends BaseCtrl {
     public function login()
     {
         $dao = new UserDao();
-        if (empty($_POST)){
+        if (empty($_POST)) {
             $this->tpl->setFile('user/login')->display();
         } else {
             $username = Filter::str($_POST['username']);

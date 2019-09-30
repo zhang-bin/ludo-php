@@ -17,7 +17,7 @@ class RoleModel
 
         $permissionConf = Load::conf('Permission');
         $permissions = $menus = array();
-        $rolePermissions = (new RolePermissionDao())->findAll('roleId in ('.implode(',', $roleIds).')');
+        $rolePermissions = (new RolePermissionDao())->findAll('roleId in (' . implode(',', $roleIds) . ')');
         foreach ($rolePermissions as $rolePermission) {
             $permissions[$rolePermission['permissionPolicy']] = true;
 
@@ -26,9 +26,9 @@ class RoleModel
                     if ($actions == '*') {
                         $menus[$controller] = true;
                     } else {
-                        $actions = (array) $actions;
+                        $actions = (array)$actions;
                         foreach ($actions as $action) {
-                            $menus[$controller.'/'.$action] = true;
+                            $menus[$controller . '/' . $action] = true;
                         }
                     }
                 }

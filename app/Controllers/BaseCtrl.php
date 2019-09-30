@@ -104,8 +104,8 @@ class BaseCtrl extends Controller
      */
     static function addResponseSign(array &$data): void
     {
-        $data['rand'] = uniqid().time();
-        $data['sign'] = md5($data['rand'].RESPONSE_API_SALT);
+        $data['rand'] = uniqid() . time();
+        $data['sign'] = md5($data['rand'] . RESPONSE_API_SALT);
     }
 
     /**
@@ -116,7 +116,7 @@ class BaseCtrl extends Controller
      */
     protected function response(array $data = []): array
     {
-        return ['errCode' => 0, 'data'  => $data];
+        return ['errCode' => 0, 'data' => $data];
     }
 
     /**

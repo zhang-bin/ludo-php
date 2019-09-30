@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Controllers;
 
 use App\Daos\RoleDao;
@@ -21,7 +22,7 @@ class Permission extends BaseCtrl
     {
         $dao = new RoleDao();
         $total = $dao->count('deleted = 0');
-        [$start, $rows, $page] = HtmlWidget::page('permission/index'.$this->resetGet(), $this->currentPage, $total);
+        [$start, $rows, $page] = HtmlWidget::page('permission/index' . $this->resetGet(), $this->currentPage, $total);
 
         $roles = $dao->findAll('deleted = 0', $rows, $start);
 
@@ -148,7 +149,7 @@ class Permission extends BaseCtrl
     {
         $dao = new UserDao();
         $total = $dao->count('deleted = 0');
-        [$start, $rows, $page] = HtmlWidget::page('permission/user'.$this->resetGet(), $this->currentPage, $total);
+        [$start, $rows, $page] = HtmlWidget::page('permission/user' . $this->resetGet(), $this->currentPage, $total);
 
         $users = $dao->findAll('deleted = 0', $rows, $start);
 

@@ -7,12 +7,12 @@ use Ludo\Support\Facades\Config;
  * get an pathInfo url from an innerUrl.
  * e.g. url('blog/add') will get http://SITE_URL/index.php/blog/add
  *
- * @param  string $innerUrl ==pathInfo
+ * @param string $innerUrl ==pathInfo
  * @return string right url with pathInfo.
  */
 function url(string $innerUrl = ''): string
 {
-    return SITE_URL.'/'.$innerUrl;
+    return SITE_URL . '/' . $innerUrl;
 }
 
 /**
@@ -24,7 +24,7 @@ function url(string $innerUrl = ''): string
  */
 function tpl(string $tplPath): string
 {
-    return TPL_ROOT.'/'.$tplPath.php;
+    return TPL_ROOT . '/' . $tplPath . php;
 }
 
 /**
@@ -35,7 +35,7 @@ function tpl(string $tplPath): string
  */
 function imageUrl(string $filename): string
 {
-    return LD_PUBLIC_URL.DIRECTORY_SEPARATOR.'img'.DIRECTORY_SEPARATOR.$filename;
+    return LD_PUBLIC_URL . DIRECTORY_SEPARATOR . 'img' . DIRECTORY_SEPARATOR . $filename;
 }
 
 /**
@@ -56,7 +56,7 @@ function redirect(string $innerUrl = '')
     if (isAjax()) {
         echo json_encode(array(STATUS => GO, URL => $innerUrl));
     } else {
-        header('location:'.$innerUrl);
+        header('location:' . $innerUrl);
     }
     die;
 }
@@ -74,7 +74,7 @@ function redirectOut(string $outUrl)
     if (isAjax()) {
         echo json_encode(array(STATUS => GO, URL => $outUrl));
     } else {
-        header('location:'.$outUrl);
+        header('location:' . $outUrl);
     }
     die;
 }
@@ -129,7 +129,7 @@ function downloadExcel(string $filename, string $downloadName)
     if (preg_match('/MSIE/', $_SERVER['HTTP_USER_AGENT'])) {
         header('Content-Disposition: attachment; filename=' . $downloadName);
     } elseif (preg_match('/Firefox/', $_SERVER['HTTP_USER_AGENT'])) {
-        header("Content-Disposition: attachment; filename*='utf8'".$downloadName);
+        header("Content-Disposition: attachment; filename*='utf8'" . $downloadName);
     } else {
         header('Content-Disposition: attachment; filename=' . urldecode($downloadName));
     }
@@ -138,7 +138,7 @@ function downloadExcel(string $filename, string $downloadName)
         header('X-Sendfile:' . $filename);//Apache
     } else {
         $filename = str_replace(SITE_ROOT, '', $filename);
-        header('X-Accel-Redirect:'.$filename);//nginx
+        header('X-Accel-Redirect:' . $filename);//nginx
     }
     die;
 }
@@ -151,45 +151,45 @@ function downloadExcel(string $filename, string $downloadName)
  */
 function isJsonString($content)
 {
-	if (is_numeric($content)) {
-	    return false;
+    if (is_numeric($content)) {
+        return false;
     }
 
-	json_decode($content);
-	return json_last_error() == JSON_ERROR_NONE;
+    json_decode($content);
+    return json_last_error() == JSON_ERROR_NONE;
 }
 
 function generateCsv($menu, $data)
 {
-	$dir = LD_UPLOAD_TMP_PATH.'/'.date(DATE_FORMAT).'/';
-	if (!is_dir($dir)) {
-	    mkdir($dir);
+    $dir = LD_UPLOAD_TMP_PATH . '/' . date(DATE_FORMAT) . '/';
+    if (!is_dir($dir)) {
+        mkdir($dir);
     }
 
-	$filename = $dir.uniqid(time()).'.csv';
-	$sep  = "\t";
-	$eol  = "\n";
+    $filename = $dir . uniqid(time()) . '.csv';
+    $sep = "\t";
+    $eol = "\n";
 
-	$csv = '';
+    $csv = '';
     $arr = [];
-	foreach ($menu as $v) {
-		$arr[] = $v;
-	}
-	$csv .= '"'. implode('"'.$sep.'"', $arr).'"'.$eol;
+    foreach ($menu as $v) {
+        $arr[] = $v;
+    }
+    $csv .= '"' . implode('"' . $sep . '"', $arr) . '"' . $eol;
 
-	$fp = fopen($filename, 'w');
-	fwrite($fp, chr(255).chr(254));
-	fwrite($fp, mb_convert_encoding($csv, 'UTF-16LE', 'UTF-8'));
+    $fp = fopen($filename, 'w');
+    fwrite($fp, chr(255) . chr(254));
+    fwrite($fp, mb_convert_encoding($csv, 'UTF-16LE', 'UTF-8'));
 
-	foreach ($data as $v) {
-		$arr = array();
-		foreach ($menu as $k=>$vv) {
-			$arr[] = $v[$k];
-		}
-		$csv = '"'. implode('"'.$sep.'"', $arr).'"'.$eol;
-		fwrite($fp, mb_convert_encoding($csv, 'UTF-16LE', 'UTF-8'));
-	}
-	fflush($fp);
-	fclose($fp);
-	return $filename;
+    foreach ($data as $v) {
+        $arr = array();
+        foreach ($menu as $k => $vv) {
+            $arr[] = $v[$k];
+        }
+        $csv = '"' . implode('"' . $sep . '"', $arr) . '"' . $eol;
+        fwrite($fp, mb_convert_encoding($csv, 'UTF-16LE', 'UTF-8'));
+    }
+    fflush($fp);
+    fclose($fp);
+    return $filename;
 }

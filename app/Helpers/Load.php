@@ -42,7 +42,7 @@ class Load
 
         foreach ($module as $file => $fileType) {
             $html = '';
-            $filename = LD_PUBLIC_URL.DIRECTORY_SEPARATOR.$name.DIRECTORY_SEPARATOR.$file;
+            $filename = LD_PUBLIC_URL . DIRECTORY_SEPARATOR . $name . DIRECTORY_SEPARATOR . $file;
             switch ($fileType) {
                 case 'css':
                     $html = sprintf($css, $filename);
@@ -58,8 +58,8 @@ class Load
         }
     }
 
-	public static function conf(string $name)
+    public static function conf(string $name)
     {
-		return include LD_CONF_PATH.'/'.ucfirst($name).'.conf'.php;
-	}
+        return include LD_CONF_PATH . '/' . ucfirst($name) . '.conf' . php;
+    }
 }

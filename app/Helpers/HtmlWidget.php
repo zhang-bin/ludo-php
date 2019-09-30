@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Helpers;
 
 class HtmlWidget
@@ -31,18 +32,18 @@ class HtmlWidget
         $previousPage = $currentPage - 1;
         ($previousPage < 1) && ($previousPage = 1);
 
-        $html .= sprintf('<li><a href="%s" aria-label="Previous"><span aria-hidden="true">&laquo;</span></a></li>', url($baseUrl.$previousPage));
+        $html .= sprintf('<li><a href="%s" aria-label="Previous"><span aria-hidden="true">&laquo;</span></a></li>', url($baseUrl . $previousPage));
         foreach ($pageIndexes as $pageIndex) {
             $active = '';
             if ($pageIndex == $currentPage) {
                 $active = 'active';
             }
-            $html .= sprintf('<li class="%s"><a href="%s">%s</a></li>', $active, url($baseUrl.$pageIndex), $pageIndex);
+            $html .= sprintf('<li class="%s"><a href="%s">%s</a></li>', $active, url($baseUrl . $pageIndex), $pageIndex);
         }
 
         $nexPage = $currentPage + 1;
         ($nexPage > $totalPageNum) && ($nexPage = $totalPageNum);
-        $html .= sprintf('<li><a href="%s" aria-label="Next"><span aria-hidden="true">&raquo;</span></a></li>', url($baseUrl.$nexPage));
+        $html .= sprintf('<li><a href="%s" aria-label="Next"><span aria-hidden="true">&raquo;</span></a></li>', url($baseUrl . $nexPage));
 
         $html .= '</ul></nav>';
 
