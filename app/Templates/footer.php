@@ -1,7 +1,7 @@
-                </div>
-            </div>
-        </div>
-    </section>
+</div>
+</div>
+</div>
+</section>
 </div>
 <?php
 
@@ -50,37 +50,6 @@ use Ludo\View\View;
     </button>
     <p></p>
 </div>
-<?php View::startJs();?>
-<script type="text/javascript">
-$(document).ready(function(){
-    $(".table").on("click", "a[name=op]", function(){
-        $(".modal-del").modal();
-        $(".modal-del .modal-title").text($(this).attr("data-title"));
-        if ($(this).attr("data-body") != '') {
-            $(".modal-del .modal-body p").text($(this).attr("data-body"));
-        }
-        $("#confirmProcess").attr("href", this.href);
-        return false;
-    });
-    $("#confirmProcess").click(function(){
-        $.posting($(this).attr("href"), {}, function(result) {
-            if(ajaxHandler(result)) return;
-            return false;
-        }, "json");
-        return false;
-    });
-
-    $("form.form").submit(function(){
-        $.posting($(this).attr("action"), $(this).serialize(), function(result) {
-            ajaxHandler(result);
-        }, "json");
-        return false;
-    });
-    $('.select2').select2();
-});
-</script>
-<?php View::endJs();?>
-
 <?php
 View::loadCss();
 View::loadJs();

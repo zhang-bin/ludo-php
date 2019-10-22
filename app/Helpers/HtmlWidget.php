@@ -8,7 +8,7 @@ class HtmlWidget
     {
         $html = '<nav aria-label="Page navigation"><ul class="pagination">';
         $totalPageNum = ceil($total / $size);
-        if ($totalPageNum == 1) {
+        if ($totalPageNum <= 1) {
             return [0, 0, ''];
         }
 
