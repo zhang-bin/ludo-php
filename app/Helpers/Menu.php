@@ -4,12 +4,10 @@ namespace App\Helpers;
 
 use App\Models\RoleModel;
 use Ludo\Support\Facades\Context;
-use App\Models\UserModel;
 
 class Menu
 {
     public static $menu = null;
-    public static $currMenuId = null;
 
     /**
      * 生成菜单

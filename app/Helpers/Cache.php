@@ -8,25 +8,22 @@ use Ludo\Support\ServiceProvider;
 class Cache
 {
     /**
-     * Get redis connection
-     *
-     * @param string $name
+     * @param string $connectionName
      * @return BaseRedis
      */
-    public static function get(string $name = null)
+    public static function redis($connectionName = null)
     {
-        return ServiceProvider::getInstance()->getRedisHandler($name);
+        return ServiceProvider::getInstance()->getRedisHandler($connectionName);
     }
 
     /**
-     * Close redis connection
-     *
-     * @param string|null $name
+     * close connection
      */
-    public static function close(string $name = null)
+    public static function close()
     {
-        $redis = ServiceProvider::getInstance()->getRedisHandler($name);
-        $redis->close();
-        ServiceProvider::getInstance()->delRedisHandler($name);
+        $manager = ServiceProvider::getInstance()->getRedisManagerHandler();
+        foreach ($manager->getConnections() as $connectionName) {
+            $manager->disconnect($connectionName);
+        }
     }
 }
