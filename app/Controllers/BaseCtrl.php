@@ -4,12 +4,12 @@ namespace App\Controllers;
 
 use Ludo\Routing\Controller;
 use Ludo\Support\ServiceProvider;
-use Ludo\Log\Logger;
+use Ludo\Support\Facades\Log;
 
 class BaseCtrl extends Controller
 {
     /**
-     * @var Logger
+     * @var Log
      */
     protected $log;
 
