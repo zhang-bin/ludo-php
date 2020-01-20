@@ -8,6 +8,7 @@ use App\Daos\UserDao;
 use App\Daos\UserRoleDao;
 use App\Helpers\HtmlWidget;
 use App\Helpers\Load;
+use App\Models\LogModel;
 use Ludo\Database\QueryException;
 use Ludo\Support\Facades\Lang;
 
@@ -48,18 +49,22 @@ class Permission extends BaseCtrl
                 $add['role'] = trim($_POST['role']);
                 $add['descr'] = trim($_POST['descr']);
                 $add['createTime'] = date(TIME_FORMAT);
-                $roleId = $dao->insert($add);
+                $add['id'] = $dao->insert($add);
 
                 if (!empty($_POST['permission'])) {
                     $permissions = [];
                     foreach ($_POST['permission'] as $permissionPolicy) {
                         $permissions[] = array(
-                            'roleId' => $roleId,
+                            'roleId' => $add['id'],
                             'permissionPolicy' => $permissionPolicy
                         );
                     }
                     $rolePermissionDao->batchInsert($permissions);
                 }
+
+                LogModel::log('add role', [
+                    'new' => $add['id'],
+                ]);
 
                 $dao->commit();
                 return $this->success(url('permission'));
@@ -106,6 +111,10 @@ class Permission extends BaseCtrl
                     $rolePermissionDao->batchInsert($permissions);
                 }
 
+                LogModel::log('change role', [
+                    'new' => $id,
+                ]);
+
                 $dao->commit();
                 return $this->success(url('permission'));
             } catch (QueryException $e) {
@@ -122,6 +131,11 @@ class Permission extends BaseCtrl
         try {
             $dao->beginTransaction();
             $dao->update($id, array('deleted' => 1));
+
+            LogModel::log('delete role', [
+                'new' => $id,
+            ]);
+
             $dao->commit();
             return $this->success(url('permission'));
         } catch (QueryException $e) {
@@ -176,18 +190,22 @@ class Permission extends BaseCtrl
                 $add['nickname'] = trim($_POST['nickname']);
                 $add['password'] = password_hash('123456', PASSWORD_DEFAULT);
                 $add['createTime'] = date(TIME_FORMAT);
-                $userId = $dao->insert($add);
+                $add['id'] = $dao->insert($add);
 
                 if (!empty($_POST['role'])) {
                     $roles = [];
                     foreach ($_POST['role'] as $roleId) {
                         $roles[] = array(
-                            'userId' => $userId,
+                            'userId' =>  $add['id'],
                             'roleId' => $roleId
                         );
                     }
                     $userRoleDao->batchInsert($roles);
                 }
+
+                LogModel::log('add user', [
+                    'new' => $add['id'],
+                ]);
 
                 $dao->commit();
                 return $this->success(url('permission/user'));
@@ -231,6 +249,10 @@ class Permission extends BaseCtrl
                     $userRoleDao->batchInsert($roles);
                 }
 
+                LogModel::log('change user', [
+                    'new' => $id,
+                ]);
+
                 $dao->commit();
                 return $this->success(url('permission/user'));
             } catch (QueryException $e) {
@@ -247,6 +269,11 @@ class Permission extends BaseCtrl
         try {
             $dao->beginTransaction();
             $dao->update($id, array('deleted' => 1));
+
+            LogModel::log('delete user', [
+                'new' => $id,
+            ]);
+
             $dao->commit();
             return $this->success(url('permission/user'));
         } catch (QueryException $e) {

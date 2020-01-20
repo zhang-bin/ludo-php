@@ -3,6 +3,7 @@
 namespace App\Controllers;
 
 use App\Daos\UserDao;
+use App\Models\LogModel;
 use Ludo\Database\QueryException;
 use Ludo\Support\Facades\Lang;
 use Ludo\Support\Filter;
@@ -39,6 +40,9 @@ class User extends BaseCtrl
             $_SESSION[USER]['isAdmin'] = $user['isAdmin'] ? true : false;
             [$_SESSION[USER]['permission'], $_SESSION[USER]['menu']] = RoleModel::parsePermissions($user['id']);
             unset($_POST['password']);
+
+            LogModel::log('user login');
+
             if (isset($_POST['callback'])) {
                 redirectOut($_POST['callback']);
             }
@@ -71,6 +75,8 @@ class User extends BaseCtrl
             try {
                 $dao->beginTransaction();
                 $dao->update($id, $add);
+
+                LogModel::log('user change password');
                 $dao->commit();
                 return $this->alert(Lang::get('user.change_password_successful'));
             } catch (QueryException $e) {
