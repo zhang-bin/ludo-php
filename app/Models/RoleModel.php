@@ -44,7 +44,7 @@ class RoleModel
             return true;
         }
 
-        [$controller, ] = explode('/', $url);
+        [$controller,] = explode('/', $url);
         if ($_SESSION[USER]['menu'][$controller]) {
             return true;
         }
@@ -54,7 +54,9 @@ class RoleModel
 
     public static function can($permissionPolicy)
     {
-        if ($_SESSION[USER]['isAdmin']) return true;
+        if ($_SESSION[USER]['isAdmin']) {
+            return true;
+        }
 
         return boolval($_SESSION[USER]['permission'][$permissionPolicy]);
     }
