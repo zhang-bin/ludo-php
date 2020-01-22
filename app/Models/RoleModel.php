@@ -40,15 +40,22 @@ class RoleModel
 
     public static function canMenu($url)
     {
-        if ($_SESSION[USER]['isAdmin']) return true;
+        if ($_SESSION[USER]['isAdmin']) {
+            return true;
+        }
 
-        return isset($_SESSION[USER]['menu'][$url]);
+        [$controller, ] = explode('/', $url);
+        if ($_SESSION[USER]['menu'][$controller]) {
+            return true;
+        }
+
+        return boolval($_SESSION[USER]['menu'][$url]);
     }
 
-    public static function can($resource, $operation)
+    public static function can($permissionPolicy)
     {
         if ($_SESSION[USER]['isAdmin']) return true;
 
-        return isset($_SESSION[USER]['permission'][$resource][$operation]);
+        return boolval($_SESSION[USER]['permission'][$permissionPolicy]);
     }
 }
