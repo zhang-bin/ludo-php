@@ -53,10 +53,10 @@ class User extends BaseCtrl
     /**
      * 用户首次登录修改密码
      */
-    public function changePassword()
+    public function modifyPassword()
     {
         if (empty($_POST)) {
-            $this->tpl->setFile('user/changePassword')
+            $this->tpl->setFile('user/modifyPassword')
                 ->assign('user', (new UserDao())->fetch($_SESSION[USER]['id']))
                 ->display();
         } else {
@@ -76,12 +76,12 @@ class User extends BaseCtrl
                 $dao->beginTransaction();
                 $dao->update($id, $add);
 
-                LogModel::log('user change password');
+                LogModel::log('user modify password');
                 $dao->commit();
-                return $this->alert(Lang::get('user.change_password_successful'));
+                return $this->alert(Lang::get('user.modify_password_successful'));
             } catch (QueryException $e) {
                 $dao->rollback();
-                return $this->alert(Lang::get('user.change_password_failed'));
+                return $this->alert(Lang::get('user.modify_password_failed'));
             }
         }
     }

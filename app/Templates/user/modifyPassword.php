@@ -1,10 +1,10 @@
 <?php
 use Ludo\Support\Facades\Lang;
 
-$gTitle = Lang::get('user.change_password');
+$gTitle = Lang::get('user.modify_password');
 include tpl('header');
 ?>
-<form class="form form-horizontal" action="<?=url('user/changePassword')?>">
+<form class="form form-horizontal" action="<?=url('user/modifyPassword')?>">
     <div class="form-group">
         <label for="role" class="col-sm-2 control-label"><?=Lang::get('user.username')?></label>
         <div class="col-sm-4">

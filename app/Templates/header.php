@@ -73,9 +73,9 @@ use App\Helpers\Menu;
                             <span class="hidden-xs"><?=$_SESSION[USER]['nickname']?></span>
                         </a>
                         <ul class="dropdown-menu">
-                            <li><a href="<?=url('user/changePassword')?>"><?=Lang::get('base.change_password')?></a></li>
+                            <li><a href="<?=url('user/modifyPassword')?>"><?=Lang::get('base.modify_password')?></a></li>
                             <li role="separator" class="divider"></li>
-                            <li><a href="<?=url('user/changePassword')?>"><?=Lang::get('base.sign_out')?></a></li>
+                            <li><a href="<?=url('user/modifyPassword')?>"><?=Lang::get('base.sign_out')?></a></li>
                         </ul>
                     </li>
                 </ul>

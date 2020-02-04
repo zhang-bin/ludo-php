@@ -38,7 +38,7 @@ class Permission extends BaseCtrl
         if (empty($_POST)) {
             $permissions = Load::conf('Permission');
 
-            $this->tpl->setFile('role/change')
+            $this->tpl->setFile('role/modify')
                 ->assign('permissions', $permissions)
                 ->display();
         } else {
@@ -75,7 +75,7 @@ class Permission extends BaseCtrl
         }
     }
 
-    public function changeRole()
+    public function modifyRole()
     {
         if (empty($_POST)) {
             $id = intval($_GET['id']);
@@ -85,7 +85,7 @@ class Permission extends BaseCtrl
 
             $permissions = Load::conf('Permission');
 
-            $this->tpl->setFile('role/change')
+            $this->tpl->setFile('role/modify')
                 ->assign('permissions', $permissions)
                 ->assign('role', $role)
                 ->display();
@@ -111,7 +111,7 @@ class Permission extends BaseCtrl
                     $rolePermissionDao->batchInsert($permissions);
                 }
 
-                LogModel::log('change role', [
+                LogModel::log('modify role', [
                     'new' => $id,
                 ]);
 
@@ -119,7 +119,7 @@ class Permission extends BaseCtrl
                 return $this->success(url('permission'));
             } catch (QueryException $e) {
                 $dao->rollback();
-                return $this->alert(Lang::get('user.role_change_failed'));
+                return $this->alert(Lang::get('user.role_modify_failed'));
             }
         }
     }
@@ -178,7 +178,7 @@ class Permission extends BaseCtrl
         if (empty($_POST)) {
             $roles = (new RoleDao())->findAll('deleted = 0');
 
-            $this->tpl->setFile('user/change')
+            $this->tpl->setFile('user/modify')
                 ->assign('roles', $roles)
                 ->display();
         } else {
@@ -216,7 +216,7 @@ class Permission extends BaseCtrl
         }
     }
 
-    public function changeUser()
+    public function modifyUser()
     {
         if (empty($_POST)) {
             $id = intval($_GET['id']);
@@ -225,7 +225,7 @@ class Permission extends BaseCtrl
             $user['roles'] = (new UserRoleDao())->findAllUnique(array('userId = ?', $id), 'roleId');
             $roles = (new RoleDao())->findAll('deleted = 0');
 
-            $this->tpl->setFile('user/change')
+            $this->tpl->setFile('user/modify')
                 ->assign('user', $user)
                 ->assign('roles', $roles)
                 ->display();
@@ -249,7 +249,7 @@ class Permission extends BaseCtrl
                     $userRoleDao->batchInsert($roles);
                 }
 
-                LogModel::log('change user', [
+                LogModel::log('modify user', [
                     'new' => $id,
                 ]);
 
@@ -257,7 +257,7 @@ class Permission extends BaseCtrl
                 return $this->success(url('permission/user'));
             } catch (QueryException $e) {
                 $dao->rollback();
-                return $this->alert(Lang::get('user.user_change_failed'));
+                return $this->alert(Lang::get('user.user_modify_failed'));
             }
         }
     }

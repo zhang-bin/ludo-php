@@ -1,11 +1,11 @@
 <?php
 use Ludo\Support\Facades\Lang;
 
-$change = isset($_GET['id']) ? true : false;
-$gTitle = $change ? Lang::get('user.role_change') : Lang::get('user.role_add');
+$modify = isset($_GET['id']) ? true : false;
+$gTitle = $modify ? Lang::get('user.role_modify') : Lang::get('user.role_add');
 include tpl('header');
 ?>
-<form class="form form-horizontal" action="<?=$change ? url('permission/changeRole') : url('permission/addRole')?>">
+<form class="form form-horizontal" action="<?=$modify ? url('permission/modifyRole') : url('permission/addRole')?>">
     <div class="form-group">
         <label for="role" class="col-sm-2 control-label"><?=Lang::get('user.role_name')?></label>
         <div class="col-sm-4">

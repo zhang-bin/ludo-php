@@ -9,7 +9,7 @@ return [
     'system_manage' => [
         'name' => '管理系统配置的权限',
         'url' => [
-            'permission' => ['addRole', 'changeRole', 'delRole', 'addUser', 'changeUser', 'delUser']
+            'permission' => ['addRole', 'modifyRole', 'delRole', 'addUser', 'modifyUser', 'delUser']
         ]
     ],
 ];

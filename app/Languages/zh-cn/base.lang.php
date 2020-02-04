@@ -38,7 +38,7 @@ return [
     'duplicate' => '复制',
     'download' => '下载',
     'upload' => '上传',
-    'change_password' => '修改密码',
+    'modify_password' => '修改密码',
     'sign_out' => '登出',
     'username' => '用户名',
     'password' => '密码',

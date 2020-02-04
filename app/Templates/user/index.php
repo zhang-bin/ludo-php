@@ -26,7 +26,7 @@ include tpl('header');
                     </button>
                     <ul class="dropdown-menu" role="menu">
                         <li>
-                            <a href="<?=url('permission/changeUser/'.$user['id'])?>">
+                            <a href="<?=url('permission/modifyUser/'.$user['id'])?>">
                                 <span class="fa fa-edit" aria-hidden="true"></span>
                                 <?=Lang::get('base.modify')?>
                             </a>

@@ -1,15 +1,15 @@
 <?php
 use Ludo\Support\Facades\Lang;
 
-$change = isset($_GET['id']) ? true : false;
-$gTitle = $change ? Lang::get('user.user_change') : Lang::get('user.user_add');
+$modify = isset($_GET['id']) ? true : false;
+$gTitle = $modify ? Lang::get('user.user_modify') : Lang::get('user.user_add');
 include tpl('header');
 ?>
-<form class="form form-horizontal" action="<?=$change ? url('permission/changeUser') : url('permission/addUser')?>">
+<form class="form form-horizontal" action="<?=$modify ? url('permission/modifyUser') : url('permission/addUser')?>">
     <div class="form-group">
         <label for="username" class="col-sm-2 control-label"><?=Lang::get('user.username')?></label>
         <div class="col-sm-4">
-            <input type="text" name="username" id="username" class="form-control" value="<?=$user['username']?>" required="required" <?=$change ? 'disabled' : ''?> />
+            <input type="text" name="username" id="username" class="form-control" value="<?=$user['username']?>" required="required" <?=$modify ? 'disabled' : ''?> />
         </div>
     </div>
     <div class="form-group">
