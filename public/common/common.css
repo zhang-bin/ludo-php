@@ -26,3 +26,25 @@
 .alert-box > p {
     word-break: break-all;
 }
+
+.search-box {
+    margin-bottom: 10px;
+}
+
+.goods-row .num {
+    width: auto;
+    display: inline-block;
+}
+
+.goods-row {
+    margin-bottom: 10px;
+}
+
+.box-tools a {
+    margin-left: 5px;
+}
+
+ul.dropdown-menu  i.fa {
+    width: 15px;
+    margin-right: 5px;
+}
