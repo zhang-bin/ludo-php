@@ -26,7 +26,7 @@ function ajaxHandler(result) {
             msgAlert(result['msg']);
             return false;
         case 'alert2go':
-            msgAlert(result['msg']);
+            alert(result['msg']);
             if (result['url']) {
                 window.location.href = result['url'];
             }
