@@ -1,5 +1,5 @@
 <?php
-return array(
+return [
     'default' => 'redis',
 
     'connections' => [
@@ -9,4 +9,4 @@ return array(
             'password'  => '64297881',
         ],
     ]
-);
+];

@@ -93,7 +93,7 @@ class BaseCtrl extends Controller
      */
     protected function alert2go(string $msg, string $url): array
     {
-        return array(STATUS => ALERT2GO, MSG => $msg, URL => $url);
+        return [STATUS => ALERT2GO, MSG => $msg, URL => $url];
     }
 
 

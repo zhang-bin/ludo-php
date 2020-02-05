@@ -54,10 +54,10 @@ class Permission extends BaseCtrl
                 if (!empty($_POST['permission'])) {
                     $permissions = [];
                     foreach ($_POST['permission'] as $permissionPolicy) {
-                        $permissions[] = array(
+                        $permissions[] = [
                             'roleId' => $add['id'],
                             'permissionPolicy' => $permissionPolicy
-                        );
+                        ];
                     }
                     $rolePermissionDao->batchInsert($permissions);
                 }
@@ -102,12 +102,12 @@ class Permission extends BaseCtrl
                 if (!empty($_POST['permission'])) {
                     $permissions = [];
                     foreach ($_POST['permission'] as $permissionPolicy) {
-                        $permissions[] = array(
+                        $permissions[] = [
                             'roleId' => $id,
                             'permissionPolicy' => $permissionPolicy
-                        );
+                        ];
                     }
-                    $rolePermissionDao->deleteWhere('roleId = ?', array($id));
+                    $rolePermissionDao->deleteWhere('roleId = ?', [$id]);
                     $rolePermissionDao->batchInsert($permissions);
                 }
 
@@ -130,7 +130,7 @@ class Permission extends BaseCtrl
         $dao = new RoleDao();
         try {
             $dao->beginTransaction();
-            $dao->update($id, array('deleted' => 1));
+            $dao->update($id, ['deleted' => 1]);
 
             LogModel::log('delete role', [
                 'new' => $id,
@@ -195,10 +195,10 @@ class Permission extends BaseCtrl
                 if (!empty($_POST['role'])) {
                     $roles = [];
                     foreach ($_POST['role'] as $roleId) {
-                        $roles[] = array(
+                        $roles[] = [
                             'userId' =>  $add['id'],
                             'roleId' => $roleId
-                        );
+                        ];
                     }
                     $userRoleDao->batchInsert($roles);
                 }
@@ -222,7 +222,7 @@ class Permission extends BaseCtrl
             $id = intval($_GET['id']);
             $dao = new UserDao();
             $user = $dao->fetch($id);
-            $user['roles'] = (new UserRoleDao())->findAllUnique(array('userId = ?', $id), 'roleId');
+            $user['roles'] = (new UserRoleDao())->findAllUnique(['userId = ?', $id], 'roleId');
             $roles = (new RoleDao())->findAll('deleted = 0');
 
             $this->tpl->setFile('user/modify')
@@ -237,14 +237,14 @@ class Permission extends BaseCtrl
             try {
                 $dao->beginTransaction();
                 $dao->update($id, $add);
-                $userRoleDao->deleteWhere('userId = ?', array($id));
+                $userRoleDao->deleteWhere('userId = ?', [$id]);
                 if (!empty($_POST['role'])) {
-                    $roles = array();
+                    $roles = [];
                     foreach ($_POST['role'] as $roleId) {
-                        $roles[] = array(
+                        $roles[] = [
                             'userId' => $id,
                             'roleId' => $roleId
-                        );
+                        ];
                     }
                     $userRoleDao->batchInsert($roles);
                 }
@@ -268,7 +268,7 @@ class Permission extends BaseCtrl
         $dao = new UserDao();
         try {
             $dao->beginTransaction();
-            $dao->update($id, array('deleted' => 1));
+            $dao->update($id, ['deleted' => 1]);
 
             LogModel::log('delete user', [
                 'new' => $id,
@@ -286,7 +286,7 @@ class Permission extends BaseCtrl
     {
         $id = intval($_GET['id']);
         $user = (new UserDao())->fetch($id);
-        $userRoles = (new UserRoleDao())->hasA('Role', 'Role.role')->findAll(array('userId = ?', $id));
+        $userRoles = (new UserRoleDao())->hasA('Role', 'Role.role')->findAll(['userId = ?', $id]);
         $this->tpl->setFile('user/view')
             ->assign('user', $user)
             ->assign('userRoles', $userRoles)

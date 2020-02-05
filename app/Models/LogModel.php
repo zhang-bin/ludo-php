@@ -10,7 +10,7 @@ class LogModel
 
     public static function log($name, $parameter = [])
     {
-        $data = array(
+        $data = [
             'userId' => $_SESSION[USER]['id'] ? $_SESSION[USER]['id'] : 0,
             'uname' => $_SESSION[USER]['uname'],
             'createTime' => date(TIME_FORMAT),
@@ -26,7 +26,7 @@ class LogModel
             'session' => json_encode($_SESSION),
             'cookie' => json_encode($_COOKIE),
             'success' => 1
-        );
+        ];
         if (realIp() != $_SERVER['REMOTE_ADDR']) {
             $cip = getenv('HTTP_CLIENT_IP') ? 'HTTP_CLIENT_IP:' . getenv('HTTP_CLIENT_IP') : '';
             $xip = getenv('HTTP_X_FORWARDED_FOR') ? ', HTTP_X_FORWARDED_FOR:' . getenv('HTTP_X_FORWARDED_FOR') : '';

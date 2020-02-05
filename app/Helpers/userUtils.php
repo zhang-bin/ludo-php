@@ -55,7 +55,7 @@ function redirect(string $innerUrl = '')
 
     $innerUrl = url($innerUrl);
     if (isAjax()) {
-        echo json_encode(array(STATUS => GO, URL => $innerUrl));
+        echo json_encode([STATUS => GO, URL => $innerUrl]);
     } else {
         header('location:' . $innerUrl);
     }
@@ -73,7 +73,7 @@ function redirectOut(string $outUrl)
         Application::debug();
     }
     if (isAjax()) {
-        echo json_encode(array(STATUS => GO, URL => $outUrl));
+        echo json_encode([STATUS => GO, URL => $outUrl]);
     } else {
         header('location:' . $outUrl);
     }
@@ -183,7 +183,7 @@ function generateCsv($menu, $data)
     fwrite($fp, mb_convert_encoding($csv, 'UTF-16LE', 'UTF-8'));
 
     foreach ($data as $v) {
-        $arr = array();
+        $arr = [];
         foreach ($menu as $k => $vv) {
             $arr[] = $v[$k];
         }

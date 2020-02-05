@@ -10,13 +10,13 @@ class RoleModel
 {
     public static function parsePermissions($uid)
     {
-        $roleIds = (new UserRoleDao())->hasA('Role')->findAllUnique(array('userId = ? and Role.deleted = 0', $uid), 'roleId');
+        $roleIds = (new UserRoleDao())->hasA('Role')->findAllUnique(['userId = ? and Role.deleted = 0', $uid], 'roleId');
         if (empty($roleIds)) {
             return [];
         }
 
         $permissionConf = Load::conf('Permission');
-        $permissions = $menus = array();
+        $permissions = $menus = [];
         $rolePermissions = (new RolePermissionDao())->findAll('roleId in (' . implode(',', $roleIds) . ')');
         foreach ($rolePermissions as $rolePermission) {
             $permissions[$rolePermission['permissionPolicy']] = true;
