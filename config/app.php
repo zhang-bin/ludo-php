@@ -9,4 +9,8 @@ return [
     'debug' => true,
 
     'controller' => 'App\\Controllers\\',
+
+    'facades' => [
+
+    ]
 ];
