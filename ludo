@@ -1,6 +1,8 @@
 #!/usr/bin/env php
 <?php
 
+$_SERVER['HTTP_HOST'] = null;
+
 require 'config.inc.php';
 
 require __DIR__.'/bootstrap/start.php';

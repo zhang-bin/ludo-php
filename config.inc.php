@@ -1,6 +1,6 @@
 <?php
 define('SITE_ROOT', __DIR__);
-define('SITE_URL',			'http://'.$_SERVER['SERVER_NAME']);
+define('SITE_URL',			'http://'.$_SERVER['HTTP_HOST']);
 define('PROGRAM_CHARSET',       'UTF-8');
 define('SUCCESS',               'success');
 define('ALERT',                 'alert');
