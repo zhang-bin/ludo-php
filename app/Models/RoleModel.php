@@ -10,7 +10,7 @@ class RoleModel
 {
     public static function parsePermissions($uid)
     {
-        $roleIds = (new UserRoleDao())->hasA('Role')->findAllUnique(['userId = ? and Role.deleted = 0', $uid], 'roleId');
+        $roleIds = (new UserRoleDao())->hasA('Role')->findAllUnique(['userId = ? and Role.deleted = 0', [$uid]], 'roleId');
         if (empty($roleIds)) {
             return [];
         }
