@@ -101,7 +101,7 @@ function realIp(): string
             continue;
         }
 
-        foreach ($_SERVER[$key] as $address) {
+        foreach (explode(';', $_SERVER[$key]) as $address) {
             $address = trim($address);
 
             if (true === Validator::publicIp($address)) {
