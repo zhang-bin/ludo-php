@@ -17,16 +17,20 @@ class RoleModel
 
         $permissionConf = Load::conf('Permission');
         $permissions = $menus = [];
-        $rolePermissions = (new RolePermissionDao())->findAll('roleId in (' . implode(',', $roleIds) . ')');
-        foreach ($rolePermissions as $rolePermission) {
-            $permissions[$rolePermission['permissionPolicy']] = true;
+        $permissionPolicies = (new RolePermissionDao())->findAllUnique('roleId in (' . implode(',', $roleIds) . ')', 'permissionPolicy');
+        foreach ($permissionPolicies as $permissionPolicy) {
+            $permissions[$permissionPolicy] = true;
 
-            foreach ($permissionConf[$rolePermission['permissionPolicy']]['url'] as $urls) {
-                foreach ($urls as $controller => $actions) {
-                    if ($actions == '*') {
-                        $menus[$controller] = true;
-                    } else {
-                        $actions = (array)$actions;
+            foreach ($permissionConf[$permissionPolicy]['url'] as $controller => $actions) {
+                foreach ($actions as $action) {
+                    $menus[$controller . '/' . $action] = true;
+                }
+            }
+
+            if (!empty($permissionConf[$permissionPolicy]['include'])) {
+                foreach ($permissionConf[$permissionPolicy]['include'] as $includePermissionPolicy) {
+                    $permissions[$includePermissionPolicy] = true;
+                    foreach ($permissionConf[$includePermissionPolicy]['url'] as $controller => $actions) {
                         foreach ($actions as $action) {
                             $menus[$controller . '/' . $action] = true;
                         }
@@ -44,12 +48,7 @@ class RoleModel
             return true;
         }
 
-        [$controller,] = explode('/', $url);
-        if ($_SESSION[USER]['menu'][$controller]) {
-            return true;
-        }
-
-        return boolval($_SESSION[USER]['menu'][$url]);
+        return isset($_SESSION[USER]['menu'][$url]);
     }
 
     public static function can($permissionPolicy)
