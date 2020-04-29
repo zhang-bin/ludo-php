@@ -222,7 +222,7 @@ class Permission extends BaseCtrl
             $id = intval($_GET['id']);
             $dao = new UserDao();
             $user = $dao->fetch($id);
-            $user['roles'] = (new UserRoleDao())->findAllUnique(['userId = ?', $id], 'roleId');
+            $user['roles'] = (new UserRoleDao())->findAllUnique(['userId = ?', [$id]], 'roleId');
             $roles = (new RoleDao())->findAll('deleted = 0');
 
             $this->tpl->setFile('user/modify')
