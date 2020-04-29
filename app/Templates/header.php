@@ -75,7 +75,7 @@ use App\Helpers\Menu;
                         <ul class="dropdown-menu">
                             <li><a href="<?=url('user/modifyPassword')?>"><?=Lang::get('base.modify_password')?></a></li>
                             <li role="separator" class="divider"></li>
-                            <li><a href="<?=url('user/modifyPassword')?>"><?=Lang::get('base.sign_out')?></a></li>
+                            <li><a href="<?=url('user/logout')?>"><?=Lang::get('base.sign_out')?></a></li>
                         </ul>
                     </li>
                 </ul>
