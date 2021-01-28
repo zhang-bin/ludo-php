@@ -3,22 +3,14 @@
 namespace App\Controllers;
 
 use Ludo\Routing\Controller;
-use Ludo\Support\ServiceProvider;
-use Ludo\Support\Facades\Log;
 
 class BaseCtrl extends Controller
 {
-    /**
-     * @var Log
-     */
-    protected $log;
-
     protected $currentPage;
 
     public function __construct(string $name)
     {
         parent::__construct($name);
-        $this->log = ServiceProvider::getMainInstance()->getLogHandler();
         $this->currentPage = empty($_GET['pager']) ? 1 : intval($_GET['pager']);
     }
 
